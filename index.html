@@ -216,6 +216,15 @@
   .nota{font-size:12px;color:var(--tinta-suave);line-height:1.45;margin-top:6px}
   .switch{display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer}
   .switch input{width:18px;height:18px}
+  /* ---- acabado premium / futurista ---- */
+  .balance,.hero{border:1px solid rgba(199,154,59,.24);box-shadow:0 10px 26px rgba(22,33,27,.3),0 0 26px rgba(199,154,59,.12)}
+  .balance .monto{font-size:34px;font-weight:800;letter-spacing:-.02em}
+  .monto.oro,.disp.oro,.bg-neto b.oro{background:linear-gradient(115deg,#F6F1E4 8%,#E8C56A 55%,#C79A3B 96%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .barra.fina{height:7px;margin-top:14px;background:rgba(243,245,241,.14);border-radius:4px}
+  .barra.fina div{border-radius:0}
+  .tabs{background:rgba(255,255,255,.86);backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5)}
+  .kpi{position:relative;overflow:hidden}
+  .kpi::before{content:'';position:absolute;top:0;left:12px;right:12px;height:2.5px;border-radius:2px;background:linear-gradient(90deg,var(--oro),var(--oro-claro))}
   @media(prefers-reduced-motion:reduce){.hoja,.barra-meta div{transition:none}.pantalla.activa{animation:none}}
 </style>
 </head>
@@ -267,7 +276,7 @@
       <div class="de"><span data-i18n="de"></span> <b class="num" id="resIngresos">—</b> <span data-i18n="deIngreso"></span></div>
       <div class="mini">
         <div><span data-i18n="gastadoLbl"></span><b class="num" id="resSalidas">—</b></div>
-        <div><span data-i18n="apartadoLbl"></span><b class="num" id="resApartado">—</b></div>
+        <div><span data-i18n="aPatrimonioLbl"></span><b class="num" id="resApartado">—</b></div>
         <div><span data-i18n="ritmoLbl"></span><b class="num" id="ritmoDia">—</b></div>
       </div>
     </div>
@@ -347,6 +356,7 @@
     <div class="fila"><span data-i18n="activosTotales"></span><b class="num" id="actTotal">—</b></div>
     <div class="fila"><span data-i18n="pasivosTotales"></span><b class="num" id="pasTotal" style="color:#E8A398">—</b></div>
     <div class="fila"><span data-i18n="endeudamiento"></span><b class="num" id="endeud">—</b></div>
+    <div class="barra fina" id="barraHeroPat"></div>
   </section>
   <div class="card">
     <h2 class="sec" style="margin-top:0" data-i18n="clasifTitulo"></h2>
@@ -694,7 +704,10 @@ es:{
   tp_efectivo:'Efectivo',tp_vehiculo:'Coche',tp_otro:'Otro bien',
   td_tarjeta:'Tarjeta',td_auto:'Crédito auto',td_personal:'Préstamo',td_hipoteca:'Hipoteca',td_otrop:'Otra',
   disponible:'disponible',heroEtq:'Me queda de mi ingreso',de:'de',deIngreso:'de ingreso',
-  gastadoLbl:'Gastado',apartadoLbl:'🔒 Apartado',ritmoLbl:'Ritmo/día',porDia:'/día',proyTag:' (proy.)',
+  gastadoLbl:'Gastado',apartadoLbl:'🔒 Apartado',aPatrimonioLbl:'💎 A patrimonio',ritmoLbl:'Ritmo/día',porDia:'/día',proyTag:' (proy.)',
+  invertidoSigue:'invertido · sigue siendo tuyo',
+  notaPatrimonio:'Convertiste %s en patrimonio este mes (inversión + ahorro).',
+  balBajoInv:'Tu disponible es bajo porque moviste %s a inversiones y ahorro — ese dinero sigue siendo tuyo.',
   cascadaTitulo:'¿A dónde se va mi ingreso?',teQueda:'Te queda',
   notaApartado:'Incluye %s que apartaste en ahorro este mes.',
   apartadoSigue:'apartado · sigue siendo tuyo',deAsignado:'de %s',
@@ -847,7 +860,10 @@ en:{
   tp_efectivo:'Cash',tp_vehiculo:'Car',tp_otro:'Other asset',
   td_tarjeta:'Credit card',td_auto:'Car loan',td_personal:'Loan',td_hipoteca:'Mortgage',td_otrop:'Other',
   disponible:'available',heroEtq:'Left from my income',de:'of',deIngreso:'income',
-  gastadoLbl:'Spent',apartadoLbl:'🔒 Set aside',ritmoLbl:'Daily pace',porDia:'/day',proyTag:' (proj.)',
+  gastadoLbl:'Spent',apartadoLbl:'🔒 Set aside',aPatrimonioLbl:'💎 To wealth',ritmoLbl:'Daily pace',porDia:'/day',proyTag:' (proj.)',
+  invertidoSigue:'invested · still yours',
+  notaPatrimonio:'You turned %s into wealth this month (investing + savings).',
+  balBajoInv:'Your available balance is low because you moved %s into investments and savings — that money is still yours.',
   cascadaTitulo:'Where does my income go?',teQueda:'You have left',
   notaApartado:'Includes %s you set aside in savings this month.',
   apartadoSigue:'set aside · still yours',deAsignado:'of %s',
@@ -1063,6 +1079,21 @@ const fechaISO = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')
 const hoyISO = () => fechaISO(new Date());
 const fFecha = (iso,ops) => new Date(iso+'T12:00:00').toLocaleDateString(LOC(),ops||{day:'numeric',month:'short'});
 
+/* ---------- animación de conteo en cifras grandes ---------- */
+const REDUCIR_MOV=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function animarNumero(el,valor,formateador){
+  const prev=parseFloat(el.dataset.v);
+  el.dataset.v=valor;
+  if(REDUCIR_MOV||isNaN(prev)||prev===valor){ el.textContent=formateador(valor); return; }
+  const inicio=performance.now(), dur=550;
+  function paso(ahora){
+    const p=Math.min(1,(ahora-inicio)/dur), e=1-Math.pow(1-p,3);
+    el.textContent=formateador(prev+(valor-prev)*e);
+    if(p<1) requestAnimationFrame(paso);
+  }
+  requestAnimationFrame(paso);
+}
+
 /* ---------- toast ---------- */
 let toastTimer=null;
 function notificar(txt,esError){
@@ -1228,23 +1259,29 @@ function totalesMes(k){
 function renderMes(){
   document.getElementById('mesLabel').textContent=MESES_T()[mesActual.getMonth()]+' '+mesActual.getFullYear();
   const {ms,tot}=totalesMes(mesKey(mesActual));
-  // el ahorro NO resta: es dinero apartado que sigue siendo tuyo
-  const gastado=CATS.filter(c=>!c.entrada&&c.id!=='ahorro').reduce((s,c)=>s+tot[c.id],0);
+  // consumo real (rojo) vs. dinero convertido en patrimonio (ahorro + inversiones: sigue siendo tuyo)
+  const consumo=CATS.filter(c=>!c.entrada&&c.id!=='ahorro'&&c.id!=='inversiones').reduce((s,c)=>s+tot[c.id],0);
+  const invertido=tot.inversiones;
   const apartado=tot.ahorro;
+  const aPatrimonio=invertido+apartado;
   const {ing:ingProy}=flujoLibre();
   const base = tot.ingresos>0? tot.ingresos : ingProy;
-  const bal = base - gastado;
+  const bal = base - consumo - invertido;
+  const sobreConsumo = consumo > base; // solo el consumo real pinta de rojo
 
   document.getElementById('resIngresos').textContent=fmt(base)+(tot.ingresos>0?'':t('proyTag'));
-  document.getElementById('resSalidas').textContent=fmt(gastado);
-  document.getElementById('resApartado').textContent=fmt(apartado);
+  document.getElementById('resSalidas').textContent=fmt(consumo);
+  document.getElementById('resApartado').textContent=fmt(aPatrimonio);
   const eb=document.getElementById('balanceTotal');
-  eb.textContent=fmt2(bal); eb.style.color=bal<0?'#E8A398':'#F3F5F1';
+  const esRojo = bal<0 && sobreConsumo;
+  eb.classList.toggle('oro',!esRojo);
+  eb.style.color = esRojo? '#E8A398' : '';
+  animarNumero(eb,bal,fmt2);
 
   const pctDisp = base>0? Math.max(0,Math.min(100, bal/base*100)) : 0;
   const C=276.5, prog=document.getElementById('anilloProg');
   prog.style.strokeDashoffset = C - C*pctDisp/100;
-  prog.style.stroke = pctDisp<15? '#B5452F' : pctDisp<35? '#C79A3B' : '#1F7A4D';
+  prog.style.stroke = sobreConsumo? '#B5452F' : pctDisp<35? '#C79A3B' : '#1F7A4D';
   document.getElementById('anilloPct').textContent = base>0? Math.round(pctDisp)+'%' : '—';
 
   const hoy=new Date(), rd=document.getElementById('ritmoDia');
@@ -1258,21 +1295,22 @@ function renderMes(){
   const {ing:ingBase}=flujoLibre();
   CATS.filter(c=>!c.entrada).forEach(c=>{
     const monto=tot[c.id];
-    const esAhorro=c.id==='ahorro';
+    const esPatrimonio=c.id==='ahorro'||c.id==='inversiones'; // no es pérdida: se convierte en patrimonio
     const pct=base>0? Math.min(100,Math.max(0,monto)/base*100):0;
     const asig=asignadoCat(c.id, ingBase);
-    const sobre = !esAhorro && asig>0 && monto>asig;
+    const sobre = !esPatrimonio && asig>0 && monto>asig;
     const fila=document.createElement('div'); fila.className='fila-c';
-    fila.innerHTML='<span class="nom-c"><i class="punto" style="background:'+COLORES[c.id]+'"></i>'+(esAhorro?'🔒 ':'')+nomCat(c.id)+'</span>'+
+    fila.innerHTML='<span class="nom-c"><i class="punto" style="background:'+COLORES[c.id]+'"></i>'+(c.id==='ahorro'?'🔒 ':(c.id==='inversiones'?'💎 ':''))+nomCat(c.id)+'</span>'+
       '<span class="pista"><div style="width:'+pct+'%;background:'+(sobre?'#B5452F':COLORES[c.id])+'"></div></span>'+
-      '<span class="m-c num" style="color:'+(esAhorro?'#1F7A4D':(sobre?'#B5452F':'var(--tinta)'))+'">'+(esAhorro?'→ ':'−')+fmt(monto)+
-      (esAhorro?'<br><span class="sub-c">'+t('apartadoSigue')+'</span>':(asig>0?'<br><span class="sub-c">'+t('deAsignado',fmt(asig))+(sobre?' ⚠️':'')+'</span>':''))+'</span>';
+      '<span class="m-c num" style="color:'+(esPatrimonio?(c.id==='ahorro'?'#1F7A4D':'#2E5E8C'):(sobre?'#B5452F':'var(--tinta)'))+'">'+(esPatrimonio?'→ ':'−')+fmt(monto)+
+      (esPatrimonio?'<br><span class="sub-c">'+(c.id==='ahorro'?t('apartadoSigue'):t('invertidoSigue'))+'</span>':(asig>0?'<br><span class="sub-c">'+t('deAsignado',fmt(asig))+(sobre?' ⚠️':'')+'</span>':''))+'</span>';
     casc.appendChild(fila);
   });
   const qf=document.getElementById('quedaFinal');
-  qf.textContent=fmt2(bal); qf.style.color=bal<0?'#B5452F':'#1F7A4D';
+  qf.textContent=fmt2(bal);
+  qf.style.color = (bal<0&&sobreConsumo)? '#B5452F' : (bal<0? '#B8862F' : '#1F7A4D');
   const notaAp=document.getElementById('quedaNota');
-  notaAp.textContent = apartado>0? t('notaApartado',fmt(apartado)) : '';
+  notaAp.textContent = (bal<0&&!sobreConsumo&&aPatrimonio>0)? t('balBajoInv',fmt(aPatrimonio)) : (aPatrimonio>0? t('notaPatrimonio',fmt(aPatrimonio)) : '');
 
   const grid=document.getElementById('gridCats'); grid.innerHTML='';
   CATS.forEach(c=>{
@@ -1391,8 +1429,17 @@ function renderCartera(){
   const pasTot=pasivosTotal();
   const neto=activosTot-pasTot;
   const patrimonio=activosTot;
-  document.getElementById('patrimonioTotal').textContent=fmt2(neto);
-  document.getElementById('patrimonioTotal').style.color = neto<0?'#E8A398':'#F3F5F1';
+  const ept=document.getElementById('patrimonioTotal');
+  ept.classList.toggle('oro',neto>=0);
+  ept.style.color = neto<0?'#E8A398':'';
+  animarNumero(ept,neto,fmt2);
+  // composición de activos dentro del hero
+  const bh=document.getElementById('barraHeroPat'); bh.innerHTML='';
+  [[liqBancos,'#2E5E8C'],[liqEfectivo,'#1F7A4D'],[total,'#C79A3B'],[bienes,'#B5452F'],[inmuebles,'#2E7D7A']].forEach(([v,clr])=>{
+    const seg=document.createElement('div');
+    seg.style.width=(activosTot>0? v/activosTot*100:0)+'%'; seg.style.background=clr;
+    bh.appendChild(seg);
+  });
   document.getElementById('actTotal').textContent=fmt2(activosTot);
   document.getElementById('pasTotal').textContent='−'+fmt2(pasTot);
   document.getElementById('endeud').textContent = activosTot>0? Math.round(pasTot/activosTot*100)+t('deActivosTag') : '—';
@@ -1404,7 +1451,8 @@ function renderCartera(){
   document.getElementById('bgAct').textContent=fmt2(activosTot);
   document.getElementById('bgPas').textContent=pasTot>0?'−'+fmt2(pasTot):fmt2(0);
   const bn=document.getElementById('bgNeto');
-  bn.textContent=fmt2(neto); bn.style.color=neto<0?'#E8A398':'#F3F5F1';
+  bn.classList.toggle('oro',neto>=0);
+  bn.textContent=fmt2(neto); bn.style.color=neto<0?'#E8A398':'';
   const bgp=document.getElementById('bgPasivos'); bgp.innerHTML='';
   if(!D.pasivos.length && !D.inmuebles.some(i=>i.hip&&i.hip.monto>0)){
     bgp.innerHTML='<div class="bg-linea"><span style="color:var(--tinta-suave)">'+t('sinDeudas')+'</span><span class="num">'+fmt2(0)+'</span></div>';
@@ -1664,7 +1712,8 @@ function renderFondos(){
   const totalAh=ah.reduce((s,m)=>s+signoMov(m),0);
   const kAhora=mesKey(new Date());
   const ahMes=ah.filter(m=>m.fecha.slice(0,7)===kAhora).reduce((s,m)=>s+signoMov(m),0);
-  document.getElementById('ahorroTotal').textContent=fmt2(totalAh);
+  const eah=document.getElementById('ahorroTotal');
+  eah.classList.add('oro'); animarNumero(eah,totalAh,fmt2);
   document.getElementById('ahorroMes').textContent=fmt2(ahMes);
   const la=document.getElementById('listaAhorro'); la.innerHTML='';
   if(!ah.length){ la.innerHTML='<div class="vacio">'+t('ahorroVacio')+'</div>'; }
