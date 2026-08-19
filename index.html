@@ -293,10 +293,17 @@
     <div id="cascadaFilas"></div>
     <div class="queda"><span data-i18n="teQueda"></span><b class="num" id="quedaFinal">—</b></div>
     <div class="nota" id="quedaNota" style="text-align:right"></div>
+    <div class="nota" id="proyCierre" style="text-align:right;font-weight:600"></div>
   </section>
   <section class="grid" id="gridCats"></section>
   <h2 class="sec" data-i18n="movsMes"></h2>
   <div id="listaMovs"></div>
+  <div class="card" style="margin-top:14px">
+    <h2 class="sec" style="margin-top:0" data-i18n="histTitulo"></h2>
+    <div id="histChart"></div>
+    <div id="histDetalle" class="plan-real"></div>
+    <div class="nota" id="histNota"></div>
+  </div>
 </div>
 
 <!-- ================= PLAN ================= -->
@@ -511,6 +518,7 @@
     <div class="campo"><label data-i18n="moneda"></label><div class="seg" id="mMoneda"><button data-v="USD" class="activo">USD</button><button data-v="MXN">MXN</button></div></div>
   </div>
   <div class="campo"><label for="mDesc" data-i18n="descripcion"></label><input id="mDesc" type="text" data-i18n-ph="phMovDesc"></div>
+  <div class="campo" id="frecWrap" style="display:none"><label data-i18n="frecuentes"></label><div class="chips" id="chipsFrec"></div></div>
   <div class="campo"><label for="mFecha" data-i18n="fecha"></label><input id="mFecha" type="date"></div>
   <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarMov" data-i18n="guardar"></button></div>
 </div>
@@ -733,7 +741,17 @@ es:{
   evoTitulo:'Evolución de mi patrimonio',
   evoNota:'Cada mes se guarda una foto automática de tu patrimonio (en USD). Toca la gráfica para recorrer los meses.',
   evoPrimera:'Primera foto guardada: %s. La gráfica aparecerá cuando tengas 2 meses o más de historia.',
-  evoCambio:'vs. mes anterior',tipoCambio:'Tipo de cambio (MXN/USD)',impIngresos:'Impuesto ingresos %',
+  evoCambio:'vs. mes anterior',
+  alertaPresu80:'Vas al %s% de tu presupuesto de %s',
+  alertaPresu80Sub:'Llevas %s de %s · quedan %s días del mes.',
+  alertaPresu100:'Te pasaste del presupuesto de %s',
+  alertaPresu100Sub:'Llevas %s de %s (%s%).',
+  ritmoProyTxt:'A este ritmo cerrarás el mes con ~%s de consumo.',
+  ritmoProyPresu:' Presupuesto: %s.',
+  frecuentes:'Frecuentes ⚡',
+  histTitulo:'Consumo · últimos 6 meses',
+  histNota:'Toca una barra para ver el desglose por categoría.',
+  histVacio:'Registra movimientos y aquí verás tu comparativa mensual.',tipoCambio:'Tipo de cambio (MXN/USD)',impIngresos:'Impuesto ingresos %',
   descargarCsv:'⬇️ Descargar CSV (movimientos + aportaciones)',
   respaldoTitulo:'Respaldo de datos',respaldar:'💾 Respaldar (JSON)',restaurar:'📂 Restaurar',
   respaldoNota:'Descarga un respaldo cada cierto tiempo y guárdalo en iCloud/Drive. Si cambias de teléfono o el navegador borra sus datos, lo restauras aquí y recuperas todo.',
@@ -893,7 +911,17 @@ en:{
   evoTitulo:'My net worth over time',
   evoNota:'A snapshot of your net worth is saved automatically each month (in USD). Tap the chart to walk through the months.',
   evoPrimera:'First snapshot saved: %s. The chart appears once you have 2+ months of history.',
-  evoCambio:'vs. last month',tipoCambio:'Exchange rate (MXN/USD)',impIngresos:'Income tax %',
+  evoCambio:'vs. last month',
+  alertaPresu80:'You are at %s% of your %s budget',
+  alertaPresu80Sub:'You have used %s of %s · %s days left this month.',
+  alertaPresu100:'You went over your %s budget',
+  alertaPresu100Sub:'You have used %s of %s (%s%).',
+  ritmoProyTxt:'At this pace you will end the month at ~%s in spending.',
+  ritmoProyPresu:' Budget: %s.',
+  frecuentes:'Frequent ⚡',
+  histTitulo:'Spending · last 6 months',
+  histNota:'Tap a bar to see the category breakdown.',
+  histVacio:'Log transactions and your monthly comparison will appear here.',tipoCambio:'Exchange rate (MXN/USD)',impIngresos:'Income tax %',
   descargarCsv:'⬇️ Download CSV (transactions + contributions)',
   respaldoTitulo:'Data backup',respaldar:'💾 Back up (JSON)',restaurar:'📂 Restore',
   respaldoNota:'Download a backup regularly and keep it in iCloud/Drive. If you switch phones or the browser clears its data, restore it here and recover everything.',
@@ -1093,7 +1121,7 @@ const TIPOS_PAS=[
 const CLR_CUENTAS=['#2E5E8C','#1F7A4D','#C79A3B','#7A4E8C','#2E7D7A','#B5452F'];
 const KEY='finanzas-pro';
 
-let D = { mov:[], rec:[], metas:[], cuentas:[], aportes:[], fondos:[], negocio:[], bancos:[], activos:[], pasivos:[], inmuebles:[], hist:[],
+let D = { mov:[], rec:[], metas:[], cuentas:[], aportes:[], fondos:[], negocio:[], bancos:[], activos:[], pasivos:[], inmuebles:[], hist:[], avisos:{},
   cfg:{ fx:18.50, moneda:'USD', tax:15, apiUrl:'', lang:'es', tema:'auto', negocioEnProj:true, deudaEnProj:true,
     dist:{gastos:{modo:'pct',v:0},inversiones:{modo:'pct',v:0},ahorro:{modo:'pct',v:0},caridad:{modo:'pct',v:0},profesional:{modo:'pct',v:0}} } };
 let mesActual=new Date(); mesActual.setDate(1);
@@ -1103,6 +1131,7 @@ let movEdit=null, recEdit=null, negEdit=null;
 
 const fmt = n => n.toLocaleString(LOC(),{style:'currency',currency:D.cfg.moneda,maximumFractionDigits:0});
 const fmt2 = n => n.toLocaleString(LOC(),{style:'currency',currency:D.cfg.moneda});
+const fmtCompact = n => new Intl.NumberFormat(LOC(),{style:'currency',currency:D.cfg.moneda,notation:'compact',maximumFractionDigits:1}).format(n);
 const conv = (m,mon) => mon===D.cfg.moneda ? m : (mon==='USD'? m*D.cfg.fx : m/D.cfg.fx);
 const mesKey = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
 const escapar = s => { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; };
@@ -1162,6 +1191,9 @@ async function cargar(){
     }catch(e){}
   }
   ['mov','rec','metas','cuentas','aportes','fondos','negocio','bancos','activos','pasivos','inmuebles','hist'].forEach(k=>{ if(!Array.isArray(D[k])) D[k]=[]; });
+  if(!D.avisos||typeof D.avisos!=='object'||Array.isArray(D.avisos)) D.avisos={};
+  const kAvisos=mesKey(new Date());
+  Object.keys(D.avisos).forEach(k=>{ if(k.slice(0,7)!==kAvisos) delete D.avisos[k]; });
   LANG=(D.cfg.lang==='en')?'en':'es';
   if(D.cuentas.length===0){
     D.cuentas=[{id:uid(),nombre:'Interactive Brokers',obj:50},{id:uid()+'b',nombre:'Charles Schwab',obj:50}];
@@ -1276,6 +1308,29 @@ function renderAlertas(){
     ok.onclick=async()=>{ f.avisado=true; await guardar(); renderTodo(); };
     div.appendChild(ok); cont.appendChild(div);
   });
+  // presupuestos: avisos al 80% y al pasarse (solo mes en curso, consumo real)
+  const kAhora=mesKey(new Date());
+  const {tot:totAhora}=totalesMes(kAhora);
+  const {ing:ingAhora}=flujoLibre();
+  CATS.filter(c=>!c.entrada&&c.id!=='ahorro'&&c.id!=='inversiones').forEach(c=>{
+    const asig=asignadoCat(c.id,ingAhora); if(asig<=0) return;
+    const real=totAhora[c.id]; if(real<=0) return;
+    const pct=Math.round(real/asig*100);
+    const nivel = pct>=100? '100' : pct>=80? '80' : null;
+    if(!nivel) return;
+    const clave=kAhora+':'+c.id+':'+nivel;
+    if(D.avisos[clave]) return;
+    const hoyA=new Date();
+    const finMesA=new Date(hoyA.getFullYear(),hoyA.getMonth()+1,0).getDate();
+    const div=document.createElement('div'); div.className='alerta '+(nivel==='100'?'roja':'dorada');
+    div.innerHTML='<span style="font-size:24px">'+(nivel==='100'?'🚨':'⚠️')+'</span>'+
+      '<div class="txt">'+(nivel==='100'? t('alertaPresu100',nomCat(c.id)) : t('alertaPresu80',pct,nomCat(c.id)))+
+      '<small>'+(nivel==='100'? t('alertaPresu100Sub',fmt(real),fmt(asig),pct) : t('alertaPresu80Sub',fmt(real),fmt(asig),finMesA-hoyA.getDate()))+'</small></div>';
+    const ok=document.createElement('button'); ok.textContent=t('entendido');
+    ok.onclick=async()=>{ D.avisos[clave]=true; await guardar(); renderTodo(); };
+    div.appendChild(ok); cont.appendChild(div);
+  });
+
   // inversiones de deuda (CETES) vencidas
   const hoy=new Date();
   D.aportes.filter(a=>(a.tipo||'')==='deuda' && a.tasa>0 && a.plazo>0 && !a.avisadoVenc).forEach(a=>{
@@ -1353,6 +1408,16 @@ function renderMes(){
   qf.style.color = (bal<0&&sobreConsumo)? '#B5452F' : (bal<0? '#B8862F' : '#1F7A4D');
   const notaAp=document.getElementById('quedaNota');
   notaAp.textContent = (bal<0&&!sobreConsumo&&aPatrimonio>0)? t('balBajoInv',fmt(aPatrimonio)) : (aPatrimonio>0? t('notaPatrimonio',fmt(aPatrimonio)) : '');
+  // proyección de cierre: a este ritmo, ¿cómo termino el mes?
+  const pc=document.getElementById('proyCierre');
+  const esMesActual=hoy.getFullYear()===mesActual.getFullYear()&&hoy.getMonth()===mesActual.getMonth();
+  if(esMesActual && consumo>0 && hoy.getDate()>=3){
+    const finMesP=new Date(hoy.getFullYear(),hoy.getMonth()+1,0).getDate();
+    const proy=consumo/hoy.getDate()*finMesP;
+    const presuConsumo=['gastos','caridad','profesional'].reduce((sm,id)=>sm+asignadoCat(id,ingBase),0);
+    pc.textContent=t('ritmoProyTxt',fmt(proy))+(presuConsumo>0? t('ritmoProyPresu',fmt(presuConsumo)):'');
+    pc.style.color = (presuConsumo>0&&proy>presuConsumo)? '#B5452F' : '';
+  } else pc.textContent='';
 
   const grid=document.getElementById('gridCats'); grid.innerHTML='';
   CATS.forEach(c=>{
@@ -1917,7 +1982,7 @@ function renderEvolucion(){
   const cont=document.getElementById('evoChart'), nota=document.getElementById('evoNota'), sel=document.getElementById('evoSel');
   const hist=(D.hist||[]).slice(-12);
   const vVista=v=> D.cfg.moneda==='USD'? v : v*D.cfg.fx;
-  const fmtC=n=>new Intl.NumberFormat(LOC(),{style:'currency',currency:D.cfg.moneda,notation:'compact',maximumFractionDigits:1}).format(n);
+  const fmtC=fmtCompact;
   sel.textContent=''; sel.style.color='';
   if(hist.length<2){
     cont.innerHTML='';
@@ -1984,8 +2049,57 @@ function renderEvolucion(){
   svg.addEventListener('pointermove',ev=>{ if(ev.buttons>0||ev.pointerType==='mouse') elegir(ev); });
 }
 
+function renderHist(){
+  const cont=document.getElementById('histChart'), det=document.getElementById('histDetalle'), nota=document.getElementById('histNota');
+  det.innerHTML='';
+  const CATS_CONSUMO=CATS.filter(c=>!c.entrada&&c.id!=='ahorro'&&c.id!=='inversiones');
+  const claves=[];
+  const hoyH=new Date();
+  for(let i=5;i>=0;i--){ claves.push(mesKey(new Date(hoyH.getFullYear(),hoyH.getMonth()-i,1))); }
+  const datos=claves.map(k=>{
+    const {tot}=totalesMes(k);
+    return {k,consumo:CATS_CONSUMO.reduce((sm,c)=>sm+tot[c.id],0),tot};
+  });
+  if(!datos.some(x=>x.consumo>0)){ cont.innerHTML='<div class="vacio">'+t('histVacio')+'</div>'; nota.textContent=''; return; }
+  nota.textContent=t('histNota');
+  const W=460,H=170,P=10,B=22,Tp=20;
+  const max=Math.max.apply(null,datos.map(x=>x.consumo).concat([1]));
+  const paso=(W-P*2)/6, bw=paso-12;
+  const kAhora=mesKey(new Date());
+  let html='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+t('histTitulo')+'" style="touch-action:pan-y">';
+  html+='<line x1="'+P+'" y1="'+(H-B)+'" x2="'+(W-P)+'" y2="'+(H-B)+'" style="stroke:var(--linea)" stroke-width="1"/>';
+  datos.forEach((x,i)=>{
+    const h=x.consumo>0? Math.max(3,x.consumo/max*(H-Tp-B)) : 0;
+    const bx=P+i*paso+6, by=H-B-h;
+    const esAhora=x.k===kAhora;
+    if(x.consumo>0){
+      html+='<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="4" style="fill:'+(esAhora?'var(--oro)':'var(--tinta-suave)')+'" opacity="'+(esAhora?'1':'.5')+'" data-i="'+i+'"/>';
+      html+='<text x="'+(bx+bw/2).toFixed(1)+'" y="'+(by-5).toFixed(1)+'" font-size="9" text-anchor="middle" class="num" style="fill:var(--tinta-suave)">'+fmtCompact(x.consumo)+'</text>';
+    }
+    html+='<text x="'+(bx+bw/2).toFixed(1)+'" y="'+(H-7)+'" font-size="9" text-anchor="middle" style="fill:var(--tinta-suave);font-weight:'+(esAhora?'700':'400')+'">'+etiquetaMesCorta(x.k)+'</text>';
+  });
+  html+='</svg>';
+  cont.innerHTML=html;
+  function mostrar(i){
+    const x=datos[i]; det.innerHTML='';
+    const cab=document.createElement('div'); cab.className='pr-top'; cab.style.marginTop='6px';
+    cab.innerHTML='<b style="text-transform:capitalize">'+etiquetaMesLarga(x.k)+'</b><span class="num" style="font-weight:700">'+fmt(x.consumo)+'</span>';
+    det.appendChild(cab);
+    CATS_CONSUMO.forEach(c=>{
+      if(x.tot[c.id]<=0) return;
+      const pct=x.consumo>0? Math.min(100,x.tot[c.id]/x.consumo*100):0;
+      const fila=document.createElement('div'); fila.className='pr-fila';
+      fila.innerHTML='<div class="pr-top"><b>'+nomCat(c.id)+'</b><span class="num">'+fmt(x.tot[c.id])+'</span></div>'+
+        '<div class="pr-barra"><div style="width:'+pct+'%;background:'+COLORES[c.id]+'"></div></div>';
+      det.appendChild(fila);
+    });
+  }
+  cont.querySelectorAll('rect[data-i]').forEach(r=>r.addEventListener('pointerdown',()=>mostrar(parseInt(r.dataset.i,10))));
+  mostrar(datos.length-1);
+}
+
 function renderTodo(){
-  renderAlertas(); renderMes(); renderPlan(); renderCartera(); renderEvolucion(); renderFondos(); renderNegocio(); renderProj();
+  renderAlertas(); renderMes(); renderHist(); renderPlan(); renderCartera(); renderEvolucion(); renderFondos(); renderNegocio(); renderProj();
   document.getElementById('fxToggle').textContent=D.cfg.moneda+' · '+D.cfg.fx.toFixed(2);
   const est=document.getElementById('motorEstado');
   if(!est.textContent || est.dataset.hint==='1'){ est.textContent=t('motorHint'); est.dataset.hint='1'; }
@@ -2066,7 +2180,34 @@ function pintaChipsMov(){
   chips('chipsCat',CATS,catMov,id=>{
     if(id==='inversiones' && !movEdit){ abrirDestinoInv(); return; }
     catMov=id; pintaChipsMov(); ajustaTipoAhorro();
+    if(!movEdit) pintaFrecuentes();
   },nomCat);
+}
+// captura en 2 toques: descripciones más usadas de la categoría, con su último monto
+function pintaFrecuentes(){
+  const wrap=document.getElementById('frecWrap'), cont=document.getElementById('chipsFrec');
+  cont.innerHTML='';
+  const mapa={};
+  D.mov.filter(m=>m.cat===catMov&&m.desc).forEach(m=>{
+    const k=m.desc.trim().toLowerCase(); if(!k) return;
+    if(!mapa[k]) mapa[k]={desc:m.desc.trim(),n:0,monto:m.monto,moneda:m.moneda||'USD',fecha:m.fecha};
+    mapa[k].n++;
+    if(m.fecha>=mapa[k].fecha){ mapa[k].monto=m.monto; mapa[k].moneda=m.moneda||'USD'; mapa[k].fecha=m.fecha; }
+  });
+  const top=Object.values(mapa).filter(x=>x.n>=2).sort((a,b)=>b.n-a.n).slice(0,6);
+  if(!top.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  top.forEach(f=>{
+    const b=document.createElement('button'); b.className='chip';
+    b.textContent='⚡ '+f.desc;
+    b.onclick=()=>{
+      document.getElementById('mDesc').value=f.desc;
+      const mm=document.getElementById('mMonto');
+      if(!mm.value) mm.value=f.monto;
+      setSeg('mMoneda',f.moneda);
+    };
+    cont.appendChild(b);
+  });
 }
 function ajustaTipoAhorro(){
   document.getElementById('mTipoAhorroWrap').style.display = catMov==='ahorro'?'block':'none';
@@ -2074,7 +2215,7 @@ function ajustaTipoAhorro(){
 function abrirMov(){
   movEdit=null;
   document.getElementById('tituloMov').textContent=t('nuevoMov');
-  pintaChipsMov(); ajustaTipoAhorro();
+  pintaChipsMov(); ajustaTipoAhorro(); pintaFrecuentes();
   setSeg('mTipoAhorro','aporte');
   if(!hojaAbierta||hojaAbierta.id!=='hojaMov'){
     const hoy=new Date();
@@ -2088,6 +2229,7 @@ function abrirMovEditar(m){
   movEdit=m; catMov=m.cat;
   document.getElementById('tituloMov').textContent=t('editarMov');
   pintaChipsMov(); ajustaTipoAhorro();
+  document.getElementById('frecWrap').style.display='none';
   document.getElementById('mMonto').value=m.monto;
   document.getElementById('mDesc').value=m.desc||'';
   document.getElementById('mFecha').value=m.fecha;
