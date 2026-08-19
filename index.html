@@ -223,6 +223,26 @@
   .nota{font-size:12px;color:var(--tinta-suave);line-height:1.45;margin-top:6px}
   .switch{display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer}
   .switch input{width:18px;height:18px}
+  #candado button{width:72px;height:60px;border:1px solid rgba(243,245,241,.18);border-radius:16px;background:rgba(243,245,241,.06);color:#F3F5F1;font-size:22px;font-weight:600;cursor:pointer;font-family:inherit}
+  #candado button:active{background:rgba(243,245,241,.16)}
+  #pinPuntos i{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(243,245,241,.5);display:inline-block}
+  #pinPuntos i.lleno{background:#E0B95C;border-color:#E0B95C}
+  @keyframes sacudir{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  #pinPuntos.error{animation:sacudir .3s ease 2}
+  #reporte{display:none}
+  @media print{
+    body>*:not(#reporte){display:none !important}
+    #reporte{display:block;color:#000;background:#fff}
+    body{background:#fff;padding:0;max-width:none}
+    #reporte h1{font-size:20px;margin-bottom:2px}
+    #reporte .rsub{color:#555;font-size:11px;margin-bottom:14px}
+    #reporte h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:16px 0 6px;border-bottom:1.5px solid #000;padding-bottom:3px}
+    #reporte table{width:100%;border-collapse:collapse;font-size:12px}
+    #reporte td{padding:4px 0;border-bottom:1px solid #ddd}
+    #reporte td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+    #reporte .rtot td{font-weight:700;border-bottom:none;border-top:1.5px solid #000}
+  }
+
   /* ---- acabado premium / futurista ---- */
   .balance,.hero{border:1px solid rgba(199,154,59,.24);box-shadow:0 10px 26px rgba(22,33,27,.3),0 0 26px rgba(199,154,59,.12)}
   .balance .monto{font-size:34px;font-weight:800;letter-spacing:-.02em}
@@ -321,6 +341,10 @@
       <div class="campo" style="margin-bottom:0"><label for="cfgTax" data-i18n="impIngresos"></label><input id="cfgTax" type="number" inputmode="decimal" step="0.5" min="0" max="60"></div>
     </div>
     <button class="btn-mini" id="btnCsv" style="width:100%;margin-top:12px" data-i18n="descargarCsv"></button>
+    <div style="display:flex;gap:9px;margin-top:9px">
+      <button class="btn-mini" id="btnPin" style="flex:1"></button>
+      <button class="btn-mini" id="btnReporte" style="flex:1" data-i18n="reporteBtn"></button>
+    </div>
   </div>
 
   <h2 class="sec" data-i18n="respaldoTitulo"></h2>
@@ -419,6 +443,7 @@
   <button class="btn-mini" id="btnAddInm" style="width:100%" data-i18n="addInm"></button>
   <h2 class="sec" data-i18n="pasivosDeudas"></h2>
   <div class="card"><label class="switch"><input type="checkbox" id="deudaProj"> <span data-i18n="incluirDeudas"></span></label></div>
+  <div id="planDeudas"></div>
   <div id="listaPasivos"></div>
   <button class="btn-mini" id="btnAddPasivo" style="width:100%" data-i18n="addPasivo"></button>
   <div class="distro">
@@ -490,6 +515,17 @@
     </div>
     <div id="chart"></div>
     <div class="nota" id="notaImp"></div>
+  </div>
+  <div class="card">
+    <h2 class="sec" style="margin-top:0" data-i18n="fireTitulo"></h2>
+    <div class="fila2">
+      <div class="campo"><label for="fireRend" data-i18n="fireRend"></label><input id="fireRend" type="number" inputmode="decimal" step="0.5" min="0" max="30"></div>
+      <div class="campo"><label for="fireMeta" data-i18n="fireMeta"></label><input id="fireMeta" type="number" inputmode="decimal" step="1000" min="0" placeholder="500000"></div>
+    </div>
+    <div class="campo"><label for="fireExtra" data-i18n="fireExtra"></label><input id="fireExtra" type="number" inputmode="decimal" step="50" min="0" placeholder="0"></div>
+    <div id="fireChart"></div>
+    <div class="nota num" id="fireRes" style="font-weight:700;min-height:17px"></div>
+    <div class="nota" id="fireNota"></div>
   </div>
 </div>
 
@@ -686,6 +722,40 @@
   <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarSaldo" data-i18n="actualizar"></button></div>
 </div>
 
+<!-- Hoja: PIN -->
+<div class="hoja" id="hojaPin">
+  <h3 data-i18n="pinTitulo"></h3>
+  <div id="pinCrear">
+    <div class="fila2">
+      <div class="campo"><label for="pinNuevo" data-i18n="pinNuevo"></label><input id="pinNuevo" type="password" inputmode="numeric" maxlength="6" autocomplete="off"></div>
+      <div class="campo"><label for="pinConf" data-i18n="pinConf"></label><input id="pinConf" type="password" inputmode="numeric" maxlength="6" autocomplete="off"></div>
+    </div>
+    <div class="nota" data-i18n="pinNota"></div>
+  </div>
+  <div id="pinQuitarWrap" style="display:none">
+    <div class="campo"><label for="pinActual" data-i18n="pinActual"></label><input id="pinActual" type="password" inputmode="numeric" maxlength="6" autocomplete="off"></div>
+  </div>
+  <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarPin" data-i18n="guardar"></button></div>
+</div>
+
+<!-- Candado de PIN -->
+<div id="candado" style="display:none;position:fixed;inset:0;z-index:60;background:linear-gradient(150deg,#1B2A21 0%,#16211B 55%,#0F1712 100%);color:#F3F5F1;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+  <svg viewBox="0 0 1024 1024" style="width:64px;height:64px;border-radius:16px" aria-hidden="true">
+    <rect width="1024" height="1024" rx="200" fill="#0F1712"/>
+    <rect x="272" y="536" width="124" height="196" rx="30" fill="#C79A3B" opacity=".72"/>
+    <rect x="450" y="440" width="124" height="292" rx="30" fill="#C79A3B" opacity=".86"/>
+    <rect x="628" y="316" width="124" height="416" rx="30" fill="#C79A3B"/>
+    <path d="M300 600 L512 470 L654 349" fill="none" stroke="#F6F1E4" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M700 310 L679 378 L630 320 Z" fill="#F6F1E4"/>
+  </svg>
+  <div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.7" data-i18n="candadoTitulo"></div>
+  <div id="pinPuntos" style="display:flex;gap:12px;height:14px"></div>
+  <div id="tecladoPin" style="display:grid;grid-template-columns:repeat(3,72px);gap:12px;margin-top:8px"></div>
+</div>
+
+<!-- Reporte imprimible -->
+<div id="reporte"></div>
+
 <!-- Hoja: servicio de negocio -->
 <div class="hoja" id="hojaNeg">
   <h3 id="tituloNeg"></h3>
@@ -751,7 +821,47 @@ es:{
   frecuentes:'Frecuentes ⚡',
   histTitulo:'Consumo · últimos 6 meses',
   histNota:'Toca una barra para ver el desglose por categoría.',
-  histVacio:'Registra movimientos y aquí verás tu comparativa mensual.',tipoCambio:'Tipo de cambio (MXN/USD)',impIngresos:'Impuesto ingresos %',
+  histVacio:'Registra movimientos y aquí verás tu comparativa mensual.',
+  aportadoTag:'Aportado %s · valor actualizado %s',
+  sinValorTag:'valuada al costo — toca Actualizar valor tras revisar tu broker',
+  fireTitulo:'🚀 Libertad financiera',
+  fireRend:'Rendimiento anual %',
+  fireMeta:'Meta de patrimonio',
+  fireExtra:'Aporte extra al mes (simulador)',
+  fireYa:'🎉 ¡Ya alcanzaste tu meta de %s!',
+  fireCuando:'🎯 Llegas a %s en %s — dentro de %s.',
+  fireNunca:'Con estos números la meta no se alcanza en 30 años. Sube tu aporte o tu rendimiento.',
+  fireSinMeta:'Define una meta para calcular tu fecha de libertad financiera.',
+  fireNotaTxt:'Parte de tu patrimonio actual (%s) e invierte tu flujo libre (%s/mes) más el extra, compuesto mensualmente al %s%.',
+  anios:'años',
+  libreEn:'libre en %s meses (%s) · intereses ~%s',
+  pagoNoCubre:'⚠️ el pago no cubre los intereses — la deuda crece',
+  planDeudasTitulo:'🎯 Plan de liberación',
+  planDeudasTxt:'Con tus pagos actuales quedas libre de estas deudas en %s, pagando ~%s de intereses en el camino.',
+  planDeudasAva:'Prioriza «%s» (tasa %s%): es la que más intereses te cuesta.',
+  pinActivar:'🔒 Activar PIN',
+  pinQuitar:'🔓 Quitar PIN',
+  pinTitulo:'PIN de acceso',
+  pinNuevo:'Nuevo PIN (4–6 dígitos)',
+  pinConf:'Confirmar PIN',
+  pinActual:'PIN actual',
+  pinNota:'Se pedirá cada vez que abras la app. Si lo olvidas, tendrás que borrar los datos del navegador y restaurar tu respaldo JSON — guárdalo bien.',
+  pinError:'PIN incorrecto',
+  pinNoCoincide:'Los PIN no coinciden o son muy cortos (mínimo 4 dígitos).',
+  pinListo:'PIN activado ✓',
+  pinQuitado:'PIN desactivado',
+  candadoTitulo:'Ingresa tu PIN',
+  reporteBtn:'🖨️ Reporte del mes',
+  reporteTitulo:'Reporte mensual · Mis Finanzas',
+  reporteGen:'Generado el %s · moneda %s',
+  reporteResumen:'Resumen del mes',
+  reporteIngresos:'Ingresos',
+  reporteConsumo:'Consumo',
+  reporteAPatrimonio:'A patrimonio (ahorro + inversión)',
+  reporteQueda:'Disponible',
+  reportePorCat:'Consumo por categoría',
+  reportePatrimonio:'Patrimonio',
+  reporteMovs:'Movimientos del mes',tipoCambio:'Tipo de cambio (MXN/USD)',impIngresos:'Impuesto ingresos %',
   descargarCsv:'⬇️ Descargar CSV (movimientos + aportaciones)',
   respaldoTitulo:'Respaldo de datos',respaldar:'💾 Respaldar (JSON)',restaurar:'📂 Restaurar',
   respaldoNota:'Descarga un respaldo cada cierto tiempo y guárdalo en iCloud/Drive. Si cambias de teléfono o el navegador borra sus datos, lo restauras aquí y recuperas todo.',
@@ -921,7 +1031,47 @@ en:{
   frecuentes:'Frequent ⚡',
   histTitulo:'Spending · last 6 months',
   histNota:'Tap a bar to see the category breakdown.',
-  histVacio:'Log transactions and your monthly comparison will appear here.',tipoCambio:'Exchange rate (MXN/USD)',impIngresos:'Income tax %',
+  histVacio:'Log transactions and your monthly comparison will appear here.',
+  aportadoTag:'Contributed %s · value updated %s',
+  sinValorTag:'valued at cost — tap Update value after checking your broker',
+  fireTitulo:'🚀 Financial freedom',
+  fireRend:'Annual return %',
+  fireMeta:'Net worth goal',
+  fireExtra:'Extra monthly contribution (simulator)',
+  fireYa:'🎉 You already reached your %s goal!',
+  fireCuando:'🎯 You reach %s in %s — in %s.',
+  fireNunca:'With these numbers the goal is not reached in 30 years. Raise your contribution or your return.',
+  fireSinMeta:'Set a goal to compute your financial freedom date.',
+  fireNotaTxt:'Starts from your current net worth (%s) and invests your free cash flow (%s/mo) plus the extra, compounded monthly at %s%.',
+  anios:'years',
+  libreEn:'debt-free in %s months (%s) · interest ~%s',
+  pagoNoCubre:'⚠️ the payment does not cover interest — the debt grows',
+  planDeudasTitulo:'🎯 Freedom plan',
+  planDeudasTxt:'With your current payments you clear these debts by %s, paying ~%s in interest along the way.',
+  planDeudasAva:'Prioritize “%s” (rate %s%): it costs you the most interest.',
+  pinActivar:'🔒 Set a PIN',
+  pinQuitar:'🔓 Remove PIN',
+  pinTitulo:'Access PIN',
+  pinNuevo:'New PIN (4–6 digits)',
+  pinConf:'Confirm PIN',
+  pinActual:'Current PIN',
+  pinNota:'It will be required every time you open the app. If you forget it you will need to clear the browser data and restore your JSON backup — keep it safe.',
+  pinError:'Wrong PIN',
+  pinNoCoincide:'PINs do not match or are too short (minimum 4 digits).',
+  pinListo:'PIN enabled ✓',
+  pinQuitado:'PIN disabled',
+  candadoTitulo:'Enter your PIN',
+  reporteBtn:'🖨️ Monthly report',
+  reporteTitulo:'Monthly report · Mis Finanzas',
+  reporteGen:'Generated on %s · currency %s',
+  reporteResumen:'Month summary',
+  reporteIngresos:'Income',
+  reporteConsumo:'Spending',
+  reporteAPatrimonio:'To wealth (savings + investing)',
+  reporteQueda:'Available',
+  reportePorCat:'Spending by category',
+  reportePatrimonio:'Net worth',
+  reporteMovs:'Month transactions',tipoCambio:'Exchange rate (MXN/USD)',impIngresos:'Income tax %',
   descargarCsv:'⬇️ Download CSV (transactions + contributions)',
   respaldoTitulo:'Data backup',respaldar:'💾 Back up (JSON)',restaurar:'📂 Restore',
   respaldoNota:'Download a backup regularly and keep it in iCloud/Drive. If you switch phones or the browser clears its data, restore it here and recover everything.',
@@ -1123,10 +1273,11 @@ const KEY='finanzas-pro';
 
 let D = { mov:[], rec:[], metas:[], cuentas:[], aportes:[], fondos:[], negocio:[], bancos:[], activos:[], pasivos:[], inmuebles:[], hist:[], avisos:{},
   cfg:{ fx:18.50, moneda:'USD', tax:15, apiUrl:'', lang:'es', tema:'auto', negocioEnProj:true, deudaEnProj:true,
+    projRend:8, projMetaUSD:0, projExtraUSD:0, pinHash:null, pinLen:0,
     dist:{gastos:{modo:'pct',v:0},inversiones:{modo:'pct',v:0},ahorro:{modo:'pct',v:0},caridad:{modo:'pct',v:0},profesional:{modo:'pct',v:0}} } };
 let mesActual=new Date(); mesActual.setDate(1);
 let catMov='gastos', catRec='ingresos', tipoFondoSel='aprendizaje';
-let cuentaAporte=null, fondoAporte=null, bancoSel=null, activoSel=null, pasivoSel=null, inmSel=null, modoSaldo='banco', tipoPatSel='efectivo', tipoPasSel='tarjeta';
+let cuentaAporte=null, fondoAporte=null, bancoSel=null, activoSel=null, pasivoSel=null, inmSel=null, cuentaSel=null, modoSaldo='banco', tipoPatSel='efectivo', tipoPasSel='tarjeta';
 let movEdit=null, recEdit=null, negEdit=null;
 
 const fmt = n => n.toLocaleString(LOC(),{style:'currency',currency:D.cfg.moneda,maximumFractionDigits:0});
@@ -1209,6 +1360,7 @@ async function cargar(){
   aplicarIdioma();
   try{ if(actualizarHist()) await guardar(); }catch(e){}
   renderTodo();
+  if(D.cfg.pinHash) mostrarCandado();
 }
 function setSegTema(){
   const seg=document.getElementById('segTema');
@@ -1524,8 +1676,12 @@ function renderPlan(){
 function totalCuenta(cid){
   return D.aportes.filter(a=>a.cuentaId===cid).reduce((s,a)=>s+conv(a.monto,a.moneda||'USD'),0);
 }
+// valor de mercado de la cuenta: el capturado por el usuario, o el costo aportado
+function valorCuenta(c){
+  return (c.val && c.val.montoUSD>0)? conv(c.val.montoUSD,'USD') : totalCuenta(c.id);
+}
 function calcularPatrimonio(){
-  const total=D.cuentas.reduce((s,c)=>s+totalCuenta(c.id),0);
+  const total=D.cuentas.reduce((s,c)=>s+valorCuenta(c),0);
   const liqBancos=D.bancos.reduce((s,b)=>s+conv(b.saldo||0,b.moneda||'USD'),0);
   const liqEfectivo=D.activos.filter(a=>a.tipo==='efectivo').reduce((s,a)=>s+valorActual(a),0);
   const bienes=D.activos.filter(a=>a.tipo!=='efectivo').reduce((s,a)=>s+valorActual(a),0);
@@ -1650,9 +1806,17 @@ function renderCartera(){
   });
   document.getElementById('carteraAnio').textContent=fmt2(totAnio);
 
-  // pasivos
+  // pasivos: meses para liquidar cada deuda con su pago actual
+  function mesesLiquidar(saldoV,pagoV,tasa){
+    if(!(pagoV>0)) return null;
+    const r=(tasa||0)/100/12;
+    if(r<=0) return Math.ceil(saldoV/pagoV);
+    if(pagoV<=saldoV*r) return -1; // el pago no cubre intereses
+    return Math.ceil(-Math.log(1-r*saldoV/pagoV)/Math.log(1+r));
+  }
   const lpas=document.getElementById('listaPasivos'); lpas.innerHTML='';
   if(!D.pasivos.length){ lpas.innerHTML='<div class="vacio">'+t('pasivosVacio')+'</div>'; }
+  let maxMeses=0, interesesTot=0, planValido=false, crece=false;
   D.pasivos.forEach(p=>{
     const tp=TIPOS_PAS.find(x=>x.id===p.tipo)||TIPOS_PAS[4];
     const saldo=conv(p.saldo||0,p.moneda||'USD');
@@ -1661,6 +1825,16 @@ function renderCartera(){
     let sub=[];
     if(p.tasa>0) sub.push(t('tasaSub',p.tasa,fmt(interesMes))+(p.tasa>=20?t('deudaCara'):''));
     if(p.pago>0) sub.push(t('pagoSub',fmt(conv(p.pago,p.moneda||'USD'))));
+    const nM=mesesLiquidar(saldo,conv(p.pago||0,p.moneda||'USD'),p.tasa);
+    if(nM===-1){ sub.push(t('pagoNoCubre')); crece=true; }
+    else if(nM){
+      const fLib=new Date(); fLib.setMonth(fLib.getMonth()+nM);
+      const interes=Math.max(0,conv(p.pago,p.moneda||'USD')*nM-saldo);
+      sub.push(t('libreEn',nM,MESES_T()[fLib.getMonth()].slice(0,3)+' '+fLib.getFullYear(),fmt(interes)));
+      planValido=true;
+      if(nM>maxMeses) maxMeses=nM;
+      interesesTot+=interes;
+    }
     div.innerHTML='<div class="top"><span class="nom">'+tp.emoji+' '+escapar(p.nombre)+'</span><span class="tot num" style="color:#B5452F">−'+fmt2(saldo)+'</span></div>'+
       '<div class="sub"><span>'+sub.join(' · ')+'</span></div>';
     const btns=document.createElement('div'); btns.className='btns';
@@ -1672,6 +1846,19 @@ function renderCartera(){
     btns.appendChild(bA); btns.appendChild(bD); div.appendChild(btns);
     lpas.appendChild(div);
   });
+
+  // resumen del plan de deudas
+  const pd=document.getElementById('planDeudas'); pd.innerHTML='';
+  if(planValido && !crece){
+    const fLib=new Date(); fLib.setMonth(fLib.getMonth()+maxMeses);
+    const caras=D.pasivos.filter(p=>p.tasa>0).sort((a,b)=>b.tasa-a.tasa);
+    const div=document.createElement('div'); div.className='card';
+    let htmlPd='<h2 class="sec" style="margin-top:0">'+t('planDeudasTitulo')+'</h2>'+
+      '<div style="font-size:13px;line-height:1.5">'+t('planDeudasTxt','<b>'+MESES_T()[fLib.getMonth()]+' '+fLib.getFullYear()+'</b>','<b class="num">'+fmt(interesesTot)+'</b>')+'</div>';
+    if(caras.length>1) htmlPd+='<div class="nota">'+t('planDeudasAva',escapar(caras[0].nombre),caras[0].tasa)+'</div>';
+    div.innerHTML=htmlPd;
+    pd.appendChild(div);
+  }
 
   // ¿dónde está mi dinero?
   const bp=document.getElementById('barraPatrimonio'), lp=document.getElementById('leyendaPatrimonio');
@@ -1733,7 +1920,7 @@ function renderCartera(){
   const barra=document.getElementById('barraCartera'), ley=document.getElementById('leyendaCartera');
   barra.innerHTML=''; ley.innerHTML='';
   D.cuentas.forEach((c,i)=>{
-    const tt=totalCuenta(c.id), pct=total>0? tt/total*100:0, clr=CLR_CUENTAS[i%CLR_CUENTAS.length];
+    const tt=valorCuenta(c), pct=total>0? tt/total*100:0, clr=CLR_CUENTAS[i%CLR_CUENTAS.length];
     const s=document.createElement('div'); s.style.width=pct+'%'; s.style.background=clr; barra.appendChild(s);
     const li=document.createElement('span');
     li.innerHTML='<i class="punto" style="background:'+clr+'"></i>'+escapar(c.nombre)+' '+(total>0?Math.round(pct)+'%':'—');
@@ -1755,21 +1942,34 @@ function renderCartera(){
 
   const lista=document.getElementById('listaCuentas'); lista.innerHTML='';
   D.cuentas.forEach((c,i)=>{
-    const tt=totalCuenta(c.id), pct=total>0? tt/total*100:0, clr=CLR_CUENTAS[i%CLR_CUENTAS.length];
+    const aportado=totalCuenta(c.id), tt=valorCuenta(c), pct=total>0? tt/total*100:0, clr=CLR_CUENTAS[i%CLR_CUENTAS.length];
     const div=document.createElement('div'); div.className='cta-inv'; div.style.borderLeftColor=clr;
     let objTxt='';
     if(c.obj>0){
       const dif=pct-c.obj;
       objTxt=t('objetivoTxt',c.obj,Math.round(pct))+(total>0?(Math.abs(dif)<3?t('enLinea'):(dif>0?t('sobreAsignada'):t('subAsignada'))):'');
     }
+    let ganHtml='';
+    if(c.val && c.val.montoUSD>0){
+      const gan=tt-aportado;
+      const ganPct=aportado>0? Math.round(gan/aportado*1000)/10 : 0;
+      const sube=gan>=0;
+      ganHtml='<div class="sub"><span style="color:'+(sube?'#1F7A4D':'#B5452F')+';font-weight:700">'+(sube?'▲ +':'▼ −')+fmt(Math.abs(gan))+' ('+(sube?'+':'−')+Math.abs(ganPct)+'%)</span></div>'+
+        '<div class="sub"><span>'+t('aportadoTag',fmt(aportado),fFecha(c.val.fecha))+'</span></div>';
+    } else if(aportado>0){
+      ganHtml='<div class="sub"><span>'+t('sinValorTag')+'</span></div>';
+    }
     div.innerHTML='<div class="top"><span class="nom">'+escapar(c.nombre)+'</span><span class="tot num">'+fmt(tt)+'</span></div>'+
-      '<div class="sub"><span>'+objTxt+'</span></div>';
+      '<div class="sub"><span>'+objTxt+'</span></div>'+ganHtml;
     const btns=document.createElement('div'); btns.className='btns';
     const bA=document.createElement('button'); bA.className='btn-mini oscuro'; bA.textContent=t('aportarMini');
     bA.onclick=()=>{ cuentaAporte=c; abrirAporte(); };
+    const bV=document.createElement('button'); bV.className='btn-mini'; bV.textContent=t('actualizarValor');
+    bV.onclick=()=>{ cuentaSel=c; modoSaldo='cuenta'; document.getElementById('tituloSaldo').textContent=t('valorDe',c.nombre);
+      document.getElementById('sSaldo').value=Math.round(tt*100)/100; abrir('hojaSaldo'); };
     const bD=document.createElement('button'); bD.className='btn-mini'; bD.textContent=t('eliminar');
     armarBorrar(bD,async()=>{ D.cuentas=D.cuentas.filter(x=>x.id!==c.id); D.aportes=D.aportes.filter(a=>a.cuentaId!==c.id); await guardar(); renderTodo(); });
-    btns.appendChild(bA); btns.appendChild(bD); div.appendChild(btns);
+    btns.appendChild(bA); btns.appendChild(bV); btns.appendChild(bD); div.appendChild(btns);
     lista.appendChild(div);
   });
 
@@ -2098,8 +2298,73 @@ function renderHist(){
   mostrar(datos.length-1);
 }
 
+function renderFire(){
+  const res=document.getElementById('fireRes'), nota=document.getElementById('fireNota'), cont=document.getElementById('fireChart');
+  // inputs en moneda de vista (sin pisar lo que el usuario está tecleando)
+  const iR=document.getElementById('fireRend'), iM=document.getElementById('fireMeta'), iE=document.getElementById('fireExtra');
+  if(document.activeElement!==iR) iR.value=D.cfg.projRend||'';
+  if(document.activeElement!==iM) iM.value=D.cfg.projMetaUSD>0? Math.round(conv(D.cfg.projMetaUSD,'USD')) : '';
+  if(document.activeElement!==iE) iE.value=D.cfg.projExtraUSD>0? Math.round(conv(D.cfg.projExtraUSD,'USD')) : '';
+  const rend=D.cfg.projRend||0;
+  const meta=D.cfg.projMetaUSD>0? conv(D.cfg.projMetaUSD,'USD') : 0;
+  const extra=D.cfg.projExtraUSD>0? conv(D.cfg.projExtraUSD,'USD') : 0;
+  const {neto}=calcularPatrimonio();
+  const {flujo}=flujoLibre();
+  const aporte=Math.max(0,flujo)+extra;
+  nota.textContent=t('fireNotaTxt',fmt(neto),fmt(aporte),rend);
+  const r=rend/100/12;
+  const anual=[neto]; let v=neto, mesMeta=null;
+  for(let m=1;m<=360;m++){
+    v=v*(1+r)+aporte;
+    if(meta>0 && mesMeta===null && v>=meta) mesMeta=m;
+    if(m%12===0) anual.push(v);
+  }
+  res.style.color='';
+  if(meta<=0) res.textContent=t('fireSinMeta');
+  else if(neto>=meta){ res.textContent=t('fireYa',fmt(meta)); res.style.color='#1F7A4D'; }
+  else if(mesMeta===null){ res.textContent=t('fireNunca'); res.style.color='#B5452F'; }
+  else{
+    const f=new Date(); f.setMonth(f.getMonth()+mesMeta);
+    const a=Math.floor(mesMeta/12), mm=mesMeta%12;
+    const dur=(a>0? a+' '+t('anios'):'')+(a>0&&mm>0?' ':'')+(mm>0? mm+' m':'');
+    res.textContent=t('fireCuando',fmt(meta),MESES_T()[f.getMonth()]+' '+f.getFullYear(),dur||('0 '+t('anios')));
+    res.style.color='#1F7A4D';
+  }
+  // curva a 30 años
+  const W=460,H=180,Lp=12,Rp=66,Tp=18,Bp=24,n=anual.length;
+  const yMax=Math.max.apply(null,anual.concat([meta||0,1]));
+  const yMin=Math.min(0,Math.min.apply(null,anual));
+  const X=i=> Lp+i*(W-Lp-Rp)/(n-1);
+  const Y=vv=> Tp+(H-Tp-Bp)*(1-(vv-yMin)/(yMax-yMin||1));
+  let linea='';
+  anual.forEach((vv,i)=>{ linea+=(i?'L':'M')+X(i).toFixed(1)+' '+Y(vv).toFixed(1)+' '; });
+  let html='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+t('fireTitulo')+'" style="touch-action:pan-y">';
+  html+='<line x1="'+Lp+'" y1="'+(H-Bp)+'" x2="'+(W-Rp+40)+'" y2="'+(H-Bp)+'" style="stroke:var(--linea)" stroke-width="1"/>';
+  if(meta>0 && meta<=yMax){
+    html+='<line x1="'+Lp+'" y1="'+Y(meta).toFixed(1)+'" x2="'+(W-Rp+40)+'" y2="'+Y(meta).toFixed(1)+'" style="stroke:#1F7A4D" stroke-width="1.5" stroke-dasharray="5 4" opacity=".7"/>';
+    html+='<text x="'+(Lp+2)+'" y="'+(Y(meta)-5).toFixed(1)+'" font-size="9" class="num" style="fill:#1F7A4D;font-weight:700">🎯 '+fmtCompact(meta)+'</text>';
+  }
+  html+='<path d="'+linea.trim()+'" fill="none" style="stroke:var(--chart-linea)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  for(let a2=0;a2<=30;a2+=5){
+    html+='<text x="'+X(a2).toFixed(1)+'" y="'+(H-7)+'" font-size="9" text-anchor="middle" style="fill:var(--tinta-suave)">'+a2+'</text>';
+  }
+  html+='<circle cx="'+X(n-1).toFixed(1)+'" cy="'+Y(anual[n-1]).toFixed(1)+'" r="4" style="fill:var(--chart-linea);stroke:var(--tarjeta)" stroke-width="2"/>';
+  html+='<text x="'+(X(n-1)+8).toFixed(1)+'" y="'+(Y(anual[n-1])-7).toFixed(1)+'" font-size="11" font-weight="700" class="num" style="fill:var(--tinta)">'+fmtCompact(anual[n-1])+'</text>';
+  html+='</svg>';
+  cont.innerHTML=html;
+  const svg=cont.querySelector('svg');
+  svg.addEventListener('pointerdown',ev=>{
+    const rr=svg.getBoundingClientRect();
+    let i=Math.round((ev.clientX-rr.left)/rr.width*W/((W-Lp-Rp)/(n-1)));
+    i=Math.max(0,Math.min(n-1,i));
+    res.style.color='';
+    res.textContent=i+' '+t('anios')+' · '+fmt2(anual[i]);
+  });
+}
+
 function renderTodo(){
-  renderAlertas(); renderMes(); renderHist(); renderPlan(); renderCartera(); renderEvolucion(); renderFondos(); renderNegocio(); renderProj();
+  renderAlertas(); renderMes(); renderHist(); renderPlan(); renderCartera(); renderEvolucion(); renderFondos(); renderNegocio(); renderProj(); renderFire();
+  document.getElementById('btnPin').textContent=t(D.cfg.pinHash?'pinQuitar':'pinActivar');
   document.getElementById('fxToggle').textContent=D.cfg.moneda+' · '+D.cfg.fx.toFixed(2);
   const est=document.getElementById('motorEstado');
   if(!est.textContent || est.dataset.hint==='1'){ est.textContent=t('motorHint'); est.dataset.hint='1'; }
@@ -2437,6 +2702,10 @@ document.getElementById('btnGuardarSaldo').onclick=async()=>{
     inmSel.fecha = hoyISO();
   }
   else if(modoSaldo==='pasivo' && pasivoSel){ pasivoSel.saldo=v; }
+  else if(modoSaldo==='cuenta' && cuentaSel){
+    const usd = D.cfg.moneda==='USD'? v : v/D.cfg.fx;
+    cuentaSel.val = v>0? {montoUSD:Math.round(usd*100)/100, fecha:hoyISO()} : null;
+  }
   else if(bancoSel){ bancoSel.saldo=v; bancoSel.actualizado=new Date().toISOString(); }
   await guardar(); cerrar(); renderTodo();
 };
@@ -2594,7 +2863,7 @@ document.getElementById('fileRestaurar').onchange=async e=>{
     if(!confirm(t('restaurarConfirm'))) return;
     D=datos;
     ['mov','rec','metas','cuentas','aportes','fondos','negocio','bancos','activos','pasivos','inmuebles','hist'].forEach(k=>{ if(!Array.isArray(D[k])) D[k]=[]; });
-    D.cfg={fx:18.5,moneda:'USD',tax:15,apiUrl:'',lang:'es',tema:'auto',negocioEnProj:true,deudaEnProj:true,dist:{},...(D.cfg||{})};
+    D.cfg={fx:18.5,moneda:'USD',tax:15,apiUrl:'',lang:'es',tema:'auto',negocioEnProj:true,deudaEnProj:true,projRend:8,projMetaUSD:0,projExtraUSD:0,pinHash:null,pinLen:0,dist:{},...(D.cfg||{})};
     LANG=(D.cfg.lang==='en')?'en':'es';
     await guardar();
     document.getElementById('cfgFx').value=D.cfg.fx;
@@ -2644,6 +2913,126 @@ document.getElementById('btnMotor').onclick=actualizarMotor;
 document.getElementById('cfgFx').onchange=async e=>{const v=parseFloat(e.target.value); if(v>0){D.cfg.fx=v;await guardar();renderTodo();}};
 document.getElementById('cfgTax').onchange=async e=>{const v=parseFloat(e.target.value); if(v>=0){D.cfg.tax=v;await guardar();renderTodo();}};
 document.getElementById('fxToggle').onclick=async()=>{D.cfg.moneda=D.cfg.moneda==='USD'?'MXN':'USD';await guardar();renderTodo();};
+
+/* libertad financiera */
+document.getElementById('fireRend').onchange=async e=>{ D.cfg.projRend=Math.max(0,parseFloat(e.target.value)||0); await guardar(); renderFire(); };
+document.getElementById('fireMeta').onchange=async e=>{
+  const v=Math.max(0,parseFloat(e.target.value)||0);
+  D.cfg.projMetaUSD = v>0? (D.cfg.moneda==='USD'? v : v/D.cfg.fx) : 0;
+  await guardar(); renderFire();
+};
+document.getElementById('fireExtra').onchange=async e=>{
+  const v=Math.max(0,parseFloat(e.target.value)||0);
+  D.cfg.projExtraUSD = v>0? (D.cfg.moneda==='USD'? v : v/D.cfg.fx) : 0;
+  await guardar(); renderFire();
+};
+
+/* PIN de acceso */
+async function hashPin(pin){
+  try{
+    const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('mf:'+pin));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }catch(e){ return 'b64:'+btoa('mf:'+pin); }
+}
+document.getElementById('btnPin').onclick=()=>{
+  const activo=!!D.cfg.pinHash;
+  document.getElementById('pinCrear').style.display=activo?'none':'block';
+  document.getElementById('pinQuitarWrap').style.display=activo?'block':'none';
+  ['pinNuevo','pinConf','pinActual'].forEach(i=>document.getElementById(i).value='');
+  abrir('hojaPin');
+};
+document.getElementById('btnGuardarPin').onclick=async()=>{
+  if(D.cfg.pinHash){
+    const actual=document.getElementById('pinActual').value.trim();
+    if(await hashPin(actual)!==D.cfg.pinHash){ notificar(t('pinError'),true); return; }
+    D.cfg.pinHash=null; D.cfg.pinLen=0;
+    await guardar(); cerrar(); renderTodo(); notificar(t('pinQuitado'));
+    return;
+  }
+  const p1=document.getElementById('pinNuevo').value.trim();
+  const p2=document.getElementById('pinConf').value.trim();
+  if(!/^\d{4,6}$/.test(p1) || p1!==p2){ notificar(t('pinNoCoincide'),true); return; }
+  D.cfg.pinHash=await hashPin(p1); D.cfg.pinLen=p1.length;
+  await guardar(); cerrar(); renderTodo(); notificar(t('pinListo'));
+};
+function mostrarCandado(){
+  const c=document.getElementById('candado');
+  c.style.display='flex';
+  const puntos=document.getElementById('pinPuntos'), teclado=document.getElementById('tecladoPin');
+  let entrada='', ocupado=false;
+  function pinta(){
+    puntos.innerHTML='';
+    for(let i=0;i<(D.cfg.pinLen||4);i++){ const d=document.createElement('i'); if(i<entrada.length)d.className='lleno'; puntos.appendChild(d); }
+  }
+  teclado.innerHTML='';
+  ['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k=>{
+    if(k===''){ const v=document.createElement('span'); teclado.appendChild(v); return; }
+    const b=document.createElement('button'); b.textContent=k==='del'?'⌫':k;
+    b.onclick=async()=>{
+      if(ocupado) return;
+      if(k==='del'){ entrada=entrada.slice(0,-1); pinta(); return; }
+      if(entrada.length>=(D.cfg.pinLen||6)) return;
+      entrada+=k; pinta();
+      if(entrada.length===(D.cfg.pinLen||4)){
+        ocupado=true;
+        const h=await hashPin(entrada);
+        if(h===D.cfg.pinHash){ c.style.display='none'; entrada=''; }
+        else{
+          puntos.classList.add('error');
+          setTimeout(()=>{ puntos.classList.remove('error'); entrada=''; pinta(); ocupado=false; },500);
+          return;
+        }
+        ocupado=false;
+      }
+    };
+    teclado.appendChild(b);
+  });
+  pinta();
+}
+
+/* reporte del mes (imprimir / guardar como PDF) */
+document.getElementById('btnReporte').onclick=()=>{
+  const k=mesKey(mesActual);
+  const {ms,tot}=totalesMes(k);
+  const CATS_CONS=CATS.filter(c=>!c.entrada&&c.id!=='ahorro'&&c.id!=='inversiones');
+  const consumo=CATS_CONS.reduce((sm,c)=>sm+tot[c.id],0);
+  const aPat=tot.inversiones+tot.ahorro;
+  const {ing:ingProy}=flujoLibre();
+  const base=tot.ingresos>0? tot.ingresos : ingProy;
+  const bal=base-consumo-tot.inversiones;
+  const pat=calcularPatrimonio();
+  const r=document.getElementById('reporte');
+  let h='<h1>'+t('reporteTitulo')+'</h1>'+
+    '<div class="rsub" style="text-transform:capitalize">'+MESES_T()[mesActual.getMonth()]+' '+mesActual.getFullYear()+' · '+
+    t('reporteGen',new Date().toLocaleDateString(LOC(),{day:'numeric',month:'long',year:'numeric'}),D.cfg.moneda)+'</div>';
+  h+='<h2>'+t('reporteResumen')+'</h2><table>'+
+    '<tr><td>'+t('reporteIngresos')+'</td><td>'+fmt2(base)+'</td></tr>'+
+    '<tr><td>'+t('reporteConsumo')+'</td><td>−'+fmt2(consumo)+'</td></tr>'+
+    '<tr><td>'+t('reporteAPatrimonio')+'</td><td>→ '+fmt2(aPat)+'</td></tr>'+
+    '<tr class="rtot"><td>'+t('reporteQueda')+'</td><td>'+fmt2(bal)+'</td></tr></table>';
+  h+='<h2>'+t('reportePorCat')+'</h2><table>';
+  CATS.filter(c=>!c.entrada).forEach(c=>{
+    if(tot[c.id]===0) return;
+    const esPat=c.id==='ahorro'||c.id==='inversiones';
+    h+='<tr><td>'+nomCat(c.id)+(esPat?' (→)':'')+'</td><td>'+fmt2(tot[c.id])+'</td></tr>';
+  });
+  h+='</table>';
+  h+='<h2>'+t('reportePatrimonio')+'</h2><table>'+
+    '<tr><td>'+t('activosTotales')+'</td><td>'+fmt2(pat.activosTot)+'</td></tr>'+
+    '<tr><td>'+t('pasivosTotales')+'</td><td>−'+fmt2(pat.pasTot)+'</td></tr>'+
+    '<tr class="rtot"><td>'+t('patrimonioNeto')+'</td><td>'+fmt2(pat.neto)+'</td></tr></table>';
+  if(ms.length){
+    h+='<h2>'+t('reporteMovs')+' ('+ms.length+')</h2><table>';
+    ms.slice().sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,40).forEach(m=>{
+      const c=CATS.find(x=>x.id===m.cat);
+      h+='<tr><td>'+fFecha(m.fecha)+' · '+nomCat(m.cat)+' · '+escapar(m.desc||'')+'</td><td>'+
+        (c.entrada?'+':(m.retiro?'↩ +':'−'))+fmt2(conv(m.monto,m.moneda||'USD'))+'</td></tr>';
+    });
+    h+='</table>';
+  }
+  r.innerHTML=h;
+  window.print();
+};
 
 /* tabs */
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
