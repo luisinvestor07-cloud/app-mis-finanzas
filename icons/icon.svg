@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#263B2E"/>
+      <stop offset=".55" stop-color="#16211B"/>
+      <stop offset="1" stop-color="#0C130F"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".78" cy=".18" r=".7">
+      <stop offset="0" stop-color="#C79A3B" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#C79A3B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="oro" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E8C56A"/>
+      <stop offset="1" stop-color="#B8862F"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#glow)"/>
+  <path d="M0 0h1024L0 720Z" fill="#FFFFFF" opacity=".025"/>
+  <g>
+    <rect x="272" y="536" width="124" height="196" rx="30" fill="url(#oro)" opacity=".72"/>
+    <rect x="450" y="440" width="124" height="292" rx="30" fill="url(#oro)" opacity=".86"/>
+    <rect x="628" y="316" width="124" height="416" rx="30" fill="url(#oro)"/>
+  </g>
+  <circle cx="300" cy="600" r="17" fill="#F6F1E4"/>
+  <path d="M300 600 L512 470 L654 349" fill="none" stroke="#F6F1E4" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M700 310 L679 378 L630 320 Z" fill="#F6F1E4"/>
+  <rect x="272" y="790" width="480" height="10" rx="5" fill="#F6F1E4" opacity=".22"/>
+</svg>
