@@ -46,3 +46,22 @@ conocimiento/     ← Mi Conocimiento: la app de notas (misma estructura, datos 
 ```
 
 `MIS FINANZAS/misfinanzas.html` es la versión anterior; se conserva como referencia y puede borrarse cuando quieras.
+
+## 🔒 Privacidad
+
+Estas apps se pueden compartir con toda confianza: **compartes el enlace, nunca tus datos.**
+
+- Todos los datos (movimientos, patrimonio, notas) viven **únicamente en el navegador de cada
+  dispositivo**. No hay servidor, no hay cuentas y las apps no hacen ninguna llamada a internet.
+- Cada persona que abre el enlace empieza con su propia app vacía. Nadie —ni siquiera el autor—
+  puede ver los datos de otra persona.
+- Por lo mismo, **el respaldo es responsabilidad de cada quien**: el navegador puede borrar los
+  datos de sitios que no visitas en semanas. Descarga tu respaldo JSON con regularidad y guárdalo
+  en iCloud/Drive.
+- El PIN de Mis Finanzas es un candado de pantalla, no un cifrado: protege de miradas casuales,
+  no sustituye la seguridad de tu teléfono.
+
+## 📄 Licencia
+
+Código bajo [licencia MIT](LICENSE): puedes usarlo, copiarlo y adaptarlo libremente, sin garantía.
+

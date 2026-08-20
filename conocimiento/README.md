@@ -78,3 +78,16 @@ manifest.json ← manifiesto PWA
 sw.js         ← service worker (offline)
 icons/        ← ícono de la red de conocimiento
 ```
+
+## Privacidad
+
+Puedes compartir el enlace con quien quieras: cada persona obtiene su propia app vacía.
+Tus notas viven **solo en tu dispositivo** — la app no tiene servidor, no pide cuenta y no
+hace ninguna llamada a internet, así que nadie más puede leerlas (ni siquiera el autor).
+La otra cara de esa moneda: si pierdes el dispositivo sin respaldo, nadie puede recuperarlas
+por ti. **Ajustes → Respaldar (JSON)**, con regularidad.
+
+## Licencia
+
+Código bajo [licencia MIT](../LICENSE).
+
