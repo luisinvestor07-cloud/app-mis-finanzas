@@ -1,5 +1,5 @@
 /* Service worker: la app funciona 100% offline una vez instalada. */
-const CACHE = 'mis-finanzas-v7';
+const CACHE = 'mis-finanzas-v8';
 const ARCHIVOS = [
   './',
   './index.html',
