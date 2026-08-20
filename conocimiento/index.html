@@ -367,6 +367,32 @@
   .acc .st b{color:var(--oro)}
   .crono-viva{border:1.5px solid var(--oro) !important;background:linear-gradient(140deg,rgba(199,154,59,.14),transparent) !important}
 
+  /* ---------- temas (materias) y unidades ---------- */
+  .materia-c{display:flex;align-items:center;gap:13px;width:100%;background:var(--tarjeta);border:1px solid var(--marca);
+    border-radius:16px;padding:15px 14px;margin-bottom:9px;cursor:pointer;font-family:inherit;color:var(--tinta);
+    text-align:left;box-shadow:0 1px 3px rgba(22,33,27,.06);border-left:4px solid var(--oro);transition:transform .14s ease}
+  .materia-c:active{transform:scale(.98)}
+  .materia-c .m-em{font-size:26px;line-height:1;flex-shrink:0}
+  .materia-c .m-info{flex:1;min-width:0}
+  .materia-c .m-nom{display:block;font-size:16px;font-weight:800}
+  .materia-c .m-sub{display:block;font-size:12px;color:var(--tinta-suave);margin-top:2px;line-height:1.45}
+  .materia-c .m-sub b{color:var(--oro)}
+  .materia-c .m-fl{color:var(--tinta-suave);font-size:18px;flex-shrink:0}
+  .unidad{background:var(--tarjeta);border:1px solid var(--marca);border-radius:14px;margin-bottom:8px;
+    box-shadow:0 1px 3px rgba(22,33,27,.05);overflow:hidden}
+  .unidad.actual{border-left:4px solid var(--oro)}
+  .u-cab{display:flex;align-items:center;gap:11px;width:100%;background:none;border:none;padding:13px 14px;
+    cursor:pointer;font-family:inherit;color:var(--tinta);text-align:left}
+  .u-num{width:26px;height:26px;border-radius:8px;background:var(--papel);color:var(--tinta-suave);font-size:12px;
+    font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .unidad.actual .u-num{background:linear-gradient(135deg,#B8862F,var(--oro-claro));color:#16211B}
+  .u-nom{flex:1;min-width:0;font-size:14.5px;font-weight:700;line-height:1.25}
+  .u-nom small{display:block;font-size:10px;font-weight:800;color:var(--oro);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+  .u-ct{font-size:12px;font-weight:700;color:var(--tinta-suave);white-space:nowrap}
+  .u-fl{color:var(--tinta-suave);font-size:13px;flex-shrink:0}
+  .u-cuerpo{padding:2px 12px 13px;border-top:1px solid var(--linea)}
+  .u-cuerpo .n-item{box-shadow:none;border-color:var(--linea);margin-top:8px;margin-bottom:0}
+
   /* ---------- línea de ruta y «Más» plegado ---------- */
   .ruta-linea{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 2px 12px;font-size:12.5px;color:var(--tinta-suave)}
   .ruta-linea .rl-t{font-weight:600;white-space:nowrap}
@@ -454,11 +480,17 @@
              placeholder="Buscar en mis notas…">
       <button class="limpiar" id="qLimpiar" aria-label="Limpiar" style="display:none">✕</button>
     </div>
-    <div class="filtros" id="filtrosBuscar"></div>
   </div>
   <div id="rutaLinea"></div>
+  <div id="cuerpoTemas"></div>
   <div class="conteo-res" id="conteoRes"></div>
   <div id="resultados"></div>
+</div>
+
+<!-- ================= TEMA (materia con sus unidades) ================= -->
+<div class="pantalla" id="p-materia">
+  <div class="miga"><button id="materiaVolver">‹ Mis temas</button></div>
+  <div id="cuerpoMateria"></div>
 </div>
 
 <!-- ================= REPASAR ================= -->
@@ -490,8 +522,14 @@
     <div id="estAreas"></div>
   </div>
 
-  <h2 class="sec">Áreas de estudio<button class="cta" id="btnNuevaArea">+ Nueva</button></h2>
+  <h2 class="sec">Temas de estudio<button class="cta" id="btnNuevaArea">+ Nuevo</button></h2>
   <div id="listaAreas"></div>
+
+  <h2 class="sec">Ruta guiada (opcional)</h2>
+  <div class="card">
+    <div class="nota-p" style="margin-top:0">Un temario ya armado que te propone el siguiente concepto en la pantalla de Notas. Puedes activarla, cambiarla o quitarla cuando quieras.</div>
+    <div class="btn-fila"><button class="btn-mini" id="btnRutaAjustes">🧭 Elegir o cambiar ruta</button></div>
+  </div>
 
   <h2 class="sec">Preferencias</h2>
   <div class="card">
@@ -580,6 +618,17 @@
   </div>
 </div>
 
+<div class="hoja" id="h-unidad">
+  <h3 id="unTitulo">Nueva unidad</h3>
+  <div class="h-sub">Una etapa de tu avance dentro del tema: «Lo básico», «Condicionales», «Bucles»… Se numeran solas, en el orden en que las creas.</div>
+  <div class="campo" style="margin-bottom:0"><label>Nombre de la unidad</label>
+    <input id="unNombre" type="text" placeholder="Ej. Condicionales (if, else)"></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="unGuardar">Guardar</button>
+  </div>
+</div>
+
 <div class="hoja" id="h-ruta">
   <h3>🧭 Ruta de estudio (opcional)</h3>
   <div class="h-sub">Un temario ya armado: la app te va proponiendo el siguiente concepto y tú solo escribes. Una a la vez; puedes cambiar o quitarla cuando quieras.</div>
@@ -630,10 +679,10 @@
 </div>
 
 <div class="hoja" id="h-area">
-  <h3 id="arTitulo">Nueva área</h3>
-  <div class="h-sub">Una rama grande de tu estudio: Finanzas, Tecnología, Idiomas… No hagas muchas; el detalle vive en los temas y las etiquetas.</div>
-  <div class="campo"><label>Nombre</label><input id="arNombre" type="text" placeholder="Ej. Finanzas"></div>
-  <div class="campo"><label>Emoji</label><input id="arEmoji" type="text" maxlength="4" placeholder="📊"></div>
+  <h3 id="arTitulo">Nuevo tema</h3>
+  <div class="h-sub">Una materia grande de tu estudio: Python, Finanzas, Inglés… El avance por dentro se organiza en unidades.</div>
+  <div class="campo"><label>Nombre</label><input id="arNombre" type="text" placeholder="Ej. Python"></div>
+  <div class="campo"><label>Emoji</label><input id="arEmoji" type="text" maxlength="4" placeholder="🐍"></div>
   <div class="acciones">
     <button class="btn-cancelar" data-cerrar>Cancelar</button>
     <button class="btn-guardar" id="arGuardar">Guardar</button>
@@ -642,10 +691,10 @@
 
 <div class="hoja" id="h-ubicacion">
   <h3>Dónde vive esta nota</h3>
-  <div class="h-sub">El área es la rama grande; el tema es la carpeta dentro de ella. Las etiquetas cruzan áreas y sirven para lo que no cabe en un árbol.</div>
-  <div class="campo"><label>Área</label><select id="ubArea"></select></div>
-  <div class="campo"><label>Tema</label>
-    <input id="ubTema" type="text" list="dlTemas" autocomplete="off" placeholder="Ej. Balance general">
+  <div class="h-sub">El tema es la materia grande (Python, Finanzas…); la unidad es la etapa dentro de ella (Condicionales, Bucles…). Las etiquetas son libres y cruzan temas.</div>
+  <div class="campo"><label>Tema</label><select id="ubArea"></select></div>
+  <div class="campo"><label>Unidad</label>
+    <input id="ubTema" type="text" list="dlTemas" autocomplete="off" placeholder="Ej. Condicionales">
     <datalist id="dlTemas"></datalist>
   </div>
   <div class="campo" style="margin-bottom:0"><label>Etiquetas (separadas por coma)</label>
@@ -748,7 +797,8 @@ const AREAS_BASE=[
   {id:'tecnologia',nombre:'Tecnología', emoji:'💻'}
 ];
 let D={ v:1, cfg:{tema:'auto',sesion:60,metaHoras:1000}, areas:[], notas:[], dias:[],
-        rutas:{activa:null,proyectos:{}}, sesiones:[], casos:[], micros:[], cronometro:null, peajeDia:'' };
+        rutas:{activa:null,proyectos:{}}, sesiones:[], casos:[], micros:[], cronometro:null, peajeDia:'',
+        temario:{} };
 
 function notaNueva(p){
   return Object.assign({
@@ -824,6 +874,7 @@ function cargar(){
   if(!D.rutas||typeof D.rutas!=='object'||Array.isArray(D.rutas)) D.rutas={activa:null,proyectos:{}};
   if(!D.rutas.proyectos||typeof D.rutas.proyectos!=='object') D.rutas.proyectos={};
   ['sesiones','casos','micros'].forEach(k=>{ if(!Array.isArray(D[k])) D[k]=[]; });
+  if(!D.temario||typeof D.temario!=='object'||Array.isArray(D.temario)) D.temario={};
   if(!(D.cfg.metaHoras>0)) D.cfg.metaHoras=1000;
   D.notas.forEach(n=>{
     ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });
@@ -928,6 +979,7 @@ function ir(p,sinScroll){
   if(!sinScroll) window.scrollTo(0,0);
   if(p!=='nota') notaActual=null;
   if(p==='notas') renderNotas();
+  if(p==='materia') renderMateria();
   if(p==='repasar') renderRepasarHome();
   if(p==='repaso') renderRepaso();
   if(p==='ajustes') renderAjustes();
@@ -1029,49 +1081,25 @@ function fragmento(n,tokens){
   return esc(String(t||'').replace(/\n+/g,' · ').slice(0,150));
 }
 
-let filtroActivo='todo';
-function renderFiltros(){
-  const cont=document.getElementById('filtrosBuscar');
-  /* los filtros son tus propios temas: aparecen solos conforme escribes */
-  const m=new Map();
-  D.notas.forEach(nn=>{ const t=(nn.tema||'').trim(); if(t) m.set(t,(m.get(t)||0)+1); });
-  const temas=[...m.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'es')).slice(0,12);
-  const chips=[{id:'todo',n:'Todo'}].concat(temas.map(t=>({id:'tema:'+t[0],n:t[0]+' · '+t[1]})));
-  if(!chips.some(x=>x.id===filtroActivo)) filtroActivo='todo';
-  cont.innerHTML=chips.map(f=>
-    '<button class="chip'+(filtroActivo===f.id?' activo':'')+'" data-filtro="'+esc(f.id)+'">'+esc(f.n)+'</button>').join('');
-  cont.querySelectorAll('[data-filtro]').forEach(b=>b.onclick=()=>{
-    filtroActivo=b.dataset.filtro; renderFiltros(); renderBusqueda();
-  });
-}
-function pasaFiltro(n){
-  if(filtroActivo.startsWith('tema:')) return (n.tema||'').trim()===filtroActivo.slice(5);
-  return true;
-}
+/* La búsqueda cubre todas tus notas, de todos los temas. Mientras el buscador
+   está vacío, la pantalla muestra tus temas; al escribir, los resultados. */
 function renderBusqueda(){
   const q=document.getElementById('qBuscar').value.trim();
   const tokens=q?tokenizar(q):[];
   const cont=document.getElementById('resultados');
   const conteo=document.getElementById('conteoRes');
   document.getElementById('qLimpiar').style.display=q?'':'none';
+  document.getElementById('cuerpoTemas').style.display=q?'none':'';
+  document.getElementById('rutaLinea').style.display=q?'none':'';
+  if(!q){ cont.innerHTML=''; conteo.textContent=''; return; }
 
-  let lista=D.notas.filter(pasaFiltro);
-  if(tokens.length){
-    lista=lista.map(n=>({n:n,p:puntuar(n,tokens)})).filter(x=>x.p>0)
-      .sort((a,b)=>b.p-a.p||(a.n.revisado<b.n.revisado?1:-1)).map(x=>x.n);
-  }else{
-    lista=lista.slice().sort((a,b)=>(a.revisado<b.revisado?1:a.revisado>b.revisado?-1:0));
-  }
-  conteo.textContent = lista.length
-    ? lista.length+(lista.length===1?' nota':' notas')+(q?' para «'+q+'»':'')
-    : '';
+  const lista=D.notas.map(n=>({n:n,p:puntuar(n,tokens)})).filter(x=>x.p>0)
+    .sort((a,b)=>b.p-a.p||(a.n.revisado<b.n.revisado?1:-1)).map(x=>x.n);
+  conteo.textContent=lista.length?lista.length+(lista.length===1?' nota':' notas')+' para «'+q+'»':'';
   if(!lista.length){
-    cont.innerHTML=q
-      ? '<div class="vacio">No encontré nada tuyo sobre «'+esc(q)+'».<br><br>'
-        +'<button class="btn-mini dorado" id="crearDesdeBusqueda">+ Crear la nota «'+esc(q)+'»</button></div>'
-      : '<div class="vacio">Sin notas con este filtro todavía.</div>';
-    const b=document.getElementById('crearDesdeBusqueda');
-    if(b) b.onclick=()=>abrirCaptura({titulo:q});
+    cont.innerHTML='<div class="vacio">No encontré nada tuyo sobre «'+esc(q)+'».<br><br>'
+      +'<button class="btn-mini dorado" id="crearDesdeBusqueda">+ Crear la nota «'+esc(q)+'»</button></div>';
+    document.getElementById('crearDesdeBusqueda').onclick=()=>abrirCaptura({titulo:q});
     return;
   }
   cont.innerHTML=lista.slice(0,120).map(n=>itemNota(n,tokens)).join('')
@@ -1082,7 +1110,6 @@ inputQ.addEventListener('input',renderBusqueda);
 inputQ.addEventListener('keydown',e=>{ if(e.key==='Enter') inputQ.blur(); });
 document.getElementById('qLimpiar').onclick=()=>{ inputQ.value=''; renderBusqueda(); inputQ.focus(); };
 function buscarPor(txt){
-  filtroActivo='todo';
   inputQ.value=txt||'';
   ir('notas');
 }
@@ -1093,14 +1120,141 @@ function buscarPor(txt){
 function renderNotas(){
   document.getElementById('chipNotasVal').textContent=D.notas.length;
   pintarRutaLinea();
-  renderFiltros();
+  pintarTemas();
   renderBusqueda();
 }
+function pintarTemas(){
+  const cont=document.getElementById('cuerpoTemas');
+  let h='';
+  if(!D.areas.length&&!D.notas.length){
+    h='<div class="vacio">Empieza creando tu primer tema de estudio:<br>Python, Finanzas, Inglés…</div>';
+  }else{
+    h='<h2 class="sec" style="margin-top:2px">Mis temas<button class="cta" id="btnNuevoTema">+ Nuevo</button></h2>'
+      +D.areas.map(a=>{
+        const notas=notasDeArea(a.id).length;
+        const unidades=temarioDe(a.id);
+        const actual=unidadActual(a.id);
+        return '<button class="materia-c" data-materia="'+esc(a.id)+'">'
+          +'<span class="m-em">'+esc(a.emoji)+'</span>'
+          +'<span class="m-info"><span class="m-nom">'+esc(a.nombre)+'</span>'
+          +'<span class="m-sub">'+notas+(notas===1?' nota':' notas')+' · '+unidades.length+(unidades.length===1?' unidad':' unidades')
+          +(actual?'<br>ahora en: <b>'+esc(actual)+'</b>':'')+'</span></span>'
+          +'<span class="m-fl">›</span></button>';
+      }).join('');
+  }
+  cont.innerHTML=h;
+  const bn=document.getElementById('btnNuevoTema');
+  if(bn) bn.onclick=()=>abrirArea(null);
+  cont.querySelectorAll('[data-materia]').forEach(b=>b.onclick=()=>{
+    materiaActual=b.dataset.materia;
+    unidadAbierta=unidadActual(materiaActual);
+    ir('materia');
+  });
+}
+
+/* ============================================================
+   Pantalla TEMA — tu avance por unidades, en orden
+   ============================================================ */
+let materiaActual=null, unidadAbierta='';
+function renderMateria(){
+  const cont=document.getElementById('cuerpoMateria');
+  const a=area(materiaActual);
+  if(!a){ ir('notas'); return; }
+  const unidades=temarioDe(a.id);
+  const actual=unidadActual(a.id);
+  const total=notasDeArea(a.id).length;
+
+  let h='<div class="n-cab" style="padding-bottom:14px">'
+    +'<div style="display:flex;align-items:center;gap:12px">'
+    +'<span style="font-size:34px;line-height:1">'+esc(a.emoji)+'</span>'
+    +'<div><div style="font-size:22px;font-weight:800;line-height:1.15">'+esc(a.nombre)+'</div>'
+    +'<div class="ruta" style="margin-top:3px">'+total+(total===1?' nota':' notas')+' · '+unidades.length+(unidades.length===1?' unidad':' unidades')+'</div></div>'
+    +'</div></div>';
+
+  if(!unidades.length){
+    h+='<div class="vacio">Aquí empieza tu avance. Crea la primera unidad —<br>«Lo básico» es un gran nombre para empezar.</div>';
+  }
+
+  const sueltas=notasSueltas(a.id);
+  unidades.forEach((u,i)=>{
+    const notas=notasDeUnidad(a.id,u);
+    const practicadas=notas.filter(n=>(n.aplico||'').trim().length>8).length;
+    const esActual=norm(u)===norm(actual);
+    const abierta=norm(u)===norm(unidadAbierta);
+    h+='<div class="unidad'+(esActual?' actual':'')+(abierta?' abierta':'')+'">'
+      +'<button class="u-cab" data-unidad="'+esc(u)+'">'
+      +'<span class="u-num num">'+(i+1)+'</span>'
+      +'<span class="u-nom">'+esc(u)+(esActual?'<small>◀ aquí voy</small>':'')+'</span>'
+      +'<span class="u-ct num">'+notas.length+(practicadas?' · ✓'+practicadas:'')+'</span>'
+      +'<span class="u-fl">'+(abierta?'▾':'▸')+'</span></button>';
+    if(abierta){
+      h+='<div class="u-cuerpo">'
+        +(notas.length?notas.map(n=>itemNota(n,[])).join(''):'<div class="nota-p" style="margin:2px 0 8px">Sin notas todavía en esta unidad.</div>')
+        +'<div class="btn-fila" style="margin-top:8px">'
+        +'<button class="btn-mini dorado" data-notaen="'+esc(u)+'">+ Nota en '+esc(u)+'</button>'
+        +'<button class="btn-mini" data-renombrar="'+esc(u)+'">✎</button>'
+        +(notas.length?'':'<button class="quitar" data-borraunidad="'+esc(u)+'" style="align-self:center">✕</button>')
+        +'</div></div>';
+    }
+    h+='</div>';
+  });
+
+  h+='<button class="btn-mini ancho" id="btnNuevaUnidad" style="margin-top:12px;padding:14px">➕ Nueva unidad — cuando avances al siguiente escalón</button>';
+
+  if(sueltas.length){
+    h+='<h2 class="sec">Notas sin unidad</h2>'+sueltas.map(n=>itemNota(n,[])).join('')
+      +'<div class="nota-p">Ábrelas y usa «✎ ubicar» para asignarles su unidad.</div>';
+  }
+  cont.innerHTML=h;
+
+  cont.querySelectorAll('[data-unidad]').forEach(b=>b.onclick=()=>{
+    unidadAbierta = norm(unidadAbierta)===norm(b.dataset.unidad) ? '' : b.dataset.unidad;
+    renderMateria();
+  });
+  cont.querySelectorAll('[data-notaen]').forEach(b=>b.onclick=()=>
+    abrirCaptura({area:a.id,tema:b.dataset.notaen}));
+  cont.querySelectorAll('[data-renombrar]').forEach(b=>b.onclick=()=>abrirUnidad(a.id,b.dataset.renombrar));
+  cont.querySelectorAll('[data-borraunidad]').forEach(b=>armarBorrar(b,()=>{
+    D.temario[a.id]=temarioDe(a.id).filter(x=>norm(x)!==norm(b.dataset.borraunidad));
+    guardar(); renderMateria();
+  }));
+  document.getElementById('btnNuevaUnidad').onclick=()=>abrirUnidad(a.id,null);
+}
+document.getElementById('materiaVolver').onclick=()=>ir('notas');
+
+/* ---------- crear / renombrar unidad ---------- */
+let unidadEdit=null;
+function abrirUnidad(areaId,nombreViejo){
+  unidadEdit={area:areaId,viejo:nombreViejo};
+  abrirHoja('h-unidad',()=>{
+    document.getElementById('unTitulo').textContent=nombreViejo?'Renombrar unidad':'Nueva unidad';
+    document.getElementById('unNombre').value=nombreViejo||'';
+    setTimeout(()=>document.getElementById('unNombre').focus(),160);
+  });
+}
+document.getElementById('unGuardar').onclick=()=>{
+  const nom=document.getElementById('unNombre').value.trim();
+  if(!nom){ notificar('Ponle nombre a la unidad.',true); return; }
+  const lista=temarioDe(unidadEdit.area);
+  if(unidadEdit.viejo){
+    const i=lista.findIndex(x=>norm(x)===norm(unidadEdit.viejo));
+    if(i>=0) lista[i]=nom;
+    D.notas.forEach(n=>{ if(n.area===unidadEdit.area&&norm((n.tema||'').trim())===norm(unidadEdit.viejo)) n.tema=nom; });
+    unidadAbierta=nom;
+  }else{
+    if(lista.some(x=>norm(x)===norm(nom))){ notificar('Esa unidad ya existe.',true); return; }
+    lista.push(nom);            /* la nueva unidad se vuelve «aquí voy» */
+    unidadAbierta=nom;
+  }
+  guardar(); cerrarHoja();
+  if(pantallaActual==='materia') renderMateria();
+  notificar(unidadEdit.viejo?'Unidad renombrada ✓':'Unidad creada ✓ — a llenarla de notas');
+};
 function pintarRutaLinea(){
   const el=document.getElementById('rutaLinea');
   const r=rutaPorId(D.rutas.activa);
   if(!r){
-    el.innerHTML='<div class="ruta-linea"><button class="chip mini" id="btnElegirRuta">🧭 Elegir una ruta de estudio (opcional)</button></div>';
+    el.innerHTML='';
   }else{
     const pend=pendientesRuta(r,2);
     const pr=progresoRuta(r);
@@ -1109,8 +1263,10 @@ function pintarRutaLinea(){
       +pend.map(o=>'<button class="chip mini dorada" data-rc="'+r.id+':'+o.i+'">+ '+esc(o.x.titulo)+'</button>').join('')
       +'<button class="rl-cambiar" id="btnElegirRuta">cambiar</button></div>';
   }
-  document.getElementById('btnElegirRuta').onclick=abrirRutaPicker;
+  const b=document.getElementById('btnElegirRuta');
+  if(b) b.onclick=abrirRutaPicker;
 }
+document.getElementById('btnRutaAjustes').onclick=abrirRutaPicker;
 function abrirRutaPicker(){
   abrirHoja('h-ruta',()=>{
     const cont=document.getElementById('rutaOpciones');
@@ -1174,6 +1330,32 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('[data-crear]');
   if(b) abrirCaptura({titulo:b.dataset.crear,desde:notaActual?notaActual.id:null});
 });
+
+/* ============================================================
+   Temario — el orden de unidades dentro de cada tema
+   ============================================================ */
+/* Devuelve las unidades del tema en orden de estudio, incorporando las
+   que existan solo en notas viejas (por fecha de creación de su primera nota). */
+function temarioDe(areaId){
+  if(!Array.isArray(D.temario[areaId])) D.temario[areaId]=[];
+  const lista=D.temario[areaId];
+  const vistas=new Set(lista.map(t=>norm(t)));
+  const nuevas=new Map();
+  D.notas.forEach(n=>{
+    if(n.area!==areaId) return;
+    const t=(n.tema||'').trim();
+    if(!t||vistas.has(norm(t))) return;
+    if(!nuevas.has(norm(t))||n.creado<nuevas.get(norm(t)).f) nuevas.set(norm(t),{t:t,f:n.creado});
+  });
+  [...nuevas.values()].sort((a,b)=>a.f<b.f?-1:1).forEach(x=>{ lista.push(x.t); vistas.add(norm(x.t)); });
+  return lista;
+}
+const unidadActual=areaId=>{ const l=temarioDe(areaId); return l.length?l[l.length-1]:''; };
+function notasDeUnidad(areaId,unidad){
+  return D.notas.filter(n=>n.area===areaId&&norm((n.tema||'').trim())===norm(unidad))
+    .sort((a,b)=>(a.creado<b.creado?-1:a.creado>b.creado?1:0));
+}
+const notasSueltas=areaId=>D.notas.filter(n=>n.area===areaId&&!(n.tema||'').trim());
 
 /* ============================================================
    Agrupadores por área y tema (para Ajustes y exportación)
@@ -1931,7 +2113,11 @@ function abrirCaptura(pref){
     setTimeout(()=>document.getElementById('capTitulo').focus(),160);
   });
 }
-document.getElementById('fab').onclick=()=>abrirCaptura({});
+document.getElementById('fab').onclick=()=>{
+  if(pantallaActual==='materia'&&materiaActual){
+    abrirCaptura({area:materiaActual,tema:unidadAbierta||unidadActual(materiaActual)});
+  }else abrirCaptura({});
+};
 document.getElementById('capGuardar').onclick=()=>{
   const titulo=document.getElementById('capTitulo').value.trim();
   if(!titulo){ notificar('Ponle un título, aunque sea provisional.',true); return; }
@@ -1952,6 +2138,7 @@ document.getElementById('capGuardar').onclick=()=>{
     area:('area' in capturaPref)?capturaPref.area:((notaActual&&notaActual.area)||(rAct?rAct.area.id:(D.areas[0]?D.areas[0].id:''))),
     tema:(capturaPref.tema||(notaActual&&notaActual.tema)||'')
   });
+  if(!n.tema&&n.area) n.tema=unidadActual(n.area);   /* que ninguna nota quede huérfana */
   D.notas.push(n);
   /* si la creaste desde otra nota o desde una mención, quedan conectadas */
   const origen=('desde' in capturaPref)?capturaPref.desde:(notaActual?notaActual.id:null);
@@ -2108,6 +2295,7 @@ function cargarNormalizar(){
   if(!D.rutas||typeof D.rutas!=='object'||Array.isArray(D.rutas)) D.rutas={activa:null,proyectos:{}};
   if(!D.rutas.proyectos||typeof D.rutas.proyectos!=='object') D.rutas.proyectos={};
   ['sesiones','casos','micros'].forEach(k=>{ if(!Array.isArray(D[k])) D[k]=[]; });
+  if(!D.temario||typeof D.temario!=='object'||Array.isArray(D.temario)) D.temario={};
   if(!(D.cfg.metaHoras>0)) D.cfg.metaHoras=1000;
   D.notas.forEach(n=>{
     ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });

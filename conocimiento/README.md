@@ -37,9 +37,11 @@ preguntas escritas de corrido: *«¿qué fórmula usé para capital de trabajo?�
 
 La app es un cuaderno de tres pestañas:
 
-- **📒 Notas** — todo en una pantalla: buscador arriba, tus temas como filtros, la lista de
-  notas y (si quieres) tu ruta de estudio como una sola línea que te propone el siguiente
-  concepto. El botón «+ Nota» pide dos cosas: título y qué aprendiste.
+- **📒 Notas** — buscador global arriba y tus **temas** (Python, Finanzas…) como tarjetas.
+  Dentro de cada tema, tu avance en **unidades numeradas y en orden** — «1. Lo básico»,
+  «2. Condicionales», «3. Bucles»… — con la actual marcada «◀ aquí voy». Cada unidad
+  acumula sus notas; cuando avanzas, creas la siguiente unidad y sigues. El botón «+ Nota»
+  pide dos cosas (título y qué aprendiste) y cae solo en la unidad donde estás.
 - **🔁 Repasar** — la única función inteligente a la vista: cuántas notas vencen hoy y un botón
   para repasarlas. Cada nota tiene su propio calendario (repaso espaciado): si la recuerdas se
   aleja, si la fallas vuelve pronto. Al abrir la app, una pregunta del día de 15 segundos.
