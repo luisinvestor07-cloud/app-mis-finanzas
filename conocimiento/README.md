@@ -39,6 +39,13 @@ preguntas escritas de corrido: *«¿qué fórmula usé para capital de trabajo?�
   Si tienes una ruta activa, te muestra el siguiente concepto por crear.
   Te muestra qué conceptos mencionaste sin crearles nota, qué notas quedaron sueltas y cuáles
   dejaste a medias.
+- **Práctica** — el taller de las 10,000 horas: repaso espaciado (SM-2) que te pregunta tus propias
+  notas y reprograma cada una según qué tan bien la recuerdas; cronómetro de práctica deliberada con
+  peso por exigencia (al límite ×1.0, frustrante ×0.75, fácil ×0.5); proyección de fecha para tu meta
+  de horas; modo Feynman («explícalo como a un niño»); caza tu error (tus correcciones vuelven como
+  trampas); simulador de casos con checklist, cronómetro y revisión posterior «con ojos de hoy»; y
+  micro-habilidades para entrenar siempre la pieza más débil. Al abrir la app, una pregunta del día
+  de 15 segundos mantiene viva la memoria.
 - **Buscar** — búsqueda instantánea con filtros: por dominar, incompletas, sin conectar, con dudas.
 - **Rutas** — tres temarios completos listos para estudiar (inteligencia artificial aplicada,
   edición de video para cursos y fiscal para inversionista/educador en México). Cada concepto del

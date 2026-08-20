@@ -321,6 +321,52 @@
   .entrada-esc>*:nth-child(4){animation-delay:.14s}
   .entrada-esc>*:nth-child(n+5){animation-delay:.18s}
   @keyframes entrar{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  /* ---------- práctica y repaso ---------- */
+  .q-card{background:linear-gradient(150deg,#1B2A21 0%,#16211B 55%,#0F1712 100%);color:#F3F5F1;border-radius:20px;
+    padding:22px 19px;border:1px solid rgba(199,154,59,.24);box-shadow:0 10px 26px rgba(22,33,27,.3);
+    position:relative;overflow:hidden;margin-bottom:12px}
+  .q-card::after{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;
+    background:radial-gradient(circle,rgba(199,154,59,.16),transparent 70%)}
+  .q-card>*{position:relative;z-index:1}
+  .q-card .q-etq{font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-bottom:8px}
+  .q-card .q-txt{font-size:19px;font-weight:700;line-height:1.4}
+  .q-card .q-resp{margin-top:14px;padding-top:13px;border-top:1px solid rgba(243,245,241,.16);
+    font-size:15px;line-height:1.55;white-space:pre-wrap}
+  .q-card .q-meta{font-size:11px;opacity:.6;margin-top:10px}
+  .calif{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:12px}
+  .calif button{border:none;border-radius:12px;padding:12px 4px;font-size:12.5px;font-weight:800;cursor:pointer;
+    font-family:inherit;color:#fff;line-height:1.2}
+  .calif button small{display:block;font-size:9.5px;font-weight:600;opacity:.85;margin-top:2px}
+  .calif .c0{background:var(--rojo)} .calif .c3{background:#B8862F} .calif .c4{background:var(--verde)} .calif .c5{background:#2E5E8C}
+  .rev-btn{width:100%;border:none;border-radius:13px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;
+    font-family:inherit;background:linear-gradient(135deg,#B8862F,var(--oro-claro));color:#16211B;margin-top:12px}
+  .prog-rep{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .prog-rep .barra-meta{flex:1;margin-top:0}
+  .prog-rep b{font-size:12px;white-space:nowrap}
+  .pr-hero{background:linear-gradient(150deg,#1B2A21 0%,#16211B 55%,#0F1712 100%);color:#F3F5F1;border-radius:20px;
+    padding:19px 18px;margin-bottom:12px;border:1px solid rgba(199,154,59,.24);
+    box-shadow:0 10px 26px rgba(22,33,27,.3),0 0 26px rgba(199,154,59,.12);position:relative;overflow:hidden}
+  .pr-hero::after{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;
+    background:radial-gradient(circle,rgba(199,154,59,.16),transparent 70%)}
+  .pr-hero>*{position:relative;z-index:1}
+  .pr-hero .etq{font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+  .pr-hero .horas{font-size:32px;font-weight:800;margin:3px 0 2px;letter-spacing:-.02em;
+    background:linear-gradient(115deg,#F6F1E4 8%,#E8C56A 55%,#C79A3B 96%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .pr-hero .sub{font-size:12px;opacity:.72;line-height:1.5}
+  .pr-hero .mini{display:flex;gap:16px;margin-top:12px;padding-top:11px;border-top:1px solid rgba(243,245,241,.14)}
+  .pr-hero .mini div{font-size:10.5px;opacity:.72;flex:1}
+  .pr-hero .mini b{display:block;font-size:14px;opacity:1;font-weight:800;margin-top:2px}
+  .acc-fila{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:4px}
+  .acc{flex:1;min-width:calc(50% - 5px);background:var(--tarjeta);border:1px solid var(--marca);border-radius:16px;
+    padding:14px 13px;cursor:pointer;text-align:left;font-family:inherit;color:var(--tinta);
+    box-shadow:0 1px 3px rgba(22,33,27,.06);transition:transform .14s ease}
+  .acc:active{transform:scale(.975)}
+  .acc .ic{display:block;font-size:20px;line-height:1}
+  .acc .tt{display:block;font-size:13.5px;font-weight:800;margin-top:6px}
+  .acc .st{display:block;font-size:11px;color:var(--tinta-suave);margin-top:2px;line-height:1.35}
+  .acc .st b{color:var(--oro)}
+  .crono-viva{border:1.5px solid var(--oro) !important;background:linear-gradient(140deg,rgba(199,154,59,.14),transparent) !important}
+
   /* ---------- rutas de estudio ---------- */
   .r-sel{display:flex;gap:7px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px;scrollbar-width:none}
   .r-sel::-webkit-scrollbar{display:none}
@@ -428,6 +474,42 @@
   <div id="cuerpoMapa"></div>
 </div>
 
+<!-- ================= PRÁCTICA ================= -->
+<div class="pantalla" id="p-practica">
+  <div id="cuerpoPractica"></div>
+</div>
+
+<!-- ================= REPASO ================= -->
+<div class="pantalla" id="p-repaso">
+  <div class="miga"><button id="repasoSalir">‹ Práctica</button></div>
+  <div class="prog-rep"><div class="barra-meta"><div id="repasoBarra" style="width:0%"></div></div><b class="num" id="repasoProg"></b></div>
+  <div id="cuerpoRepaso"></div>
+</div>
+
+<!-- ================= FEYNMAN ================= -->
+<div class="pantalla" id="p-feynman">
+  <div class="miga"><button id="feySalir">‹ Práctica</button></div>
+  <div id="cuerpoFeynman"></div>
+</div>
+
+<!-- ================= CAZA TU ERROR ================= -->
+<div class="pantalla" id="p-caza">
+  <div class="miga"><button id="cazaSalir">‹ Práctica</button></div>
+  <div class="prog-rep"><div class="barra-meta"><div id="cazaBarra" style="width:0%"></div></div><b class="num" id="cazaProg"></b></div>
+  <div id="cuerpoCaza"></div>
+</div>
+
+<!-- ================= CASOS (lista) ================= -->
+<div class="pantalla" id="p-casos">
+  <div class="miga"><button id="casosSalir">‹ Práctica</button></div>
+  <div id="cuerpoCasos"></div>
+</div>
+
+<!-- ================= CASO (espacio de trabajo) ================= -->
+<div class="pantalla" id="p-caso">
+  <div id="cuerpoCaso"></div>
+</div>
+
 <!-- ================= RUTAS ================= -->
 <div class="pantalla" id="p-rutas">
   <div id="cuerpoRutas"></div>
@@ -466,6 +548,15 @@
         <button data-v="20">20 min</button><button data-v="60" class="activo">1 hora</button><button data-v="120">2 h</button>
       </div>
       <div class="nota-p">Reparte el tiempo entre capturar, conectar y consolidar en la pantalla «Hoy».</div>
+    </div>
+    <div class="campo" style="margin-bottom:0;margin-top:12px">
+      <label>Meta de práctica deliberada</label>
+      <div class="seg" id="segMeta">
+        <button data-v="100">100 h<small>fundamentos</small></button>
+        <button data-v="1000" class="activo">1,000 h<small>profesional</small></button>
+        <button data-v="10000">10,000 h<small>maestría</small></button>
+      </div>
+      <div class="nota-p">Las horas se acumulan con peso según exigencia: al límite ×1.0, frustrante ×0.75, fácil ×0.5. La proyección vive en la pestaña Práctica.</div>
     </div>
   </div>
 
@@ -517,6 +608,7 @@
 <!-- ================= TABS ================= -->
 <nav class="tabs">
   <button data-p="hoy" class="activo"><span class="ic">🎯</span>Hoy</button>
+  <button data-p="practica"><span class="ic">🧠</span>Práctica</button>
   <button data-p="rutas"><span class="ic">🧭</span>Rutas</button>
   <button data-p="buscar"><span class="ic">🔍</span>Buscar</button>
   <button data-p="mapa"><span class="ic">🗺️</span>Mapa</button>
@@ -526,6 +618,100 @@
 
 <!-- ================= HOJAS ================= -->
 <div class="velo" id="velo"></div>
+
+<div class="hoja" id="h-peaje">
+  <h3>🔑 Tu pregunta del día</h3>
+  <div class="h-sub">Quince segundos de memoria activa antes de empezar. Así se construye la retención: frecuencia diaria, no sesiones heroicas.</div>
+  <div id="peajeCuerpo"></div>
+  <div class="acciones"><button class="btn-cancelar" id="peajeLuego">Ahora no</button></div>
+</div>
+
+<div class="hoja" id="h-sesion">
+  <h3>⏱ Sesión de práctica</h3>
+  <div class="h-sub">Elige qué vas a entrenar y arranca. Al terminar te pregunto una sola cosa: qué tan al límite estuviste.</div>
+  <div class="campo"><label>Área</label><select id="seArea"></select></div>
+  <div class="campo" id="seMicrosWrap" style="display:none"><label>Micro-habilidad (opcional)</label>
+    <div class="chips" id="seMicros"></div></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="seEmpezar">▶️ Empezar</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-cerrar">
+  <h3 id="ceTitulo">Cerrar sesión</h3>
+  <div class="h-sub">Sé honesto: solo las horas al límite construyen maestría completa. Las fáciles cuentan a la mitad — son mantenimiento, y también hace falta.</div>
+  <div class="campo"><label>¿Qué tan exigente fue?</label>
+    <div class="seg" id="segCalidad">
+      <button data-v="facil">😌 Fácil<small>×0.5</small></button>
+      <button data-v="limite" class="activo">🔥 Al límite<small>×1.0</small></button>
+      <button data-v="duro">😤 Frustrante<small>×0.75</small></button>
+    </div>
+  </div>
+  <div class="campo" style="margin-bottom:0"><label>¿Qué practicaste? (opcional)</label>
+    <input id="ceTxt" type="text" placeholder="Ej. análisis del balance de Coca-Cola FEMSA"></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Seguir practicando</button>
+    <button class="btn-guardar" id="ceGuardar">Guardar sesión</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-manual">
+  <h3>Registrar práctica pasada</h3>
+  <div class="h-sub">Una clase que diste, un análisis fuera de la app, estudio con libro. Si fue práctica real, cuenta — pero solo si la registras.</div>
+  <div class="fila2">
+    <div class="campo"><label>Minutos</label><input id="maMin" type="number" inputmode="numeric" min="1" max="600" placeholder="60"></div>
+    <div class="campo"><label>Área</label><select id="maArea"></select></div>
+  </div>
+  <div class="campo"><label>Exigencia</label>
+    <div class="seg" id="segCalidadM">
+      <button data-v="facil">😌 Fácil</button>
+      <button data-v="limite" class="activo">🔥 Al límite</button>
+      <button data-v="duro">😤 Frustrante</button>
+    </div>
+  </div>
+  <div class="campo" style="margin-bottom:0"><label>¿Qué fue? (opcional)</label>
+    <input id="maTxt" type="text" placeholder="Ej. clase de análisis fundamental a mi grupo"></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="maGuardar">Registrar</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-caso">
+  <h3>📊 Nuevo caso</h3>
+  <div class="h-sub">Un caso es práctica con evidencia: la app te pone tu checklist enfrente, cronometra y guarda tu análisis fechado.</div>
+  <div class="campo"><label>¿Qué vas a analizar?</label>
+    <input id="csTitulo" type="text" placeholder="Ej. Balance de Microsoft · reporte anual 2026"></div>
+  <div class="campo" style="margin-bottom:0"><label>Procedimiento guía (tus notas 🛠️)</label>
+    <select id="csPlantilla"></select></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="csEmpezar">▶️ Abrir espacio de trabajo</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-rev">
+  <h3>Revisar con ojos de hoy</h3>
+  <div class="h-sub">Relee tu análisis de entonces y escribe qué verías distinto ahora. La diferencia entre las dos versiones es tu progreso, medido de la forma más honesta posible.</div>
+  <div class="campo" style="margin-bottom:0"><label>Hoy veo que…</label>
+    <textarea id="revTxt" style="min-height:96px" placeholder="Ej. le di demasiado peso a la razón corriente y no miré el flujo de efectivo…"></textarea></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="revGuardar">Guardar revisión</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-micro">
+  <h3>🎯 Nueva micro-habilidad</h3>
+  <div class="h-sub">«Análisis fundamental» es demasiado grande para entrenarse. Pártelo en piezas chicas y entrena siempre la más débil — eso haría un entrenador profesional.</div>
+  <div class="campo"><label>Nombre</label><input id="miNombre" type="text" placeholder="Ej. leer las notas del 10-K"></div>
+  <div class="campo" style="margin-bottom:0"><label>Área</label><select id="miArea"></select></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="miGuardar">Guardar</button>
+  </div>
+</div>
 
 <div class="hoja" id="h-captura">
   <h3>Captura rápida</h3>
@@ -714,6 +900,8 @@ let contadorId=0;
 const uid=()=>Date.now().toString(36)+(contadorId++).toString(36)+Math.random().toString(36).slice(2,6);
 const fechaISO=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const hoyISO=()=>fechaISO(new Date());
+const sumarDias=(iso,n)=>{ const d=new Date(iso+'T12:00:00'); d.setDate(d.getDate()+n); return fechaISO(d); };
+const mananaISO=()=>sumarDias(hoyISO(),1);
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const norm=s=>String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
 const lineas=s=>String(s||'').split('\n').map(x=>x.trim()).filter(Boolean);
@@ -736,13 +924,15 @@ const AREAS_BASE=[
   {id:'finanzas',  nombre:'Finanzas',   emoji:'📊'},
   {id:'tecnologia',nombre:'Tecnología', emoji:'💻'}
 ];
-let D={ v:1, cfg:{tema:'auto',sesion:60}, areas:[], notas:[], dias:[], rutas:{activa:null,proyectos:{}} };
+let D={ v:1, cfg:{tema:'auto',sesion:60,metaHoras:1000}, areas:[], notas:[], dias:[],
+        rutas:{activa:null,proyectos:{}}, sesiones:[], casos:[], micros:[], cronometro:null, peajeDia:'' };
 
 function notaNueva(p){
   return Object.assign({
     id:uid(), tipo:'conocimiento', titulo:'', area:'', tema:'', tags:[],
     def:'', sirve:'', clasif:'', formulas:'', pasos:'', aplico:'', errores:'', ejemplo:'',
     fuentes:[], links:[], preguntas:[], correcciones:[],
+    rep:{ef:2.5,int:0,reps:0,fallos:0,due:mananaISO()},
     dominio:1, creado:hoyISO(), revisado:hoyISO(), semilla:false
   },p||{});
 }
@@ -810,11 +1000,14 @@ function cargar(){
   if(!Array.isArray(D.areas)||!D.areas.length) D.areas=AREAS_BASE.map(a=>Object.assign({},a));
   if(!D.rutas||typeof D.rutas!=='object'||Array.isArray(D.rutas)) D.rutas={activa:null,proyectos:{}};
   if(!D.rutas.proyectos||typeof D.rutas.proyectos!=='object') D.rutas.proyectos={};
+  ['sesiones','casos','micros'].forEach(k=>{ if(!Array.isArray(D[k])) D[k]=[]; });
+  if(!(D.cfg.metaHoras>0)) D.cfg.metaHoras=1000;
   D.notas.forEach(n=>{
     ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });
     if(!n.creado)   n.creado=hoyISO();
     if(!n.revisado) n.revisado=n.creado;
     if(!n.dominio)  n.dominio=1;
+    if(!n.rep||typeof n.rep!=='object') n.rep={ef:2.5,int:0,reps:0,fallos:0,due:mananaISO()};
   });
   if(!v){ D.notas=semillas(); }
   const h=hoyISO();
@@ -917,12 +1110,18 @@ function ir(p,sinScroll){
   const el=document.getElementById('p-'+p);
   if(el) el.classList.add('activa');
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('activo',b.dataset.p===p));
-  document.getElementById('fab').style.display = p==='nota' ? 'none' : '';
+  document.getElementById('fab').style.display = (p==='nota'||p==='repaso'||p==='feynman'||p==='caza'||p==='caso') ? 'none' : '';
   if(p!=='nota') pantallaPrevia=p;
   pantallaActual=p;
   if(!sinScroll) window.scrollTo(0,0);
   if(p!=='nota') notaActual=null;
   if(p==='hoy') renderHoy();
+  if(p==='practica') renderPractica();
+  if(p==='repaso') renderRepaso();
+  if(p==='feynman') renderFeynman();
+  if(p==='caza') renderCaza();
+  if(p==='casos') renderCasos();
+  if(p==='caso') renderCaso();
   if(p==='rutas') renderRutas();
   if(p==='mapa') renderMapa();
   if(p==='ajustes') renderAjustes();
@@ -1180,6 +1379,10 @@ function renderHoy(){
   /* 3. consolidar */
   h+='<div class="bloque b-consolidar"><div class="cab"><h3>3 · Consolidar</h3><span class="min">'+mm[2]+' min</span></div>'
    +'<div class="desc">Completa lo que dejaste a medias y responde tus propias dudas. Aquí es donde el conocimiento se vuelve utilizable.</div>';
+  const vencidas=notasVencidas().length;
+  if(vencidas>0){
+    h+='<div class="btn-fila" style="margin-top:0;margin-bottom:10px"><button class="btn-mini dorado ancho" data-accion="repasar">🔁 Repasar '+vencidas+(vencidas===1?' nota vencida':' notas vencidas')+'</button></div>';
+  }
   if(incompletas.length){
     h+='<div class="campo-l">Les faltan campos clave</div>'+incompletas.map(n=>itemNota(n,[])).join('');
   }
@@ -1205,6 +1408,7 @@ document.addEventListener('click',e=>{
   if(a){
     if(a.dataset.accion==='nueva-conocimiento') abrirCaptura({tipo:'conocimiento'});
     if(a.dataset.accion==='nueva-aplicacion')   abrirCaptura({tipo:'aplicacion'});
+    if(a.dataset.accion==='repasar')            empezarRepaso();
   }
 });
 document.getElementById('verTodasRec').onclick=()=>buscarPor('','todo');
@@ -1283,6 +1487,676 @@ function renderMapa(){
   miga.querySelector('[data-nivel="area"]').onclick=()=>{ mapa.tema=null; renderMapa(); };
 }
 
+
+
+/* ============================================================
+   Repaso espaciado (SM-2) — la app te pregunta tus propias
+   notas y reprograma cada una según qué tan bien la recuerdas.
+   ============================================================ */
+const PESO_CALIDAD={limite:1,duro:0.75,facil:0.5,repaso:1};
+function registrarSesion(o){
+  D.sesiones.push(Object.assign({id:uid(),f:hoyISO(),area:'',micro:null,min:1,cal:'limite',tipo:'practica',txt:''},o));
+  const h=hoyISO(); if(!D.dias.includes(h)) D.dias.push(h);
+  guardar();
+}
+function notasVencidas(){
+  const h=hoyISO();
+  return D.notas.filter(n=>n.rep&&n.rep.due<=h)
+    .sort((a,b)=>(a.rep.due<b.rep.due?-1:a.rep.due>b.rep.due?1:a.dominio-b.dominio));
+}
+/* Calificación 0=otra vez · 3=difícil · 4=bien · 5=fácil */
+function calificar(n,g){
+  const r=n.rep;
+  if(g<3){
+    r.reps=0; r.int=0; r.fallos=(r.fallos||0)+1;
+    r.ef=Math.max(1.3,(r.ef||2.5)-0.2);
+    r.due=hoyISO();                      /* vuelve hoy mismo hasta que salga */
+  }else{
+    if(g===3){ r.int=Math.max(1,Math.round((r.int||1)*1.2)); r.ef=Math.max(1.3,(r.ef||2.5)-0.15); }
+    else{
+      if(r.reps===0) r.int=1;
+      else if(r.reps===1) r.int=6;
+      else r.int=Math.round((r.int||1)*(r.ef||2.5));
+      if(g===5){ r.ef=Math.min(2.8,(r.ef||2.5)+0.15); r.int=Math.max(2,Math.round(r.int*1.3)); }
+    }
+    r.reps=(r.reps||0)+1;
+    r.due=sumarDias(hoyISO(),r.int);
+    /* recordar a 3+ semanas de distancia, varias veces, es la definición operativa de "practicado" */
+    if(r.reps>=4&&r.int>=21&&n.dominio<3) n.dominio=3;
+  }
+  tocar(n); guardar();
+}
+/* Genera la pregunta rotando entre lo que la nota tiene escrito. */
+function genPregunta(n){
+  const v=[];
+  if((n.def||'').trim())      v.push({q:'¿Qué es «'+n.titulo+'»? Dilo en voz alta con tus palabras.',a:n.def+((n.sirve||'').trim()?'\n\n¿Para qué sirve?\n'+n.sirve:'')});
+  if((n.formulas||'').trim()) v.push({q:'¿Qué fórmulas van con «'+n.titulo+'»? Escríbelas mentalmente antes de ver.',a:n.formulas});
+  if((n.pasos||'').trim())    v.push({q:'Recita en orden los pasos de «'+n.titulo+'».',a:lineas(n.pasos).map((x,i)=>(i+1)+'. '+x).join('\n')});
+  if((n.clasif||'').trim())   v.push({q:'¿Cuáles son las partes de «'+n.titulo+'»?',a:lineas(n.clasif).map(x=>'• '+x).join('\n')});
+  if((n.errores||'').trim())  v.push({q:'¿Qué errores o trampas debes vigilar con «'+n.titulo+'»?',a:lineas(n.errores).map(x=>'⚠ '+x).join('\n')});
+  if(!v.length) return {q:'¿Qué recuerdas de «'+n.titulo+'»?',a:'(Tu nota sigue vacía — hoy es buen día para completarla.)'};
+  return v[(n.rep&&n.rep.reps||0)%v.length];
+}
+function htmlPregunta(n,idPrefijo){
+  const p=genPregunta(n);
+  return '<div class="q-card">'
+    +'<div class="q-etq">'+icTipo(n.tipo)+' '+esc(n.tema||nombreArea(n.area))+' · intervalo '+(n.rep.int||0)+' d</div>'
+    +'<div class="q-txt">'+esc(p.q)+'</div>'
+    +'<div class="q-resp" id="'+idPrefijo+'Resp" style="display:none">'+esc(p.a)+'</div>'
+    +'<div class="q-meta">Primero respóndete de verdad. Luego destapa y califícate con honestidad — el algoritmo solo funciona si no te mientes.</div>'
+    +'</div>'
+    +'<button class="rev-btn" id="'+idPrefijo+'Ver">👁 Mostrar mi nota</button>'
+    +'<div class="calif" id="'+idPrefijo+'Calif" style="display:none">'
+    +'<button class="c0" data-g="0">Otra vez<small>la fallé</small></button>'
+    +'<button class="c3" data-g="3">Difícil<small>me costó</small></button>'
+    +'<button class="c4" data-g="4">Bien<small>la saqué</small></button>'
+    +'<button class="c5" data-g="5">Fácil<small>sin dudar</small></button></div>';
+}
+function armarPregunta(cont,n,idPrefijo,alCalificar){
+  const btn=cont.querySelector('#'+idPrefijo+'Ver');
+  btn.onclick=()=>{
+    cont.querySelector('#'+idPrefijo+'Resp').style.display='block';
+    cont.querySelector('#'+idPrefijo+'Calif').style.display='grid';
+    btn.style.display='none';
+  };
+  cont.querySelectorAll('#'+idPrefijo+'Calif [data-g]').forEach(b=>b.onclick=()=>{
+    calificar(n,parseInt(b.dataset.g,10));
+    alCalificar(parseInt(b.dataset.g,10));
+  });
+}
+
+/* ---------- cola de repaso ---------- */
+let colaRepaso=[], repasoIni=0, repasoBien=0, repasoMal=0, repasoTotal=0;
+function empezarRepaso(){
+  colaRepaso=notasVencidas().map(n=>n.id);
+  if(!colaRepaso.length){ notificar('No hay notas vencidas hoy. 🎉'); return; }
+  repasoIni=Date.now(); repasoBien=0; repasoMal=0; repasoTotal=colaRepaso.length;
+  ir('repaso');
+}
+function renderRepaso(){
+  const cont=document.getElementById('cuerpoRepaso');
+  const hechas=repasoTotal-colaRepaso.length;
+  document.getElementById('repasoProg').textContent=hechas+' / '+repasoTotal;
+  document.getElementById('repasoBarra').style.width=(repasoTotal?hechas/repasoTotal*100:0)+'%';
+  if(!colaRepaso.length){
+    const min=Math.max(1,Math.round((Date.now()-repasoIni)/60000));
+    if(repasoTotal>0) registrarSesion({tipo:'repaso',min:min,cal:'limite',txt:repasoBien+' bien · '+repasoMal+' a repetir'});
+    cont.innerHTML='<div class="card" style="text-align:center;padding:26px 16px">'
+      +'<div style="font-size:34px">🏁</div>'
+      +'<div style="font-size:17px;font-weight:800;margin-top:8px">Repaso terminado</div>'
+      +'<div class="nota-p" style="margin-top:6px">'+repasoBien+' recordadas · '+repasoMal+' volverán pronto · '+min+' min registrados a tus horas.</div>'
+      +'<div class="btn-fila" style="justify-content:center"><button class="btn-mini dorado" id="repasoVolver">Volver a Práctica</button></div></div>';
+    document.getElementById('repasoVolver').onclick=()=>ir('practica');
+    repasoTotal=0;
+    return;
+  }
+  const n=nota(colaRepaso[0]);
+  if(!n){ colaRepaso.shift(); renderRepaso(); return; }
+  cont.innerHTML=htmlPregunta(n,'rp')
+    +'<div class="btn-fila"><button class="btn-mini" id="repasoAbrirNota" style="flex:1">📖 Abrir la nota completa</button></div>';
+  armarPregunta(cont,n,'rp',g=>{
+    /* "otra vez" la manda al final de la cola de hoy; el resto la saca */
+    if(g<3){ repasoMal++; colaRepaso.push(colaRepaso.shift()); }
+    else{ repasoBien++; colaRepaso.shift(); }
+    renderRepaso();
+  });
+  document.getElementById('repasoAbrirNota').onclick=()=>abrirNota(n.id);
+}
+document.getElementById('repasoSalir').onclick=()=>ir('practica');
+
+/* ---------- pregunta del día (peaje amable) ---------- */
+function mostrarPeaje(){
+  if(D.peajeDia===hoyISO()) return;
+  const due=notasVencidas();
+  if(!due.length) return;
+  const n=due[0];
+  const cont=document.getElementById('peajeCuerpo');
+  cont.innerHTML=htmlPregunta(n,'pj');
+  armarPregunta(cont,n,'pj',g=>{
+    D.peajeDia=hoyISO(); guardar();
+    cerrarHoja();
+    const resto=notasVencidas().length;
+    if(resto>0) notificar('✓ Hecha. Te esperan '+resto+' más en Práctica → Repaso.');
+    else notificar('✓ Al día. Cero notas vencidas.');
+    if(pantallaActual==='hoy') renderHoy();
+    if(pantallaActual==='practica') renderPractica();
+  });
+  abrirHoja('h-peaje');
+}
+document.getElementById('peajeLuego').onclick=()=>{ D.peajeDia=hoyISO(); guardar(); cerrarHoja(); };
+
+
+/* ============================================================
+   Pantalla PRÁCTICA — horas deliberadas, cronómetro y proyección
+   ============================================================ */
+function horasEfectivas(filtro){
+  let min=0;
+  D.sesiones.forEach(x=>{ if(filtro&&!filtro(x)) return; min+=(x.min||0)*(PESO_CALIDAD[x.cal]||1); });
+  return min/60;
+}
+function ritmoSemanal(){
+  const desde=sumarDias(hoyISO(),-28);
+  let min=0;
+  D.sesiones.forEach(x=>{ if(x.f>=desde) min+=(x.min||0)*(PESO_CALIDAD[x.cal]||1); });
+  return min/60/4;
+}
+function proyeccionTxt(){
+  const total=horasEfectivas(), meta=D.cfg.metaHoras||1000, ritmo=ritmoSemanal();
+  if(total>=meta) return '🎉 Superaste tu meta de '+meta.toLocaleString('es')+' horas. Sube la meta en Ajustes.';
+  if(ritmo<=0.05) return 'Registra tus primeras sesiones y aquí verás tu fecha proyectada para llegar a '+meta.toLocaleString('es')+' h.';
+  const semanas=(meta-total)/ritmo;
+  if(semanas>52*40) return 'A este ritmo la meta de '+meta.toLocaleString('es')+' h queda a más de 40 años. Sube tu ritmo o ajusta la meta: que el número te sirva, no te aplaste.';
+  const d=new Date(); d.setDate(d.getDate()+Math.round(semanas*7));
+  const fecha=d.toLocaleDateString('es',{month:'long',year:'numeric'});
+  const extra=(meta-total)/(ritmo+2);
+  const d2=new Date(); d2.setDate(d2.getDate()+Math.round(extra*7));
+  return 'A tu ritmo llegas a '+meta.toLocaleString('es')+' h en '+fecha+'. Con 2 h más a la semana: '+d2.toLocaleDateString('es',{month:'long',year:'numeric'})+'.';
+}
+const fmtH=h=>h>=100?Math.round(h).toLocaleString('es'):h.toFixed(1).replace('.0','');
+
+/* ---------- cronómetro ---------- */
+let cronoTimer=null;
+const cronoMin=()=>D.cronometro?Math.max(0,(Date.now()-D.cronometro.ini)/60000):0;
+function fmtCrono(){
+  const seg=Math.floor((Date.now()-D.cronometro.ini)/1000);
+  const h=Math.floor(seg/3600), m=Math.floor(seg%3600/60), x=seg%60;
+  return (h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(x).padStart(2,'0');
+}
+function tickCrono(){
+  if(!D.cronometro){ clearInterval(cronoTimer); cronoTimer=null; actualizarChipNotas(); return; }
+  const chip=document.getElementById('chipNotas');
+  chip.querySelector('.pl').textContent='⏱ practicando';
+  chip.querySelector('.num').textContent=fmtCrono();
+  const t=document.getElementById('cronoTiempo');
+  if(t) t.textContent=fmtCrono();
+}
+function arrancarTick(){
+  if(!D.cronometro) return;
+  tickCrono();
+  if(!cronoTimer) cronoTimer=setInterval(tickCrono,1000);
+}
+function actualizarChipNotas(){
+  const chip=document.getElementById('chipNotas');
+  if(D.cronometro) return;
+  chip.querySelector('.pl').textContent='Notas';
+  chip.querySelector('.num').textContent=D.notas.length;
+}
+
+function renderPractica(){
+  const cont=document.getElementById('cuerpoPractica');
+  const total=horasEfectivas(), semana=horasEfectivas(x=>x.f>=sumarDias(hoyISO(),-7));
+  const ritmo=ritmoSemanal(), meta=D.cfg.metaHoras||1000;
+  const due=notasVencidas().length;
+  const pct=Math.min(100,total/meta*100);
+
+  let h='<div class="pr-hero">'
+    +'<div class="etq">Práctica deliberada acumulada</div>'
+    +'<div class="horas num">'+fmtH(total)+' h</div>'
+    +'<div class="sub">'+esc(proyeccionTxt())+'</div>'
+    +'<div class="barra-dom" style="margin-top:12px"><i style="width:'+pct+'%;background:linear-gradient(90deg,#C79A3B,#E0B95C)"></i></div>'
+    +'<div class="mini">'
+    +'<div>Esta semana<b class="num">'+fmtH(semana)+' h</b></div>'
+    +'<div>Ritmo (4 sem)<b class="num">'+fmtH(ritmo)+' h/sem</b></div>'
+    +'<div>Meta<b class="num">'+meta.toLocaleString('es')+' h</b></div>'
+    +'</div></div>';
+
+  if(D.cronometro){
+    const ar=area(D.cronometro.area);
+    const mi=D.micros.find(m=>m.id===D.cronometro.micro);
+    h+='<div class="card crono-viva" style="text-align:center;padding:18px">'
+      +'<div class="nota-p" style="margin:0">Sesión en curso · '+(ar?esc(ar.emoji+' '+ar.nombre):'General')+(mi?' · '+esc(mi.nombre):'')+'</div>'
+      +'<div class="num" id="cronoTiempo" style="font-size:38px;font-weight:800;margin:6px 0">'+fmtCrono()+'</div>'
+      +'<div class="btn-fila" style="justify-content:center"><button class="btn-mini dorado" id="cronoParar">■ Terminar y calificar</button>'
+      +'<button class="btn-mini" id="cronoDescartar">Descartar</button></div></div>';
+  }
+
+  h+='<div class="acc-fila">'
+    +'<button class="acc" data-pa="repaso"><span class="ic">🔁</span><span class="tt">Repaso de hoy</span>'
+      +'<span class="st">'+(due?'<b>'+due+' nota'+(due===1?'':'s')+'</b> esperando':'Al día ✓')+'</span></button>'
+    +(D.cronometro?'':'<button class="acc" data-pa="sesion"><span class="ic">⏱</span><span class="tt">Sesión de práctica</span>'
+      +'<span class="st">cronómetro + calidad</span></button>')
+    +'<button class="acc" data-pa="feynman"><span class="ic">🧒</span><span class="tt">Modo Feynman</span>'
+      +'<span class="st">explícalo como a un niño</span></button>'
+    +'<button class="acc" data-pa="caza"><span class="ic">🕵️</span><span class="tt">Caza tu error</span>'
+      +'<span class="st">'+bancoErrores().length+' afirmaciones tuyas</span></button>'
+    +'<button class="acc" data-pa="casos"><span class="ic">📊</span><span class="tt">Simulador de casos</span>'
+      +'<span class="st">'+D.casos.length+' caso'+(D.casos.length===1?'':'s')+' guardados</span></button>'
+    +'<button class="acc" data-pa="manual"><span class="ic">➕</span><span class="tt">Registrar pasada</span>'
+      +'<span class="st">clase, libro, análisis externo</span></button>'
+    +'</div>';
+
+  /* horas por área */
+  const conHoras=D.areas.map(a=>({a:a,h:horasEfectivas(x=>x.area===a.id)})).filter(x=>x.h>0);
+  const maxH=Math.max.apply(null,conHoras.map(x=>x.h).concat([1]));
+  if(conHoras.length){
+    h+='<h2 class="sec">Horas por área</h2><div class="card">'
+      +conHoras.sort((x,y)=>y.h-x.h).map(x=>'<div class="fila-est"><span>'+esc(x.a.emoji)+'</span><span class="nm">'+esc(x.a.nombre)+'</span>'
+        +'<span class="pista"><i style="width:'+(x.h/maxH*100)+'%;background:var(--oro)"></i></span>'
+        +'<span class="vl num">'+fmtH(x.h)+'h</span></div>').join('')+'</div>';
+  }
+
+  /* micro-habilidades */
+  h+=htmlMicros();
+
+  /* últimas sesiones */
+  const ult=D.sesiones.slice(-6).reverse();
+  h+='<h2 class="sec">Últimas sesiones</h2>';
+  h+= ult.length
+    ? ult.map(x=>{
+        const ar=area(x.area);
+        const et={practica:'⏱',repaso:'🔁',feynman:'🧒',errores:'🕵️',caso:'📊'}[x.tipo]||'⏱';
+        return '<div class="fila-lista"><span class="n" style="background:none;font-size:15px">'+et+'</span>'
+          +'<span class="tx">'+(ar?esc(ar.emoji+' '+ar.nombre):'General')+(x.txt?' — '+esc(x.txt):'')
+          +'<small>'+esc(fFecha(x.f))+' · '+x.min+' min · '+(x.cal==='limite'?'🔥 al límite':x.cal==='duro'?'😤 frustrante':'😌 fácil')+'</small></span>'
+          +'<button class="quitar" data-borrasesion="'+x.id+'">✕</button></div>';
+      }).join('')
+    : '<div class="vacio">Tus sesiones registradas aparecerán aquí. La primera hora empieza con un toque en ⏱.</div>';
+
+  cont.innerHTML=h;
+  bindPractica(cont);
+}
+function bindPractica(cont){
+  cont.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>{
+    const a=b.dataset.pa;
+    if(a==='repaso')  empezarRepaso();
+    if(a==='sesion')  abrirHojaSesion();
+    if(a==='manual')  abrirHojaManual();
+    if(a==='feynman') empezarFeynman();
+    if(a==='caza')    empezarCaza();
+    if(a==='casos')   ir('casos');
+  });
+  const parar=cont.querySelector('#cronoParar');
+  if(parar) parar.onclick=()=>{
+    document.getElementById('ceTitulo').textContent='Cerrar sesión · '+Math.max(1,Math.round(cronoMin()))+' min';
+    document.getElementById('ceTxt').value='';
+    setSeg('segCalidad','limite');
+    abrirHoja('h-cerrar');
+  };
+  const desc=cont.querySelector('#cronoDescartar');
+  if(desc) armarBorrar(desc,()=>{ D.cronometro=null; guardar(); tickCrono(); renderPractica(); notificar('Sesión descartada'); });
+  cont.querySelectorAll('[data-borrasesion]').forEach(b=>armarBorrar(b,()=>{
+    D.sesiones=D.sesiones.filter(x=>x.id!==b.dataset.borrasesion);
+    guardar(); renderPractica();
+  }));
+  const nm=cont.querySelector('#btnNuevaMicro');
+  if(nm) nm.onclick=()=>abrirHoja('h-micro',()=>{
+    document.getElementById('miNombre').value='';
+    pintarSelectAreas('miArea',(D.rutas.activa&&rutaPorId(D.rutas.activa))?rutaPorId(D.rutas.activa).area.id:(D.areas[0]?D.areas[0].id:''));
+  });
+  cont.querySelectorAll('[data-borramicro]').forEach(b=>armarBorrar(b,()=>{
+    D.micros=D.micros.filter(m=>m.id!==b.dataset.borramicro);
+    guardar(); renderPractica();
+  }));
+}
+
+/* ---------- hojas de sesión ---------- */
+let microSel=null;
+function abrirHojaSesion(){
+  abrirHoja('h-sesion',()=>{
+    pintarSelectAreas('seArea',(D.rutas.activa&&rutaPorId(D.rutas.activa))?rutaPorId(D.rutas.activa).area.id:(D.areas[0]?D.areas[0].id:''));
+    microSel=null;
+    pintarMicrosSesion();
+    document.getElementById('seArea').onchange=pintarMicrosSesion;
+  });
+}
+function pintarMicrosSesion(){
+  const areaId=document.getElementById('seArea').value;
+  const ms=D.micros.filter(m=>m.area===areaId);
+  const wrap=document.getElementById('seMicrosWrap');
+  wrap.style.display=ms.length?'block':'none';
+  if(!ms.length){ microSel=null; return; }
+  const debil=microMasDebil(areaId);
+  document.getElementById('seMicros').innerHTML=ms.map(m=>
+    '<button class="chip'+(microSel===m.id?' activo':'')+'" data-micro="'+m.id+'">'
+    +esc(m.nombre)+(debil&&debil.id===m.id?' 🎯':'')+'</button>').join('');
+  document.querySelectorAll('#seMicros [data-micro]').forEach(b=>b.onclick=()=>{
+    microSel=(microSel===b.dataset.micro)?null:b.dataset.micro;
+    pintarMicrosSesion();
+  });
+}
+document.getElementById('seEmpezar').onclick=()=>{
+  D.cronometro={ini:Date.now(),area:document.getElementById('seArea').value,micro:microSel,tipo:'practica'};
+  guardar(); cerrarHoja(); arrancarTick(); ir('practica');
+  notificar('⏱ Sesión iniciada. El tiempo corre aunque cambies de pestaña o cierres la app.');
+};
+document.getElementById('ceGuardar').onclick=()=>{
+  if(!D.cronometro) return cerrarHoja();
+  const seg=document.querySelector('#segCalidad .activo');
+  registrarSesion({
+    area:D.cronometro.area, micro:D.cronometro.micro,
+    min:Math.max(1,Math.round(cronoMin())),
+    cal:seg?seg.dataset.v:'limite',
+    tipo:'practica',
+    txt:document.getElementById('ceTxt').value.trim()
+  });
+  D.cronometro=null; guardar(); tickCrono(); cerrarHoja(); renderPractica();
+  notificar('Sesión guardada ✓ — cada hora registrada es una hora que existe.');
+};
+function abrirHojaManual(){
+  abrirHoja('h-manual',()=>{
+    document.getElementById('maMin').value='';
+    document.getElementById('maTxt').value='';
+    setSeg('segCalidadM','limite');
+    pintarSelectAreas('maArea',D.areas[0]?D.areas[0].id:'');
+  });
+}
+document.getElementById('maGuardar').onclick=()=>{
+  const min=parseInt(document.getElementById('maMin').value,10);
+  if(!(min>0)){ notificar('¿Cuántos minutos fueron?',true); return; }
+  const seg=document.querySelector('#segCalidadM .activo');
+  registrarSesion({
+    area:document.getElementById('maArea').value, min:Math.min(600,min),
+    cal:seg?seg.dataset.v:'limite', tipo:'practica',
+    txt:document.getElementById('maTxt').value.trim()
+  });
+  cerrarHoja(); renderPractica();
+  notificar('Registrada ✓');
+};
+
+
+/* ============================================================
+   Modo Feynman — explícalo sin ver la nota, como a un niño.
+   ============================================================ */
+let feyNotaId=null, feyIni=0, feyMostrado=false;
+function candidatosFeynman(){
+  return D.notas.filter(n=>(n.def||'').trim().length>40)
+    .sort((a,b)=>(a.rep.due<b.rep.due?-1:a.rep.due>b.rep.due?1:0));
+}
+function empezarFeynman(){
+  const cand=candidatosFeynman();
+  if(!cand.length){ notificar('Necesitas notas con definición escrita para jugar Feynman. Escribe primero.',true); return; }
+  feyNotaId=cand[0].id; feyIni=Date.now(); feyMostrado=false;
+  ir('feynman');
+}
+function renderFeynman(){
+  const cont=document.getElementById('cuerpoFeynman');
+  const n=nota(feyNotaId);
+  if(!n){ cont.innerHTML='<div class="vacio">Esa nota ya no existe.</div>'; return; }
+  if(!feyMostrado){
+    cont.innerHTML='<div class="q-card">'
+      +'<div class="q-etq">🧒 Modo Feynman</div>'
+      +'<div class="q-txt">Explica «'+esc(n.titulo)+'» como se lo dirías a alguien de 10 años.</div>'
+      +'<div class="q-meta">Sin ver tu nota. Con ejemplos. Si necesitas palabras técnicas para explicarlo, todavía no es tuyo.</div></div>'
+      +'<div class="grupo"><textarea class="edit" id="feyTxt" rows="6" style="min-height:140px" placeholder="Imagina que un niño te pregunta: ¿y eso qué es?"></textarea></div>'
+      +'<button class="rev-btn" id="feyComparar">Comparar con mi nota</button>'
+      +'<div class="btn-fila"><button class="btn-mini" id="feyOtra" style="flex:1">🔀 Otra nota</button></div>';
+    document.getElementById('feyComparar').onclick=()=>{
+      if(document.getElementById('feyTxt').value.trim().length<20){ notificar('Explícalo de verdad — al menos un par de frases.',true); return; }
+      feyTexto=document.getElementById('feyTxt').value.trim();
+      feyMostrado=true; renderFeynman();
+    };
+    document.getElementById('feyOtra').onclick=()=>{
+      const cand=candidatosFeynman().filter(x=>x.id!==feyNotaId);
+      if(!cand.length){ notificar('No hay más candidatas.'); return; }
+      feyNotaId=cand[Math.floor(Math.random()*Math.min(5,cand.length))].id;
+      renderFeynman();
+    };
+    return;
+  }
+  cont.innerHTML='<div class="card"><div class="campo-l">Lo que dijiste</div><div class="txt-render" style="font-size:14.5px">'+esc(feyTexto)+'</div></div>'
+    +'<div class="card"><div class="campo-l">Tu nota original</div><div class="txt-render" style="font-size:14.5px">'+esc(n.def)
+    +((n.sirve||'').trim()?'\n\n¿Para qué sirve?\n'+esc(n.sirve):'')
+    +((n.errores||'').trim()?'\n\nPrecauciones:\n'+esc(n.errores):'')+'</div></div>'
+    +'<div class="card"><div class="campo-l">Sé tu propio maestro: ¿qué te faltó?</div>'
+    +'<div class="btn-fila" style="margin-top:4px">'
+    +'<button class="btn-mini dorado" id="feyCompleto" style="flex:1">✓ Lo tenía completo</button>'
+    +'<button class="btn-mini" id="feyFalto" style="flex:1">Me faltó algo</button></div>'
+    +'<div id="feyFaltaWrap" style="display:none;margin-top:10px">'
+    +'<textarea class="edit" id="feyFalta" rows="2" placeholder="¿Qué parte no dijiste o dijiste mal?"></textarea>'
+    +'<div class="btn-fila"><button class="btn-mini oscuro ancho" id="feyGuardarFalta">Guardar como pregunta pendiente</button></div></div></div>';
+  const cerrarFeynman=(g,faltaTxt)=>{
+    if(!Array.isArray(n.feynman)) n.feynman=[];
+    n.feynman.push({f:hoyISO(),txt:feyTexto});
+    if(faltaTxt) n.preguntas.push({id:uid(),txt:'[Feynman] '+faltaTxt,resuelta:false});
+    calificar(n,g);
+    registrarSesion({tipo:'feynman',area:n.area,min:Math.max(1,Math.round((Date.now()-feyIni)/60000)),cal:'limite',txt:n.titulo});
+    ir('practica');
+    notificar(g===5?'✓ Feynman superado — la nota se aleja en el calendario.':'✓ Registrado. Tu hueco quedó como pregunta pendiente en la nota.');
+  };
+  document.getElementById('feyCompleto').onclick=()=>cerrarFeynman(5,null);
+  document.getElementById('feyFalto').onclick=()=>{
+    document.getElementById('feyFaltaWrap').style.display='block';
+    document.getElementById('feyFalto').style.display='none';
+  };
+  document.getElementById('feyGuardarFalta').onclick=()=>{
+    const t=document.getElementById('feyFalta').value.trim();
+    if(!t){ notificar('Escribe qué te faltó.',true); return; }
+    cerrarFeynman(3,t);
+  };
+}
+let feyTexto='';
+document.getElementById('feySalir').onclick=()=>ir('practica');
+
+/* ============================================================
+   Caza tu error — tus correcciones vuelven como trampas.
+   ============================================================ */
+function bancoErrores(){
+  const pool=[];
+  D.notas.forEach(n=>n.correcciones.forEach(x=>{
+    if((x.antes||'').trim())  pool.push({txt:x.antes,falsa:true, notaId:n.id,f:x.f,par:x.ahora});
+    if((x.ahora||'').trim())  pool.push({txt:x.ahora,falsa:false,notaId:n.id,f:x.f,par:x.antes});
+  }));
+  return pool;
+}
+let cazaCola=[], cazaTotal=0, cazaBien=0, cazaIni=0;
+function empezarCaza(){
+  const pool=bancoErrores();
+  if(!pool.length){
+    notificar('El banco de errores se llena con tus correcciones («antes pensaba / ahora entiendo»). Registra la primera y vuelve.',true);
+    return;
+  }
+  cazaCola=pool.slice().sort(()=>Math.random()-0.5).slice(0,10);
+  cazaTotal=cazaCola.length; cazaBien=0; cazaIni=Date.now();
+  ir('caza');
+}
+function renderCaza(){
+  const cont=document.getElementById('cuerpoCaza');
+  const hechas=cazaTotal-cazaCola.length;
+  document.getElementById('cazaProg').textContent=hechas+' / '+cazaTotal;
+  document.getElementById('cazaBarra').style.width=(cazaTotal?hechas/cazaTotal*100:0)+'%';
+  if(!cazaCola.length){
+    if(cazaTotal>0) registrarSesion({tipo:'errores',min:Math.max(1,Math.round((Date.now()-cazaIni)/60000)),cal:'limite',txt:cazaBien+'/'+cazaTotal+' cazados'});
+    cont.innerHTML='<div class="card" style="text-align:center;padding:26px 16px">'
+      +'<div style="font-size:34px">'+(cazaBien===cazaTotal?'🏆':'🕵️')+'</div>'
+      +'<div style="font-size:17px;font-weight:800;margin-top:8px">'+cazaBien+' de '+cazaTotal+' correctas</div>'
+      +'<div class="nota-p" style="margin-top:6px">'+(cazaBien===cazaTotal
+        ?'Tus viejos errores ya no te engañan. Eso es exactamente aprender.'
+        :'Los que fallaste regresaron a tu cola de repaso. Un error que reaparece no es fracaso: es la señal de dónde practicar.')+'</div>'
+      +'<div class="btn-fila" style="justify-content:center"><button class="btn-mini dorado" id="cazaVolver">Volver a Práctica</button></div></div>';
+    document.getElementById('cazaVolver').onclick=()=>ir('practica');
+    cazaTotal=0;
+    return;
+  }
+  const it=cazaCola[0];
+  const n=nota(it.notaId);
+  cont.innerHTML='<div class="q-card">'
+    +'<div class="q-etq">🕵️ ¿Verdad o viejo error tuyo?</div>'
+    +'<div class="q-txt">«'+esc(it.txt)+'»</div>'
+    +'<div class="q-meta">Tema: '+esc(n?n.titulo:'—')+'</div></div>'
+    +'<div class="calif" style="grid-template-columns:1fr 1fr">'
+    +'<button class="c4" data-r="v">✅ Es correcta</button>'
+    +'<button class="c0" data-r="f">❌ Es un error</button></div>'
+    +'<div id="cazaFeedback"></div>';
+  cont.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
+    const dijoFalsa=b.dataset.r==='f';
+    const acerto=dijoFalsa===it.falsa;
+    if(acerto) cazaBien++;
+    else if(it.falsa&&n) calificar(n,0);   /* creíste tu viejo error: la nota vuelve hoy */
+    cont.querySelectorAll('[data-r]').forEach(x=>x.disabled=true);
+    document.getElementById('cazaFeedback').innerHTML=
+      '<div class="card" style="border-left:4px solid '+(acerto?'var(--verde)':'var(--rojo)')+'">'
+      +'<b>'+(acerto?'✓ Correcto.':'✗ Te atrapó.')+'</b> '
+      +(it.falsa
+        ?'Era tu error del '+esc(fFecha(it.f,true))+'. Lo que entiendes ahora: <i>'+esc(it.par||'')+'</i>'
+        :'Así lo entiendes hoy — antes pensabas: <i>'+esc(it.par||'')+'</i>')
+      +'<div class="btn-fila"><button class="btn-mini oscuro ancho" id="cazaSigue">Siguiente →</button></div></div>';
+    document.getElementById('cazaSigue').onclick=()=>{ cazaCola.shift(); renderCaza(); };
+  });
+}
+document.getElementById('cazaSalir').onclick=()=>ir('practica');
+
+/* ============================================================
+   Simulador de casos — práctica aplicada con evidencia fechada.
+   ============================================================ */
+let casoActualId=null, casoTimer=null;
+function renderCasos(){
+  const cont=document.getElementById('cuerpoCasos');
+  let h='<h2 class="sec" style="margin-top:0">Simulador de casos'
+    +'<button class="cta" id="btnNuevoCaso">+ Nuevo caso</button></h2>'
+    +'<div class="nota-p" style="margin:0 2px 12px">Eliges qué analizar, la app te pone tu checklist enfrente, cronometra y guarda el análisis. Meses después lo revisas «con ojos de hoy»: esa diferencia es tu progreso real.</div>';
+  const lista=D.casos.slice().reverse();
+  h+= lista.length
+    ? lista.map(x=>{
+        const pl=nota(x.plantilla);
+        return '<button class="n-item" data-caso="'+x.id+'">'
+          +'<span class="bandera" style="background:'+(x.abierto?'var(--oro)':'var(--verde)')+'"></span>'
+          +'<span class="cuerpo"><span class="tit">📊 '+esc(x.titulo)+'</span>'
+          +'<span class="frag">'+esc(fFecha(x.f,true))+' · '+(x.min||0)+' min'+(pl?' · guía: '+esc(pl.titulo):'')
+          +(x.rev.length?' · '+x.rev.length+' revisión'+(x.rev.length===1?'':'es'):'')+'</span>'
+          +'<span class="pie"><span class="etiq'+(x.abierto?' enlaces':'')+'">'+(x.abierto?'EN CURSO':'CERRADO')+'</span></span>'
+          +'</span></button>';
+      }).join('')
+    : '<div class="vacio">Sin casos todavía. El primero puede ser hoy: un balance real, tus notas y 30 minutos.</div>';
+  cont.innerHTML=h;
+  document.getElementById('btnNuevoCaso').onclick=abrirHojaCaso;
+  cont.querySelectorAll('[data-caso]').forEach(b=>b.onclick=()=>{ casoActualId=b.dataset.caso; ir('caso'); });
+}
+document.getElementById('casosSalir').onclick=()=>ir('practica');
+
+function abrirHojaCaso(){
+  abrirHoja('h-caso',()=>{
+    document.getElementById('csTitulo').value='';
+    const apps=D.notas.filter(n=>n.tipo==='aplicacion'&&(n.pasos||'').trim());
+    document.getElementById('csPlantilla').innerHTML='<option value="">Sin checklist (caso libre)</option>'
+      +apps.map(n=>'<option value="'+n.id+'">'+esc(n.titulo)+'</option>').join('');
+  });
+}
+document.getElementById('csEmpezar').onclick=()=>{
+  const t=document.getElementById('csTitulo').value.trim();
+  if(!t){ notificar('Ponle nombre al caso.',true); return; }
+  const plId=document.getElementById('csPlantilla').value||null;
+  const pl=plId?nota(plId):null;
+  const caso={id:uid(),titulo:t,plantilla:plId,f:hoyISO(),ini:Date.now(),min:0,
+    check:pl?lineas(pl.pasos).map(()=>false):[],txt:'',rev:[],abierto:true};
+  D.casos.push(caso); guardar();
+  casoActualId=caso.id; cerrarHoja(); ir('caso');
+};
+
+function renderCaso(){
+  const cont=document.getElementById('cuerpoCaso');
+  const x=D.casos.find(k=>k.id===casoActualId);
+  if(!x){ cont.innerHTML='<div class="vacio">Ese caso ya no existe.</div>'; return; }
+  const pl=nota(x.plantilla);
+  const pasos=pl?lineas(pl.pasos):[];
+  let h='<div class="n-cab"><div class="arriba">'
+    +'<button class="volver" id="casoVolver">‹ Casos</button>'
+    +'<span class="tipo-b aplicacion">📊 '+(x.abierto?'EN CURSO':'CERRADO')+'</span></div>'
+    +'<div style="font-size:21px;font-weight:800;line-height:1.25">'+esc(x.titulo)+'</div>'
+    +'<div class="ruta">'+esc(fFecha(x.f,true))+(pl?' · guía: '+esc(pl.titulo):'')
+    +(x.abierto?' · <b class="num" id="casoCrono"></b>':' · '+(x.min||0)+' min')+'</div></div>';
+
+  if(pasos.length){
+    h+='<h2 class="sec" style="margin-top:0">Checklist</h2>';
+    pasos.forEach((tx,i)=>{
+      const ok=!!x.check[i];
+      h+='<label class="fila-lista" style="cursor:pointer'+(x.abierto?'':';opacity:.8')+'">'
+        +'<input type="checkbox" data-chk="'+i+'" '+(ok?'checked':'')+(x.abierto?'':' disabled')+' style="width:19px;height:19px;margin-top:2px">'
+        +'<span class="tx"'+(ok?' style="text-decoration:line-through;opacity:.65"':'')+'>'+esc(tx)+'</span></label>';
+    });
+  }
+  h+='<h2 class="sec">Mi análisis</h2>'
+    +(x.abierto
+      ?'<textarea class="edit" id="casoTxt" rows="6" style="min-height:150px" placeholder="Escribe aquí lo que vas encontrando. Se guarda solo.">'+esc(x.txt)+'</textarea>'
+      :'<div class="card"><div class="txt-render" style="font-size:14.5px">'+esc(x.txt||'(sin análisis escrito)')+'</div></div>');
+
+  if(pl){
+    const rel=[pl].concat(pl.links.map(id=>nota(id)).filter(Boolean));
+    h+='<h2 class="sec">Tus notas a la mano</h2><div class="listilla" style="display:flex;flex-wrap:wrap;gap:7px">'
+      +rel.map(nn=>'<button class="chip mini" data-nota="'+nn.id+'">'+icTipo(nn.tipo)+' '+esc(nn.titulo)+'</button>').join('')+'</div>';
+  }
+  if(x.rev.length){
+    h+='<h2 class="sec">Revisiones posteriores</h2>'
+      +x.rev.map(r=>'<div class="corr"><div class="f">'+esc(fFecha(r.f,true))+'</div><div class="b">'+esc(r.txt)+'</div></div>').join('');
+  }
+  h+='<div class="btn-fila" style="margin-top:16px">'
+    +(x.abierto
+      ?'<button class="btn-mini dorado" id="casoCerrar" style="flex:1">■ Terminar caso y registrar horas</button>'
+      :'<button class="btn-mini dorado" id="casoRevisar" style="flex:1">👓 Revisar con ojos de hoy</button>')
+    +'<button class="btn-mini" id="casoBorrar" style="color:var(--rojo);border-color:rgba(181,69,47,.4)">🗑</button></div>';
+  cont.innerHTML=h;
+
+  document.getElementById('casoVolver').onclick=()=>ir('casos');
+  if(x.abierto){
+    const pintaCrono=()=>{
+      const el=document.getElementById('casoCrono');
+      if(el&&x.ini) el.textContent=Math.max(0,Math.round((Date.now()-x.ini)/60000)+(x.min||0))+' min';
+    };
+    pintaCrono();
+    clearInterval(casoTimer);
+    casoTimer=setInterval(pintaCrono,30000);
+    const ta=document.getElementById('casoTxt');
+    ta.addEventListener('input',()=>{ x.txt=ta.value; guardarPronto(); });
+    cont.querySelectorAll('[data-chk]').forEach(ch=>ch.onchange=()=>{ x.check[+ch.dataset.chk]=ch.checked; guardar(); });
+    document.getElementById('casoCerrar').onclick=()=>{
+      x.min=(x.min||0)+Math.max(1,Math.round((Date.now()-x.ini)/60000));
+      x.ini=null; x.abierto=false; guardar();
+      registrarSesion({tipo:'caso',area:pl?pl.area:'',min:x.min,cal:'limite',txt:x.titulo});
+      renderCaso();
+      notificar('Caso cerrado ✓ — '+x.min+' min a tus horas. Vuelve en unos meses a revisarlo con ojos de hoy.');
+    };
+  }else{
+    const br=document.getElementById('casoRevisar');
+    if(br) br.onclick=()=>abrirHoja('h-rev',()=>{ document.getElementById('revTxt').value=''; });
+  }
+  armarBorrar(document.getElementById('casoBorrar'),()=>{
+    D.casos=D.casos.filter(k=>k.id!==casoActualId);
+    guardar(); ir('casos'); notificar('Caso borrado');
+  });
+}
+document.getElementById('revGuardar').onclick=()=>{
+  const x=D.casos.find(k=>k.id===casoActualId);
+  const t=document.getElementById('revTxt').value.trim();
+  if(!x||!t){ notificar('Escribe qué ves distinto hoy.',true); return; }
+  x.rev.push({f:hoyISO(),txt:t}); guardar(); cerrarHoja(); renderCaso();
+  notificar('Revisión guardada ✓ — esto es progreso medible.');
+};
+
+/* ============================================================
+   Micro-habilidades — entrena siempre la pieza más débil.
+   ============================================================ */
+function horasMicro(id){ return horasEfectivas(x=>x.micro===id); }
+function microMasDebil(areaId){
+  const ms=D.micros.filter(m=>m.area===areaId);
+  if(!ms.length) return null;
+  return ms.slice().sort((a,b)=>horasMicro(a.id)-horasMicro(b.id))[0];
+}
+function htmlMicros(){
+  let h='<h2 class="sec">Micro-habilidades<button class="cta" id="btnNuevaMicro">+ Nueva</button></h2>';
+  if(!D.micros.length){
+    return h+'<div class="nota-p" style="margin:0 2px 10px">Parte tus habilidades grandes en piezas entrenables («leer notas del 10-K», «detectar inventario inflado»). Al iniciar una sesión, la app te sugiere la más débil 🎯.</div>';
+  }
+  const maxH=Math.max.apply(null,D.micros.map(m=>horasMicro(m.id)).concat([0.5]));
+  h+='<div class="card">'+D.areas.filter(a=>D.micros.some(m=>m.area===a.id)).map(a=>{
+    const debil=microMasDebil(a.id);
+    return '<div class="bg-cab" style="font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-suave);padding:8px 0 3px">'+esc(a.emoji+' '+a.nombre)+'</div>'
+      +D.micros.filter(m=>m.area===a.id).map(m=>{
+        const hh=horasMicro(m.id);
+        return '<div class="fila-est"><span class="nm">'+esc(m.nombre)+(debil&&debil.id===m.id?' <b style="color:var(--oro)">🎯 la más débil</b>':'')+'</span>'
+          +'<span class="pista"><i style="width:'+(hh/maxH*100)+'%;background:var(--verde)"></i></span>'
+          +'<span class="vl num">'+fmtH(hh)+'h</span>'
+          +'<button class="quitar" data-borramicro="'+m.id+'">✕</button></div>';
+      }).join('');
+  }).join('')+'</div>';
+  return h;
+}
+document.getElementById('miGuardar').onclick=()=>{
+  const nom=document.getElementById('miNombre').value.trim();
+  if(!nom){ notificar('Ponle nombre.',true); return; }
+  D.micros.push({id:uid(),nombre:nom,area:document.getElementById('miArea').value});
+  guardar(); cerrarHoja();
+  if(pantallaActual==='practica') renderPractica();
+  notificar('Micro-habilidad creada 🎯');
+};
 
 /* ============================================================
    Rutas de estudio — el temario vive en la app y el progreso
@@ -1563,6 +2437,7 @@ function renderAjustes(){
   }));
   setSeg('segTema',D.cfg.tema||'auto');
   setSeg('segSesion',String(D.cfg.sesion||60));
+  setSeg('segMeta',String(D.cfg.metaHoras||1000));
 }
 
 /* ---------- segmentos ---------- */
@@ -1581,6 +2456,9 @@ function setSeg(id,v){
 }
 segInit('segTema',v=>{ D.cfg.tema=v; guardar(); aplicarTema(); });
 segInit('segSesion',v=>{ D.cfg.sesion=parseInt(v,10)||60; guardar(); });
+segInit('segMeta',v=>{ D.cfg.metaHoras=parseInt(v,10)||1000; guardar(); });
+segInit('segCalidad');
+segInit('segCalidadM');
 const getTipoCaptura=segInit('segTipo',v=>{
   document.getElementById('capTituloLbl').textContent = v==='aplicacion'?'Nombre del procedimiento':'Título del concepto';
   document.getElementById('capTitulo').placeholder    = v==='aplicacion'?'Ej. Cómo analizar un balance general':'Ej. Activo corriente';
@@ -2148,11 +3026,14 @@ function cargarNormalizar(){
   if(!Array.isArray(D.areas)||!D.areas.length) D.areas=AREAS_BASE.map(a=>Object.assign({},a));
   if(!D.rutas||typeof D.rutas!=='object'||Array.isArray(D.rutas)) D.rutas={activa:null,proyectos:{}};
   if(!D.rutas.proyectos||typeof D.rutas.proyectos!=='object') D.rutas.proyectos={};
+  ['sesiones','casos','micros'].forEach(k=>{ if(!Array.isArray(D[k])) D[k]=[]; });
+  if(!(D.cfg.metaHoras>0)) D.cfg.metaHoras=1000;
   D.notas.forEach(n=>{
     ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });
     if(!n.creado) n.creado=hoyISO();
     if(!n.revisado) n.revisado=n.creado;
     if(!n.dominio) n.dominio=1;
+    if(!n.rep||typeof n.rep!=='object') n.rep={ef:2.5,int:0,reps:0,fallos:0,due:mananaISO()};
   });
 }
 document.getElementById('btnMarkdown').onclick=()=>{
@@ -2211,7 +3092,9 @@ armarBorrar(document.getElementById('btnBorrarSemillas'),()=>{
   notificar((antes-D.notas.length)+' notas de ejemplo borradas');
 });
 armarBorrar(document.getElementById('btnBorrarTodo'),()=>{
-  D={v:1,cfg:{tema:D.cfg.tema||'auto',sesion:D.cfg.sesion||60},areas:AREAS_BASE.map(a=>Object.assign({},a)),notas:[],dias:[hoyISO()]};
+  D={v:1,cfg:{tema:D.cfg.tema||'auto',sesion:D.cfg.sesion||60,metaHoras:D.cfg.metaHoras||1000},
+     areas:AREAS_BASE.map(a=>Object.assign({},a)),notas:[],dias:[hoyISO()]};
+  cargarNormalizar();          /* completa rutas, sesiones, casos, micros… */
   guardar(); mapa={area:null,tema:null}; notaActual=null;
   renderAjustes(); ir('hoy');
   notificar('Todo borrado');
@@ -2224,6 +3107,8 @@ cargar();
 aplicarTema();
 renderFiltros();
 renderHoy();
+arrancarTick();
+setTimeout(mostrarPeaje,600);
 
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
