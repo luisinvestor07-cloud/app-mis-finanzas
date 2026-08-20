@@ -36,9 +36,14 @@ preguntas escritas de corrido: *«¿qué fórmula usé para capital de trabajo?�
 ## Cómo se usa
 
 - **Hoy** — organiza tu sesión de estudio en tres bloques: capturar, conectar y consolidar.
+  Si tienes una ruta activa, te muestra el siguiente concepto por crear.
   Te muestra qué conceptos mencionaste sin crearles nota, qué notas quedaron sueltas y cuáles
   dejaste a medias.
 - **Buscar** — búsqueda instantánea con filtros: por dominar, incompletas, sin conectar, con dudas.
+- **Rutas** — tres temarios completos listos para estudiar (inteligencia artificial aplicada,
+  edición de video para cursos y fiscal para inversionista/educador en México). Cada concepto del
+  temario se convierte en una nota tuya con un toque; el progreso se mide contra tus notas reales
+  y cada tema cierra con un proyecto que te da derecho a marcar «Aplicado».
 - **Mapa** — área › tema › notas, más todas tus etiquetas.
 - **Ajustes** — estadísticas, áreas, tema, respaldo.
 
@@ -78,3 +83,16 @@ manifest.json ← manifiesto PWA
 sw.js         ← service worker (offline)
 icons/        ← ícono de la red de conocimiento
 ```
+
+## Privacidad
+
+Puedes compartir el enlace con quien quieras: cada persona obtiene su propia app vacía.
+Tus notas viven **solo en tu dispositivo** — la app no tiene servidor, no pide cuenta y no
+hace ninguna llamada a internet, así que nadie más puede leerlas (ni siquiera el autor).
+La otra cara de esa moneda: si pierdes el dispositivo sin respaldo, nadie puede recuperarlas
+por ti. **Ajustes → Respaldar (JSON)**, con regularidad.
+
+## Licencia
+
+Código bajo [licencia MIT](../LICENSE).
+

@@ -321,6 +321,35 @@
   .entrada-esc>*:nth-child(4){animation-delay:.14s}
   .entrada-esc>*:nth-child(n+5){animation-delay:.18s}
   @keyframes entrar{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  /* ---------- rutas de estudio ---------- */
+  .r-sel{display:flex;gap:7px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px;scrollbar-width:none}
+  .r-sel::-webkit-scrollbar{display:none}
+  .r-card{background:var(--tarjeta);border:1px solid var(--marca);border-radius:18px;padding:16px;margin-bottom:10px;
+    box-shadow:0 2px 10px rgba(22,33,27,.05);border-top:3px solid var(--oro)}
+  .r-card .em{font-size:26px;line-height:1}
+  .r-card .nm{font-size:16.5px;font-weight:800;margin-top:8px}
+  .r-card .mt{font-size:13px;color:var(--tinta-suave);line-height:1.5;margin-top:5px}
+  .r-card .dt{font-size:11px;color:var(--tinta-suave);font-weight:700;margin-top:9px;text-transform:uppercase;letter-spacing:.05em}
+  .r-prog{display:flex;align-items:center;gap:10px;margin-top:11px}
+  .r-prog .barra-meta{flex:1;margin-top:0}
+  .r-prog b{font-size:12px;font-weight:800;white-space:nowrap}
+  .rt-fila{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--linea);
+    width:100%;background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;color:var(--tinta);
+    text-align:left;cursor:pointer;font-size:14px}
+  .rt-fila:last-of-type{border-bottom:none}
+  .rt-fila .est{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:800;border:1.5px solid var(--linea);color:transparent}
+  .rt-fila.hecha .est{border-color:transparent;color:#fff}
+  .rt-fila .tt{flex:1;min-width:0;line-height:1.35}
+  .rt-fila:not(.hecha) .tt{color:var(--tinta-suave)}
+  .rt-fila .tp{font-size:12px;flex-shrink:0;opacity:.8}
+  .rt-fila .mas{font-size:11px;font-weight:800;color:var(--oro);flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
+  .rt-proy{margin-top:12px;background:var(--papel);border-radius:12px;padding:12px 13px}
+  .rt-proy .tx{font-size:13.5px;line-height:1.5;margin-bottom:9px}
+  .rt-logro{font-size:12.5px;color:var(--tinta-suave);font-style:italic;margin-top:10px;line-height:1.45}
+  .rt-tag{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:4px 9px;border-radius:999px;
+    background:var(--papel);color:var(--tinta-suave);white-space:nowrap}
+  .rt-tag.ok{background:var(--verde);color:#fff}
   @media(prefers-reduced-motion:reduce){
     .hoja{transition:none}.pantalla.activa{animation:none}.entrada-esc>*{animation:none}
   }
@@ -397,6 +426,11 @@
 <div class="pantalla" id="p-mapa">
   <div class="miga" id="migaMapa"></div>
   <div id="cuerpoMapa"></div>
+</div>
+
+<!-- ================= RUTAS ================= -->
+<div class="pantalla" id="p-rutas">
+  <div id="cuerpoRutas"></div>
 </div>
 
 <!-- ================= AJUSTES ================= -->
@@ -483,6 +517,7 @@
 <!-- ================= TABS ================= -->
 <nav class="tabs">
   <button data-p="hoy" class="activo"><span class="ic">🎯</span>Hoy</button>
+  <button data-p="rutas"><span class="ic">🧭</span>Rutas</button>
   <button data-p="buscar"><span class="ic">🔍</span>Buscar</button>
   <button data-p="mapa"><span class="ic">🗺️</span>Mapa</button>
   <button data-p="ajustes"><span class="ic">⚙️</span>Ajustes</button>
@@ -701,7 +736,7 @@ const AREAS_BASE=[
   {id:'finanzas',  nombre:'Finanzas',   emoji:'📊'},
   {id:'tecnologia',nombre:'Tecnología', emoji:'💻'}
 ];
-let D={ v:1, cfg:{tema:'auto',sesion:60}, areas:[], notas:[], dias:[] };
+let D={ v:1, cfg:{tema:'auto',sesion:60}, areas:[], notas:[], dias:[], rutas:{activa:null,proyectos:{}} };
 
 function notaNueva(p){
   return Object.assign({
@@ -773,6 +808,8 @@ function cargar(){
   if(!Array.isArray(D.notas)) D.notas=[];
   if(!Array.isArray(D.dias))  D.dias=[];
   if(!Array.isArray(D.areas)||!D.areas.length) D.areas=AREAS_BASE.map(a=>Object.assign({},a));
+  if(!D.rutas||typeof D.rutas!=='object'||Array.isArray(D.rutas)) D.rutas={activa:null,proyectos:{}};
+  if(!D.rutas.proyectos||typeof D.rutas.proyectos!=='object') D.rutas.proyectos={};
   D.notas.forEach(n=>{
     ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });
     if(!n.creado)   n.creado=hoyISO();
@@ -884,7 +921,9 @@ function ir(p,sinScroll){
   if(p!=='nota') pantallaPrevia=p;
   pantallaActual=p;
   if(!sinScroll) window.scrollTo(0,0);
+  if(p!=='nota') notaActual=null;
   if(p==='hoy') renderHoy();
+  if(p==='rutas') renderRutas();
   if(p==='mapa') renderMapa();
   if(p==='ajustes') renderAjustes();
   if(p==='buscar') setTimeout(()=>document.getElementById('qBuscar').focus(),120);
@@ -1116,6 +1155,18 @@ function renderHoy(){
       +huerfanos.slice(0,8).map(x=>'<button class="chip mini" data-crear="'+esc(x.txt)+'">+ '+esc(x.txt)+'</button>').join('')
       +'</div>';
   }
+  const rAct=rutaPorId(D.rutas.activa);
+  if(rAct){
+    const pend=pendientesRuta(rAct,3);
+    if(pend.length){
+      h+='<div class="campo-l" style="margin-top:'+(huerfanos.length?'12px':'0')+'">Siguiente en tu ruta '+rAct.emoji+'</div><div class="listilla">'
+        +pend.map(o=>'<button class="chip mini" data-rc="'+rAct.id+':'+o.i+'">+ '+esc(o.x.titulo)+'</button>').join('')+'</div>';
+    }else{
+      const pr=progresoRuta(rAct);
+      if(pr.total&&pr.hechos===pr.total)
+        h+='<div class="nota-p">🎉 Creaste todas las notas de tu ruta '+rAct.emoji+'. Revisa en «Rutas» qué proyectos faltan.</div>';
+    }
+  }
   h+='<div class="btn-fila"><button class="btn-mini dorado" data-accion="nueva-conocimiento">📘 Concepto nuevo</button>'
    +'<button class="btn-mini" data-accion="nueva-aplicacion">🛠️ Procedimiento</button></div></div>';
 
@@ -1231,6 +1282,242 @@ function renderMapa(){
   miga.querySelector('[data-nivel="raiz"]').onclick=()=>{ mapa={area:null,tema:null}; renderMapa(); };
   miga.querySelector('[data-nivel="area"]').onclick=()=>{ mapa.tema=null; renderMapa(); };
 }
+
+
+/* ============================================================
+   Rutas de estudio — el temario vive en la app y el progreso
+   se mide contra tus notas reales: un concepto cuenta como
+   hecho cuando existe una nota con ese título exacto.
+   ============================================================ */
+const RUTAS=[
+{ id:'ia', emoji:'🤖', corto:'IA', nombre:'Inteligencia artificial aplicada', semanas:8,
+  meta:'Usar IA con criterio profesional — para invertir, crear cursos y construir herramientas — sabiendo cuándo confiar y cuándo no.',
+  area:{id:'ia',nombre:'Inteligencia artificial',emoji:'🤖'},
+  temas:[
+  { t:'Cómo funciona un modelo de lenguaje', sem:'semana 1',
+    por:'Quien no entiende por qué la IA inventa datos no puede usarla para dinero ni para enseñar.',
+    c:['Modelo de lenguaje (LLM)','Token','Ventana de contexto','Entrenamiento vs. inferencia','Corte de conocimiento','Alucinación','Temperatura y aleatoriedad'],
+    a:['Cómo detectar una alucinación antes de que me cueste','Qué nunca delego a la IA sin verificar'],
+    p:'Pídele a una IA un análisis largo de un tema financiero que domines y marca línea por línea: verificado, impreciso o inventado. Guarda el resultado en tus notas.',
+    l:'Puedes predecir, antes de preguntar, en qué tipo de pregunta va a fallar la IA — y aciertas.' },
+  { t:'Prompting profesional', sem:'semanas 2–3',
+    por:'La diferencia entre una respuesta mediocre y una útil casi nunca es el modelo: es la pregunta.',
+    c:['Instrucción vs. contexto','Rol o persona','Ejemplos dentro del prompt (few-shot)','Formato de salida','Razonamiento paso a paso','Iteración de prompts'],
+    a:['Mi plantilla de prompt para análisis financiero','Mi plantilla para crear material de curso','Checklist para revisar una respuesta antes de usarla'],
+    p:'Construye tres plantillas tuyas que uses de verdad cada semana. La prueba de fuego: al mes siguiente, ¿las sigues usando?',
+    l:'Tu primer intento de prompt saca en una pasada lo que antes te tomaba cinco correcciones.' },
+  { t:'IA con tus documentos', sem:'semanas 4–5',
+    por:'El salto de calidad llega cuando la IA trabaja sobre tus reportes y notas, no sobre su memoria genérica.',
+    c:['Búsqueda semántica','Embedding','RAG (generación aumentada)','Límite práctico del contexto','Privacidad de datos al usar IA'],
+    a:['Cómo darle un reporte anual a la IA sin perder el detalle','Qué datos míos y de mis alumnos nunca subo'],
+    p:'Analiza un reporte anual real con IA usando tus notas de balance como guía. Documenta tres errores u omisiones de la IA que detectaste gracias a tus notas.',
+    l:'El análisis final es mejor que el tuyo solo y que el de la IA sola — y sabes qué aportó cada quien.' },
+  { t:'Automatizar con criterio', sem:'semanas 6–7',
+    por:'Automatizar lo equivocado multiplica errores a la velocidad de una máquina. Este tema es el freno, no el acelerador.',
+    c:['API','Agente de IA','Herramienta / función','Verificación humana en el flujo','Costo por token'],
+    a:['Cuándo automatizar y cuándo no','Cómo estimar el costo de una tarea con IA'],
+    p:'Automatiza una tarea tuya repetitiva (p. ej. el resumen semanal de noticias de tus posiciones) y mide sus errores durante dos semanas antes de confiarle nada.',
+    l:'Tienes una automatización viva que revisas con checklist, y una que decidiste NO construir, con la razón escrita.' },
+  { t:'IA en tu negocio', sem:'semana 8',
+    por:'Como educador, tu política de uso de IA es parte de tu credibilidad. Escríbela antes de que un alumno la pregunte.',
+    c:['Caso de uso vs. moda','Evaluación de salidas','Sesgo del modelo','Límites éticos y legales'],
+    a:['Mi política de uso de IA en mis cursos','Cómo declaro el contenido asistido por IA'],
+    p:'Rediseña una lección de tu curso con IA y compárala honestamente con tu versión anterior: ¿qué mejoró, qué se volvió genérico?',
+    l:'Le explicas a un alumno, sin notas, qué puede y qué no puede esperar de la IA — con ejemplos tuyos.' }
+]},
+{ id:'video', emoji:'🎬', corto:'Video', nombre:'Edición de video para tus cursos', semanas:6,
+  meta:'Producir lecciones en video con calidad profesional y un flujo repetible que no te queme. Primero el ojo, después los botones.',
+  area:{id:'video',nombre:'Edición de video',emoji:'🎬'},
+  temas:[
+  { t:'Lenguaje audiovisual', sem:'semana 1',
+    por:'Editar es decidir qué se queda. Antes de tocar un programa necesitas el vocabulario para pensar esas decisiones.',
+    c:['Plano y encuadre','Corte','Jump cut','B-roll','Ritmo','Continuidad'],
+    a:['Cómo decido dónde cortar','Cómo retener la atención en los primeros 30 segundos'],
+    p:'Desarma dos videos educativos que admires: anota cada corte durante un minuto de cada uno y pregúntate qué hace cada corte por el espectador.',
+    l:'Ves un video y los cortes dejan de ser invisibles: notas cada decisión del editor.' },
+  { t:'Grabar bien para editar menos', sem:'semana 2',
+    por:'Cada hora invertida antes de grabar ahorra tres en el editor. El material malo no se arregla: se disimula.',
+    c:['Iluminación de tres puntos','El audio manda','Guion vs. escaleta','Teleprompter','Preparación del espacio de grabación'],
+    a:['Mi checklist antes de grabar','La configuración exacta de mi cámara o teléfono'],
+    p:'Graba la misma lección de dos minutos dos veces: a la carrera y con tu checklist. Edita ambas y mide cuánto tiempo te ahorró la segunda.',
+    l:'Tu material llega al editor tan limpio que la edición es montaje, no rescate.' },
+  { t:'El editor por dentro', sem:'semanas 3–4',
+    por:'Aquí empieza la mayoría — y por eso la mayoría edita lento. Tú llegas con criterio y material limpio.',
+    c:['Línea de tiempo','Corte en J y corte en L','Transiciones (y cuándo no usarlas)','Títulos y rótulos','Proxies','Atajos de teclado'],
+    a:['Mi flujo de edición paso a paso','Los diez atajos que ya memoricé'],
+    p:'Edita una lección completa de cinco minutos de tu curso, de material crudo a corte final, documentando tu flujo mientras lo haces.',
+    l:'Editas un minuto de lección terminada en menos de veinte minutos de trabajo.' },
+  { t:'Audio y color', sem:'semana 5',
+    por:'La gente perdona una imagen regular; no perdona un audio malo. El color separa «grabado en casa» de «producido».',
+    c:['Ganancia vs. volumen','Reducción de ruido','Compresión de audio','Ecualización de voz','Corrección de color básica','Música y derechos de uso'],
+    a:['Mi cadena de audio estándar','De dónde saco música y efectos legales'],
+    p:'Rescata el audio de una grabación con ruido de fondo y guarda el proceso como preset. Ese preset es el entregable.',
+    l:'Tu voz suena igual de bien en todas tus lecciones sin pensarlo — porque es un preset, no una decisión.' },
+  { t:'Exportar y publicar', sem:'semana 6',
+    por:'Un gran video mal exportado se ve mal, pesa el triple o nadie le da clic. El último kilómetro también se estudia.',
+    c:['Códec y contenedor','Bitrate','Resolución y cuadros por segundo','Miniatura','Retención de audiencia','Capítulos'],
+    a:['Mis ajustes de exportación por plataforma','Mi checklist antes de publicar'],
+    p:'Publica una lección con miniatura y capítulos hechos con intención. A la semana, revisa la retención y anota en qué segundo pierdes gente.',
+    l:'Produces una lección completa —grabar, editar, publicar— en un flujo que podrías enseñar. Que es, literalmente, tu negocio.' }
+]},
+{ id:'fiscal', emoji:'🧾', corto:'Fiscal', nombre:'Fiscal: inversionista y educador', semanas:8,
+  meta:'Entender tus impuestos como inversionista y vendedor de cursos para decidir CON tu contador, no a ciegas. Las cifras cambian cada año: tus notas guardan el concepto; tu contador confirma la cifra vigente.',
+  area:{id:'fiscal',nombre:'Fiscal',emoji:'🧾'},
+  temas:[
+  { t:'El mapa fiscal', sem:'semana 1',
+    por:'Siete palabras sostienen todo el sistema. Con ellas claras, el resto es detalle.',
+    c:['Contribuyente y RFC','Régimen fiscal','ISR','IVA','CFDI (factura)','Retención','Deducción'],
+    a:['Cómo leer mi constancia de situación fiscal'],
+    p:'Descarga tu constancia de situación fiscal y explica cada dato con tus palabras. Lo que no puedas explicar es tu lista de dudas para el tema 2.',
+    l:'Distingues sin dudar retención de deducción, y sabes cuál de las dos te devuelve dinero.' },
+  { t:'Regímenes para tu actividad', sem:'semanas 2–3',
+    por:'Vender cursos es una actividad económica y el SAT quiere saber bajo qué régimen. Elegir bien cambia cuánto pagas.',
+    c:['RESICO','Actividad empresarial y profesional','Plataformas tecnológicas','Sueldos y salarios','Obligaciones de cada régimen'],
+    a:['Qué régimen conviene para mis ingresos por cursos','Preguntas para mi contador antes de decidir'],
+    p:'Compara en números, con tus ingresos reales o un escenario realista, cómo tributarían tus cursos en dos regímenes. Llévala a tu contador y anota en qué te corrigió.',
+    l:'Explicas por qué estás (o deberías estar) en tu régimen actual, en números y no de oídas.' },
+  { t:'Impuestos del inversionista', sem:'semanas 4–5',
+    por:'CETES, bolsa, dividendos y brokers extranjeros tributan distinto. Es el tema que más te toca el bolsillo.',
+    c:['Retención sobre intereses (CETES)','Ganancia de capital en bolsa','Dividendos y su acreditamiento','Broker extranjero: mis obligaciones','Tipo de cambio fiscal','Pérdidas y su compensación'],
+    a:['Qué documentos le pido a mi broker cada año','Cómo registro mis operaciones para la declaración'],
+    p:'Arma el expediente fiscal de tus inversiones del año en curso: estados de cuenta, constancias de retención, operaciones en el extranjero.',
+    l:'Sabes, antes de invertir en algo, cómo va a tributar — y eso ya es parte de tu análisis.' },
+  { t:'Deducciones y declaración anual', sem:'semanas 6–7',
+    por:'Las deducciones se construyen durante el año y se pierden en diciembre. La declaración solo cosecha lo sembrado.',
+    c:['Deducción personal','Gasto deducible del negocio','Pagos provisionales','Declaración anual','Saldo a favor y devolución'],
+    a:['Mi checklist de deducciones antes del 31 de diciembre','Mi calendario fiscal del año'],
+    p:'Simula tu declaración anual con los datos que ya tienes. El número exacto importa menos que descubrir a tiempo qué documento te habría faltado.',
+    l:'La declaración anual deja de ser un susto de abril y se vuelve la confirmación de lo que ya sabías.' },
+  { t:'Disciplina fiscal', sem:'semana 8',
+    por:'Todo lo anterior se sostiene o se cae con una rutina de 30 minutos al mes.',
+    c:['Separación de cuentas','Buzón tributario','Multas y recargos comunes','Papeles de trabajo'],
+    a:['Mi rutina fiscal mensual de 30 minutos','Qué guardo y por cuántos años'],
+    p:'Deja montada tu carpeta de CFDIs y estados de cuenta, con la rutina mensual escrita y la primera ejecución hecha.',
+    l:'Tu contador te dice que eres su cliente más fácil — y tú entiendes cada cosa que firma por ti.' }
+]}];
+
+const rutaPorId=id=>RUTAS.find(r=>r.id===id);
+function asegurarArea(r){
+  if(!area(r.area.id)) D.areas.push({id:r.area.id,nombre:r.area.nombre,emoji:r.area.emoji});
+}
+/* Lista plana de los elementos de una ruta, en orden de estudio. */
+function itemsRuta(r){
+  const out=[];
+  r.temas.forEach((t,i)=>{
+    t.c.forEach(x=>out.push({tipo:'conocimiento',titulo:x,tema:i}));
+    t.a.forEach(x=>out.push({tipo:'aplicacion',titulo:x,tema:i}));
+  });
+  return out;
+}
+const progresoRuta=r=>{
+  const items=itemsRuta(r);
+  return {hechos:items.filter(x=>porTitulo(x.titulo)).length,total:items.length};
+};
+const pendientesRuta=(r,n)=>itemsRuta(r).map((x,i)=>({x:x,i:i})).filter(o=>!porTitulo(o.x.titulo)).slice(0,n||3);
+
+let vistaPicker=false;
+function renderRutas(){
+  const cont=document.getElementById('cuerpoRutas');
+  const act=rutaPorId(D.rutas.activa);
+
+  if(!act||vistaPicker){
+    cont.innerHTML='<h2 class="sec" style="margin-top:4px">Elige tu ruta</h2>'
+      +'<div class="nota-p" style="margin:0 2px 12px">Una ruta activa a la vez. Las otras esperan sin caducar: estudiar tres cosas a medias enseña menos que tres completas, una tras otra.</div>'
+      +RUTAS.map(r=>{
+        const pr=progresoRuta(r);
+        const nc=itemsRuta(r).filter(x=>x.tipo==='conocimiento').length;
+        const na=itemsRuta(r).filter(x=>x.tipo==='aplicacion').length;
+        return '<div class="r-card"><span class="em">'+r.emoji+'</span>'
+          +'<div class="nm">'+esc(r.nombre)+'</div>'
+          +'<div class="mt">'+esc(r.meta)+'</div>'
+          +'<div class="dt">'+r.semanas+' semanas · '+nc+' conceptos 📘 · '+na+' procedimientos 🛠️</div>'
+          +(pr.hechos?'<div class="r-prog"><div class="barra-meta"><div style="width:'+(pr.hechos/pr.total*100)+'%"></div></div><b class="num">'+pr.hechos+'/'+pr.total+'</b></div>':'')
+          +'<div class="btn-fila"><button class="btn-mini '+(pr.hechos?'':'dorado')+'" data-activar="'+r.id+'">'
+          +(D.rutas.activa===r.id?'Continuar':pr.hechos?'Retomar esta ruta':'Empezar esta ruta')+'</button></div></div>';
+      }).join('');
+    bindRutas(cont);
+    return;
+  }
+
+  const pr=progresoRuta(act);
+  const items=itemsRuta(act);
+  let h='<div class="r-sel">'+RUTAS.map(r=>
+      '<button class="chip'+(r.id===act.id?' activo':'')+'" data-activar="'+r.id+'">'+r.emoji+' '+esc(r.corto)+'</button>').join('')
+    +'<button class="chip" data-verpicker="1">Todas ›</button></div>';
+
+  h+='<div class="r-card" style="border-top-color:var(--oro)">'
+    +'<div class="nm">'+act.emoji+' '+esc(act.nombre)+'</div>'
+    +'<div class="mt">'+esc(act.meta)+'</div>'
+    +'<div class="r-prog"><div class="barra-meta"><div style="width:'+(pr.total?pr.hechos/pr.total*100:0)+'%"></div></div>'
+    +'<b class="num">'+pr.hechos+' de '+pr.total+'</b></div>'
+    +'<div class="nota-p">Cada título de la lista se convierte en una nota tuya. Toca uno pendiente para crearla con el área y el tema ya puestos; toca uno hecho para abrir tu nota.</div></div>';
+
+  let idxGlobal=0;
+  act.temas.forEach((t,i)=>{
+    const propios=items.filter(x=>x.tema===i);
+    const hechos=propios.filter(x=>porTitulo(x.titulo)).length;
+    const proyKey=act.id+':'+i;
+    const proyHecho=!!D.rutas.proyectos[proyKey];
+    const completo=hechos===propios.length&&proyHecho;
+    h+='<div class="bloque" style="border-left-color:'+(completo?'var(--verde)':'var(--oro)')+'">'
+      +'<div class="cab"><h3>'+(i+1)+' · '+esc(t.t)+'</h3>'
+      +'<span class="rt-tag'+(completo?' ok':'')+'">'+(completo?'✓ completo':hechos+'/'+propios.length)+'</span></div>'
+      +'<div class="desc">'+esc(t.por)+' <i style="opacity:.8">('+esc(t.sem)+')</i></div>';
+    propios.forEach(x=>{
+      const ya=porTitulo(x.titulo);
+      const ic=x.tipo==='aplicacion'?'🛠️':'📘';
+      if(ya){
+        const d=dom(ya.dominio);
+        h+='<button class="rt-fila hecha" data-nota="'+ya.id+'">'
+          +'<span class="est" style="background:'+d.c+'" title="'+esc(d.n)+'">✓</span>'
+          +'<span class="tt">'+esc(x.titulo)+'</span><span class="tp">'+ic+'</span></button>';
+      }else{
+        h+='<button class="rt-fila" data-rc="'+act.id+':'+idxGlobal+'">'
+          +'<span class="est"></span><span class="tt">'+esc(x.titulo)+'</span>'
+          +'<span class="tp">'+ic+'</span><span class="mas">+ crear</span></button>';
+      }
+      idxGlobal++;
+    });
+    h+='<div class="rt-proy"><div class="campo-l" style="margin-bottom:4px">Proyecto del tema'
+      +(proyHecho?'<span class="guardado ver" style="margin-left:8px">hecho el '+esc(fFecha(D.rutas.proyectos[proyKey]))+'</span>':'')+'</div>'
+      +'<div class="tx">'+esc(t.p)+'</div>'
+      +'<button class="btn-mini'+(proyHecho?'':' dorado')+'" data-proy="'+proyKey+'">'
+      +(proyHecho?'Desmarcar':'✓ Lo hice — marcar proyecto')+'</button></div>'
+      +'<div class="rt-logro"><b style="font-style:normal">Dominaste el tema cuando:</b> '+esc(t.l)+'</div>'
+      +'</div>';
+  });
+  cont.innerHTML=h;
+  bindRutas(cont);
+}
+function bindRutas(cont){
+  cont.querySelectorAll('[data-activar]').forEach(b=>b.onclick=()=>{
+    const r=rutaPorId(b.dataset.activar); if(!r) return;
+    const nueva=D.rutas.activa!==r.id;
+    D.rutas.activa=r.id; vistaPicker=false;
+    asegurarArea(r); guardar(); renderRutas();
+    if(nueva) notificar('Ruta activa: '+r.emoji+' '+r.nombre);
+    window.scrollTo(0,0);
+  });
+  cont.querySelectorAll('[data-verpicker]').forEach(b=>b.onclick=()=>{ vistaPicker=true; renderRutas(); window.scrollTo(0,0); });
+  cont.querySelectorAll('[data-proy]').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.proy;
+    if(D.rutas.proyectos[k]) delete D.rutas.proyectos[k];
+    else{ D.rutas.proyectos[k]=hoyISO(); notificar('Proyecto marcado ✓ — ahora sí puedes subir esas notas a «Aplicado»'); }
+    guardar(); renderRutas();
+  });
+}
+/* Crear una nota desde una ruta (funciona también desde los chips de «Hoy»). */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-rc]');
+  if(!b) return;
+  const partes=b.dataset.rc.split(':');
+  const r=rutaPorId(partes[0]); if(!r) return;
+  const it=itemsRuta(r)[parseInt(partes[1],10)]; if(!it) return;
+  const ya=porTitulo(it.titulo);
+  if(ya){ abrirNota(ya.id); return; }
+  asegurarArea(r);
+  abrirCaptura({titulo:it.titulo,tipo:it.tipo,area:r.area.id,tema:r.temas[it.tema].t,desde:null});
+});
 
 /* ============================================================
    Pantalla AJUSTES
@@ -1613,7 +1900,7 @@ taTitulo.addEventListener('input',()=>{
    está tocando (pestaña, dominio…) y el toque se pierde. Solo guardamos. */
 taTitulo.addEventListener('blur',()=>{ guardar(); actualizarPie(); });
 taTitulo.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); taTitulo.blur(); } });
-document.getElementById('notaVolver').onclick=()=>ir(pantallaPrevia);
+document.getElementById('notaVolver').onclick=()=>{ guardar(); ir(pantallaPrevia); };
 
 /* ---------- crear la nota par (conocimiento ⇄ aplicación) ---------- */
 document.getElementById('btnDuplicarPar').onclick=()=>{
@@ -1708,7 +1995,7 @@ document.getElementById('capGuardar').onclick=()=>{
   });
   D.notas.push(n);
   /* si la creaste desde otra nota o desde una mención, quedan conectadas */
-  const origen=capturaPref.desde||(notaActual?notaActual.id:null);
+  const origen=('desde' in capturaPref)?capturaPref.desde:(notaActual?notaActual.id:null);
   if(origen&&nota(origen)) conectar(nota(origen),n.id);
   tocar(n); guardar();
   cerrarHoja();
@@ -1859,6 +2146,8 @@ function cargarNormalizar(){
   if(!Array.isArray(D.notas)) D.notas=[];
   if(!Array.isArray(D.dias))  D.dias=[];
   if(!Array.isArray(D.areas)||!D.areas.length) D.areas=AREAS_BASE.map(a=>Object.assign({},a));
+  if(!D.rutas||typeof D.rutas!=='object'||Array.isArray(D.rutas)) D.rutas={activa:null,proyectos:{}};
+  if(!D.rutas.proyectos||typeof D.rutas.proyectos!=='object') D.rutas.proyectos={};
   D.notas.forEach(n=>{
     ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });
     if(!n.creado) n.creado=hoyISO();
