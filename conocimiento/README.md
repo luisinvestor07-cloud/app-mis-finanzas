@@ -36,9 +36,14 @@ preguntas escritas de corrido: *«¿qué fórmula usé para capital de trabajo?�
 ## Cómo se usa
 
 - **Hoy** — organiza tu sesión de estudio en tres bloques: capturar, conectar y consolidar.
+  Si tienes una ruta activa, te muestra el siguiente concepto por crear.
   Te muestra qué conceptos mencionaste sin crearles nota, qué notas quedaron sueltas y cuáles
   dejaste a medias.
 - **Buscar** — búsqueda instantánea con filtros: por dominar, incompletas, sin conectar, con dudas.
+- **Rutas** — tres temarios completos listos para estudiar (inteligencia artificial aplicada,
+  edición de video para cursos y fiscal para inversionista/educador en México). Cada concepto del
+  temario se convierte en una nota tuya con un toque; el progreso se mide contra tus notas reales
+  y cada tema cierra con un proyecto que te da derecho a marcar «Aplicado».
 - **Mapa** — área › tema › notas, más todas tus etiquetas.
 - **Ajustes** — estadísticas, áreas, tema, respaldo.
 
