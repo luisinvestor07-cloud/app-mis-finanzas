@@ -405,6 +405,7 @@
       <button class="btn-mini" id="btnPin" style="flex:1"></button>
       <button class="btn-mini" id="btnReporte" style="flex:1" data-i18n="reporteBtn"></button>
     </div>
+    <button class="btn-mini dorado" id="btnInicio" style="width:100%;margin-top:9px" data-i18n="inicioBtn"></button>
   </div>
 
   <h2 class="sec" data-i18n="respaldoTitulo"></h2>
@@ -529,6 +530,16 @@
     <div class="fila"><span data-i18n="apartadoMes"></span><b class="num" id="ahorroMes">—</b></div>
   </section>
   <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:9px">
+      <div style="min-width:0">
+        <div style="font-size:12px;font-weight:700;color:var(--tinta-suave);text-transform:uppercase;letter-spacing:.05em" data-i18n="ahorroPrevio"></div>
+        <b class="num" id="ahorroPrevioVal" style="font-size:17px">—</b>
+      </div>
+      <button class="btn-mini" id="btnAhorroPrevio" data-i18n="editarMonto"></button>
+    </div>
+    <div class="nota" data-i18n="ahorroPrevioNota"></div>
+  </div>
+  <div class="card">
     <h2 class="sec" style="margin-top:0" data-i18n="clasificadoDesc"></h2>
     <div id="listaAhorro"></div>
   </div>
@@ -608,6 +619,10 @@
   <div class="campo"><label data-i18n="categoria"></label><div class="chips" id="chipsCat"></div></div>
   <div class="campo" id="mTipoAhorroWrap" style="display:none"><label data-i18n="tipoAhorroLbl"></label>
     <div class="seg" id="mTipoAhorro"><button data-v="aporte" class="activo" data-i18n="apartarSeg"></button><button data-v="retiro" data-i18n="retirarSeg"></button></div>
+  </div>
+  <div class="campo" id="mOrigenWrap" style="display:none"><label data-i18n="origenLbl"></label>
+    <div class="seg" id="mOrigen"><button data-v="ingreso" class="activo" data-i18n="origenIngreso"></button><button data-v="capital" data-i18n="origenCapital"></button></div>
+    <div class="nota" id="mOrigenNota"></div>
   </div>
   <div class="fila2">
     <div class="campo"><label for="mMonto" data-i18n="monto"></label><input id="mMonto" type="number" inputmode="decimal" placeholder="0.00" step="0.01" min="0"></div>
@@ -693,7 +708,11 @@
     <div class="campo"><label for="afMonto" data-i18n="monto"></label><input id="afMonto" type="number" inputmode="decimal" placeholder="0.00" step="0.01" min="0"></div>
     <div class="campo"><label data-i18n="moneda"></label><div class="seg" id="afMoneda"><button data-v="USD" class="activo">USD</button><button data-v="MXN">MXN</button></div></div>
   </div>
-  <label class="switch" style="margin-bottom:6px"><input type="checkbox" id="afRegMov" checked> <span data-i18n="regMovAhorro"></span></label>
+  <div class="campo"><label data-i18n="origenLbl"></label>
+    <div class="seg" id="afOrigen"><button data-v="ingreso" class="activo" data-i18n="origenIngreso"></button><button data-v="capital" data-i18n="origenCapital"></button></div>
+    <div class="nota" id="afOrigenNota"></div>
+  </div>
+  <div id="afRegMovWrap"><label class="switch" style="margin-bottom:6px"><input type="checkbox" id="afRegMov" checked> <span data-i18n="regMovAhorro"></span></label></div>
   <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarAporteFondo" data-i18n="aportarBtn"></button></div>
 </div>
 
@@ -784,6 +803,31 @@
   <h3 id="tituloSaldo"></h3>
   <div class="campo"><label for="sSaldo" data-i18n="nuevoSaldo"></label><input id="sSaldo" type="number" inputmode="decimal" step="0.01" min="0"></div>
   <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarSaldo" data-i18n="actualizar"></button></div>
+</div>
+
+<!-- Hoja: ahorro previo -->
+<div class="hoja" id="hojaAhorroPrevio">
+  <h3 data-i18n="ahorroPrevio"></h3>
+  <div class="fila2">
+    <div class="campo"><label for="apMonto" data-i18n="monto"></label><input id="apMonto" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div>
+    <div class="campo"><label data-i18n="moneda"></label><div class="seg" id="apMoneda"><button data-v="USD" class="activo">USD</button><button data-v="MXN">MXN</button></div></div>
+  </div>
+  <div class="nota" data-i18n="ahorroPrevioNota"></div>
+  <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarAhorroPrevio" data-i18n="guardar"></button></div>
+</div>
+
+<!-- Hoja: punto de partida -->
+<div class="hoja" id="hojaInicio">
+  <h3 data-i18n="inicioTitulo"></h3>
+  <div class="nota" style="margin:-6px 0 14px" data-i18n="inicioNota"></div>
+  <div class="campo"><label data-i18n="moneda"></label><div class="seg" id="iniMoneda"><button data-v="USD" class="activo">USD</button><button data-v="MXN">MXN</button></div></div>
+  <div class="campo"><label data-i18n="inicioBancos"></label><input id="iniBancos" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div>
+  <div class="campo"><label data-i18n="inicioEfectivo"></label><input id="iniEfectivo" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div>
+  <div class="campo"><label data-i18n="inicioAhorro"></label><input id="iniAhorro" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div>
+  <div class="campo"><label data-i18n="inicioCartera"></label><input id="iniCartera" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div>
+  <div class="campo"><label data-i18n="inicioDeuda"></label><input id="iniDeuda" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div>
+  <div class="nota" id="iniAviso"></div>
+  <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarInicio" data-i18n="guardar"></button></div>
 </div>
 
 <!-- Hoja: PIN -->
@@ -1045,6 +1089,27 @@ es:{
   origenCapitalNota:'Dinero que ya tenías (cartera previa, traspaso). Suma a tu patrimonio sin tocar el flujo de este mes.',
   origenIngresoNota:'Dinero nuevo de tu ingreso: cuenta como salida del mes hacia tu patrimonio.',
   capitalTag:'capital inicial',
+  origenAhorroNota:'Dinero que ya tenías ahorrado (antes de usar la app). Suma a tu ahorro sin restar del mes.',
+  ahorroPrevio:'Ahorro que ya tenía',
+  ahorroPrevioNota:'Captura aquí lo que ya tenías ahorrado antes de empezar a usar la app. Cuenta como apartado dentro de tus bancos, sin tocar ningún mes.',
+  editarMonto:'Editar',
+  grpConsumo:'↓ Consumo',
+  grpPatrimonio:'→ A patrimonio',
+  subtotal:'Subtotal',
+  inicioTitulo:'🚀 Mi punto de partida',
+  inicioNota:'Captura una sola vez lo que ya tienes hoy. Todo se registra como capital existente: suma a tu patrimonio sin restar de ningún mes.',
+  inicioBtn:'🚀 Configurar mi punto de partida',
+  inicioBancos:'🏦 Saldo en bancos',
+  inicioEfectivo:'💵 Efectivo',
+  inicioAhorro:'🔒 Ahorro apartado',
+  inicioCartera:'📈 Cartera de inversión',
+  inicioDeuda:'💳 Deudas (total)',
+  inicioListo:'Punto de partida guardado ✓',
+  inicioNombreBanco:'Mis bancos',
+  inicioNombreEfectivo:'Efectivo',
+  inicioNombreCartera:'Cartera inicial',
+  inicioNombreDeuda:'Deudas',
+  inicioYa:'Ya configuraste tu punto de partida. Si lo vuelves a guardar, se agregarán registros nuevos.',
   aportarBtn:'Aportar',invertirEn:'Invertir en %s',
   rendEst:'Rendimiento estimado al vencimiento: +%s el %s.',
   capturaTasa:'Captura tasa y plazo para estimar tu rendimiento al vencimiento.',
@@ -1265,6 +1330,27 @@ en:{
   origenCapitalNota:'Money you already had (prior portfolio, transfer). Adds to your wealth without touching this month cash flow.',
   origenIngresoNota:'New money from your income: counts as a monthly outflow into your wealth.',
   capitalTag:'existing capital',
+  origenAhorroNota:'Money you already had saved (before using the app). Adds to your savings without subtracting from the month.',
+  ahorroPrevio:'Savings I already had',
+  ahorroPrevioNota:'Enter what you had already saved before starting to use the app. It counts as set aside inside your banks, without touching any month.',
+  editarMonto:'Edit',
+  grpConsumo:'↓ Spending',
+  grpPatrimonio:'→ To wealth',
+  subtotal:'Subtotal',
+  inicioTitulo:'🚀 My starting point',
+  inicioNota:'Capture what you already have, once. Everything is recorded as existing capital: it adds to your wealth without subtracting from any month.',
+  inicioBtn:'🚀 Set up my starting point',
+  inicioBancos:'🏦 Bank balance',
+  inicioEfectivo:'💵 Cash',
+  inicioAhorro:'🔒 Set-aside savings',
+  inicioCartera:'📈 Investment portfolio',
+  inicioDeuda:'💳 Debts (total)',
+  inicioListo:'Starting point saved ✓',
+  inicioNombreBanco:'My banks',
+  inicioNombreEfectivo:'Cash',
+  inicioNombreCartera:'Initial portfolio',
+  inicioNombreDeuda:'Debts',
+  inicioYa:'You already set up your starting point. Saving again will add new records.',
   aportarBtn:'Contribute',invertirEn:'Invest in %s',
   rendEst:'Estimated yield at maturity: +%s on %s.',
   capturaTasa:'Enter rate and term to estimate your yield at maturity.',
@@ -1357,7 +1443,7 @@ const KEY='finanzas-pro';
 
 let D = { mov:[], rec:[], metas:[], cuentas:[], aportes:[], fondos:[], negocio:[], bancos:[], activos:[], pasivos:[], inmuebles:[], hist:[], avisos:{},
   cfg:{ fx:18.50, moneda:'USD', tax:15, apiUrl:'', lang:'es', tema:'auto', negocioEnProj:true, deudaEnProj:true,
-    projRend:8, projMetaUSD:0, projExtraUSD:0, pinHash:null, pinLen:0,
+    projRend:8, projMetaUSD:0, projExtraUSD:0, pinHash:null, pinLen:0, ahorroPrevioUSD:0,
     dist:{gastos:{modo:'pct',v:0},inversiones:{modo:'pct',v:0},ahorro:{modo:'pct',v:0},caridad:{modo:'pct',v:0},profesional:{modo:'pct',v:0}} } };
 let mesActual=new Date(); mesActual.setDate(1);
 let catMov='gastos', catRec='ingresos', tipoFondoSel='aprendizaje';
@@ -1583,8 +1669,11 @@ function renderAlertas(){
 }
 
 /* ---------- MES ---------- */
+// El flujo del mes solo incluye dinero que pasó por el ingreso del periodo.
+// Los registros marcados como capital existente (m.inicial) son stock: suman a
+// patrimonio pero nunca restan del mes.
 function totalesMes(k){
-  const ms=D.mov.filter(m=>m.fecha.slice(0,7)===k);
+  const ms=D.mov.filter(m=>m.fecha.slice(0,7)===k && !m.inicial);
   const tot={}; CATS.forEach(c=>tot[c.id]=0);
   ms.forEach(m=>tot[m.cat]+=signoMov(m));
   return {ms,tot};
@@ -1649,6 +1738,14 @@ function renderMes(){
 
   const casc=document.getElementById('cascadaFilas'); casc.innerHTML='';
   const {ing:ingBase}=flujoLibre();
+  const grupoConsumo=document.createElement('div');
+  const grupoPat=document.createElement('div');
+  const cabecera=(txt,total,clr)=>{
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;justify-content:space-between;align-items:baseline;margin:10px 0 2px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:800;color:'+clr;
+    d.innerHTML='<span>'+txt+'</span><span class="num">'+fmt(total)+'</span>';
+    return d;
+  };
   CATS.filter(c=>!c.entrada).forEach(c=>{
     const monto=tot[c.id];
     const esPatrimonio=c.id==='ahorro'||c.id==='inversiones'; // no es pérdida: se convierte en patrimonio
@@ -1660,8 +1757,12 @@ function renderMes(){
       '<span class="pista"><div style="width:'+pct+'%;background:'+(sobre?'#B5452F':COLORES[c.id])+'"></div></span>'+
       '<span class="m-c num" style="color:'+(esPatrimonio?(c.id==='ahorro'?'#1F7A4D':'#2E5E8C'):(sobre?'#B5452F':'var(--tinta)'))+'">'+(esPatrimonio?'→ ':'−')+fmt(monto)+
       (esPatrimonio?'<br><span class="sub-c">'+(c.id==='ahorro'?t('apartadoSigue'):t('invertidoSigue'))+'</span>':(asig>0?'<br><span class="sub-c">'+t('deAsignado',fmt(asig))+(sobre?' ⚠️':'')+'</span>':''))+'</span>';
-    casc.appendChild(fila);
+    (esPatrimonio?grupoPat:grupoConsumo).appendChild(fila);
   });
+  casc.appendChild(cabecera(t('grpConsumo'),consumo,'#B5452F'));
+  casc.appendChild(grupoConsumo);
+  casc.appendChild(cabecera(t('grpPatrimonio'),aPatrimonio,'#1F7A4D'));
+  casc.appendChild(grupoPat);
   const qf=document.getElementById('quedaFinal');
   qf.textContent=fmt2(bal);
   qf.style.color = (bal<0&&sobreConsumo)? '#B5452F' : (bal<0? '#B8862F' : '#1F7A4D');
@@ -1817,6 +1918,11 @@ function totalCuenta(cid){
 function valorCuenta(c){
   return (c.val && c.val.montoUSD>0)? conv(c.val.montoUSD,'USD') : totalCuenta(c.id);
 }
+// Stock de ahorro: lo que ya tenías + todos los apartados/retiros registrados
+function ahorroTotalAcumulado(){
+  return conv(D.cfg.ahorroPrevioUSD||0,'USD') +
+    D.mov.filter(m=>m.cat==='ahorro').reduce((s,m)=>s+signoMov(m),0);
+}
 function calcularPatrimonio(){
   const total=D.cuentas.reduce((s,c)=>s+valorCuenta(c),0);
   const liqBancos=D.bancos.reduce((s,b)=>s+conv(b.saldo||0,b.moneda||'USD'),0);
@@ -1886,7 +1992,7 @@ function renderCartera(){
   });
 
   // clasificación: ahorro apartado / liquidez libre / invertido (con retiros ya descontados)
-  const ahorroAcum=D.mov.filter(m=>m.cat==='ahorro').reduce((s,m)=>s+signoMov(m),0);
+  const ahorroAcum=ahorroTotalAcumulado();
   const liqTotal=liqBancos+liqEfectivo;
   const liqLibre=liqTotal-ahorroAcum;
   const invertido=total;
@@ -2169,16 +2275,20 @@ async function actualizarMotor(){
 function renderFondos(){
   const {flujo}=flujoLibre();
   const ah=D.mov.filter(m=>m.cat==='ahorro');
-  const totalAh=ah.reduce((s,m)=>s+signoMov(m),0);
+  const totalAh=ahorroTotalAcumulado();
   const kAhora=mesKey(new Date());
-  const ahMes=ah.filter(m=>m.fecha.slice(0,7)===kAhora).reduce((s,m)=>s+signoMov(m),0);
+  const ahMes=ah.filter(m=>m.fecha.slice(0,7)===kAhora && !m.inicial).reduce((s,m)=>s+signoMov(m),0);
+  document.getElementById('ahorroPrevioVal').textContent=fmt2(conv(D.cfg.ahorroPrevioUSD||0,'USD'));
   const eah=document.getElementById('ahorroTotal');
   eah.classList.add('oro'); animarNumero(eah,totalAh,fmt2);
   document.getElementById('ahorroMes').textContent=fmt2(ahMes);
   const la=document.getElementById('listaAhorro'); la.innerHTML='';
-  if(!ah.length){ la.innerHTML='<div class="vacio">'+t('ahorroVacio')+'</div>'; }
+  if(!ah.length && !(D.cfg.ahorroPrevioUSD>0)){ la.innerHTML='<div class="vacio">'+t('ahorroVacio')+'</div>'; }
   else {
     const grupos={};
+    if(D.cfg.ahorroPrevioUSD>0){
+      grupos['__previo']={nombre:t('ahorroPrevio'),total:conv(D.cfg.ahorroPrevioUSD,'USD'),n:1,desde:'',previo:true};
+    }
     ah.forEach(m=>{
       const clave=(m.desc||t('sinDesc')).trim();
       const k=clave.toLowerCase();
@@ -2190,9 +2300,9 @@ function renderFondos(){
     Object.values(grupos).sort((a,b)=>b.total-a.total).forEach(g=>{
       const pct=totalAh>0? Math.max(0,g.total)/totalAh*100:0;
       const fila=document.createElement('div'); fila.className='pr-fila';
-      fila.innerHTML='<div class="pr-top"><b>🔒 '+escapar(g.nombre)+'</b><span class="num">'+fmt(g.total)+' · '+Math.round(pct)+'%</span></div>'+
-        '<div class="pr-barra"><div style="width:'+pct+'%;background:#C79A3B"></div></div>'+
-        '<div class="sub-c" style="font-size:10px;color:var(--tinta-suave);margin-top:3px">'+t('aportesDesde',g.n,fFecha(g.desde,{month:'short',year:'numeric'}))+'</div>';
+      fila.innerHTML='<div class="pr-top"><b>'+(g.previo?'📦 ':'🔒 ')+escapar(g.nombre)+'</b><span class="num">'+fmt(g.total)+' · '+Math.round(pct)+'%</span></div>'+
+        '<div class="pr-barra"><div style="width:'+pct+'%;background:'+(g.previo?'#7A4E8C':'#C79A3B')+'"></div></div>'+
+        (g.previo?'':'<div class="sub-c" style="font-size:10px;color:var(--tinta-suave);margin-top:3px">'+t('aportesDesde',g.n,fFecha(g.desde,{month:'short',year:'numeric'}))+'</div>');
       la.appendChild(fila);
     });
   }
@@ -2528,6 +2638,13 @@ function setSeg(id,v){
   const seg=document.getElementById(id);
   seg.querySelectorAll('button').forEach(b=>b.classList.toggle('activo',b.dataset.v===v));
 }
+const getOrigenMov=segInit('mOrigen', v=>{
+  document.getElementById('mOrigenNota').textContent=t(v==='capital'?'origenAhorroNota':'origenIngresoNota');
+});
+const getOrigenFondo=segInit('afOrigen', v=>{
+  document.getElementById('afRegMovWrap').style.display = v==='capital'? 'none':'block';
+  document.getElementById('afOrigenNota').textContent=t(v==='capital'?'origenAhorroNota':'origenIngresoNota');
+});
 const getOrigenAporte=segInit('aOrigen', v=>{
   document.getElementById('aRegMovWrap').style.display = v==='capital'? 'none':'block';
   document.getElementById('aOrigenNota').textContent = t(v==='capital'?'origenCapitalNota':'origenIngresoNota');
@@ -2617,13 +2734,17 @@ function pintaFrecuentes(){
   });
 }
 function ajustaTipoAhorro(){
-  document.getElementById('mTipoAhorroWrap').style.display = catMov==='ahorro'?'block':'none';
+  const esAhorro=catMov==='ahorro';
+  document.getElementById('mTipoAhorroWrap').style.display = esAhorro?'block':'none';
+  document.getElementById('mOrigenWrap').style.display = esAhorro?'block':'none';
 }
 function abrirMov(){
   movEdit=null;
   document.getElementById('tituloMov').textContent=t('nuevoMov');
   pintaChipsMov(); ajustaTipoAhorro(); pintaFrecuentes();
   setSeg('mTipoAhorro','aporte');
+  setSeg('mOrigen','ingreso');
+  document.getElementById('mOrigenNota').textContent=t('origenIngresoNota');
   if(!hojaAbierta||hojaAbierta.id!=='hojaMov'){
     const hoy=new Date();
     const enMes=hoy.getFullYear()===mesActual.getFullYear()&&hoy.getMonth()===mesActual.getMonth();
@@ -2642,6 +2763,8 @@ function abrirMovEditar(m){
   document.getElementById('mFecha').value=m.fecha;
   setSeg('mMoneda',m.moneda||'USD');
   setSeg('mTipoAhorro',m.retiro?'retiro':'aporte');
+  setSeg('mOrigen',m.inicial?'capital':'ingreso');
+  document.getElementById('mOrigenNota').textContent=t(m.inicial?'origenAhorroNota':'origenIngresoNota');
   abrir('hojaMov');
 }
 document.getElementById('btnAbrirMov').onclick=abrirMov;
@@ -2651,7 +2774,8 @@ document.getElementById('btnGuardarMov').onclick=async()=>{
   const datos={cat:catMov,monto:Math.round(monto*100)/100,moneda:getMonMov(),
     desc:document.getElementById('mDesc').value.trim(),
     fecha:document.getElementById('mFecha').value||hoyISO(),
-    retiro:catMov==='ahorro'&&getTipoAhorro()==='retiro'};
+    retiro:catMov==='ahorro'&&getTipoAhorro()==='retiro',
+    inicial:catMov==='ahorro'&&getOrigenMov()==='capital'};
   if(movEdit){ Object.assign(movEdit,datos); }
   else D.mov.push({id:uid(),...datos});
   await guardar(); cerrar(); renderTodo();
@@ -2810,6 +2934,10 @@ document.getElementById('btnGuardarFondo').onclick=async()=>{
 function abrirAporteFondo(sugerido){
   document.getElementById('tituloAporteFondo').textContent=t('aportarA',fondoAporte.nombre);
   document.getElementById('afMonto').value = sugerido>0? Math.round(sugerido*100)/100 : '';
+  setSeg('afOrigen','ingreso');
+  document.getElementById('afRegMovWrap').style.display='block';
+  document.getElementById('afRegMov').checked=true;
+  document.getElementById('afOrigenNota').textContent=t('origenIngresoNota');
   abrir('hojaAporteFondo');
 }
 document.getElementById('btnGuardarAporteFondo').onclick=async()=>{
@@ -2820,9 +2948,10 @@ document.getElementById('btnGuardarAporteFondo').onclick=async()=>{
   let enFondo=monto;
   if(moneda!==fm) enFondo = moneda==='USD'? monto*D.cfg.fx : monto/D.cfg.fx;
   fondoAporte.acumulado=(fondoAporte.acumulado||0)+Math.round(enFondo*100)/100;
-  if(document.getElementById('afRegMov').checked){
+  const fondoCapital=getOrigenFondo()==='capital';
+  if(fondoCapital || document.getElementById('afRegMov').checked){
     D.mov.push({id:uid()+'f',cat:'ahorro',monto:Math.round(monto*100)/100,moneda,
-      desc:'Fondo: '+fondoAporte.nombre,fecha:hoyISO()});
+      desc:'Fondo: '+fondoAporte.nombre,fecha:hoyISO(),inicial:fondoCapital});
   }
   await guardar(); cerrar(); renderTodo();
 };
@@ -3010,7 +3139,7 @@ document.getElementById('fileRestaurar').onchange=async e=>{
     if(!confirm(t('restaurarConfirm'))) return;
     D=datos;
     ['mov','rec','metas','cuentas','aportes','fondos','negocio','bancos','activos','pasivos','inmuebles','hist'].forEach(k=>{ if(!Array.isArray(D[k])) D[k]=[]; });
-    D.cfg={fx:18.5,moneda:'USD',tax:15,apiUrl:'',lang:'es',tema:'auto',negocioEnProj:true,deudaEnProj:true,projRend:8,projMetaUSD:0,projExtraUSD:0,pinHash:null,pinLen:0,dist:{},...(D.cfg||{})};
+    D.cfg={fx:18.5,moneda:'USD',tax:15,apiUrl:'',lang:'es',tema:'auto',negocioEnProj:true,deudaEnProj:true,projRend:8,projMetaUSD:0,projExtraUSD:0,pinHash:null,pinLen:0,ahorroPrevioUSD:0,dist:{},...(D.cfg||{})};
     LANG=(D.cfg.lang==='en')?'en':'es';
     await guardar();
     document.getElementById('cfgFx').value=D.cfg.fx;
@@ -3072,6 +3201,47 @@ document.getElementById('fireExtra').onchange=async e=>{
   const v=Math.max(0,parseFloat(e.target.value)||0);
   D.cfg.projExtraUSD = v>0? (D.cfg.moneda==='USD'? v : v/D.cfg.fx) : 0;
   await guardar(); renderFire();
+};
+
+/* ahorro previo (stock inicial) */
+const getMonAhorroPrevio=segInit('apMoneda');
+document.getElementById('btnAhorroPrevio').onclick=()=>{
+  const v=D.cfg.ahorroPrevioUSD||0;
+  document.getElementById('apMonto').value = v>0? Math.round(conv(v,'USD')*100)/100 : '';
+  setSeg('apMoneda',D.cfg.moneda);
+  abrir('hojaAhorroPrevio');
+};
+document.getElementById('btnGuardarAhorroPrevio').onclick=async()=>{
+  const v=Math.max(0,parseFloat(document.getElementById('apMonto').value)||0);
+  const mon=getMonAhorroPrevio();
+  D.cfg.ahorroPrevioUSD = v>0? Math.round((mon==='USD'? v : v/D.cfg.fx)*100)/100 : 0;
+  await guardar(); cerrar(); renderTodo();
+};
+
+/* punto de partida (asistente único) */
+const getMonInicio=segInit('iniMoneda');
+document.getElementById('btnInicio').onclick=()=>{
+  ['iniBancos','iniEfectivo','iniAhorro','iniCartera','iniDeuda'].forEach(i=>document.getElementById(i).value='');
+  setSeg('iniMoneda',D.cfg.moneda);
+  const yaHay = D.bancos.length||D.activos.length||D.aportes.length||D.pasivos.length||D.cfg.ahorroPrevioUSD>0;
+  document.getElementById('iniAviso').textContent = yaHay? t('inicioYa') : '';
+  abrir('hojaInicio');
+};
+document.getElementById('btnGuardarInicio').onclick=async()=>{
+  const mon=getMonInicio();
+  const val=id=>Math.max(0,parseFloat(document.getElementById(id).value)||0);
+  const bancos=val('iniBancos'), efectivo=val('iniEfectivo'), ahorro=val('iniAhorro'),
+        cartera=val('iniCartera'), deuda=val('iniDeuda');
+  if(bancos>0) D.bancos.push({id:uid(),nombre:t('inicioNombreBanco'),saldo:bancos,moneda:mon,actualizado:new Date().toISOString()});
+  if(efectivo>0) D.activos.push({id:uid()+'e',nombre:t('inicioNombreEfectivo'),tipo:'efectivo',valor:efectivo,moneda:mon});
+  if(ahorro>0) D.cfg.ahorroPrevioUSD=(D.cfg.ahorroPrevioUSD||0)+Math.round((mon==='USD'? ahorro : ahorro/D.cfg.fx)*100)/100;
+  if(cartera>0){
+    if(!D.cuentas.length) D.cuentas.push({id:uid()+'c',nombre:t('inicioNombreCartera'),obj:0});
+    D.aportes.push({id:uid()+'a',cuentaId:D.cuentas[0].id,monto:cartera,moneda:mon,fecha:hoyISO(),
+      tipo:'otro',nombre:t('inicioNombreCartera'),inicial:true});
+  }
+  if(deuda>0) D.pasivos.push({id:uid()+'d',nombre:t('inicioNombreDeuda'),tipo:'otrop',saldo:deuda,moneda:mon,tasa:0,pago:0});
+  await guardar(); cerrar(); renderTodo(); notificar(t('inicioListo'));
 };
 
 /* PIN de acceso */
