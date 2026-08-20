@@ -602,7 +602,11 @@
     <div class="nota" id="aRendimiento" style="margin:-4px 0 10px"></div>
   </div>
   <div class="campo"><label for="aFecha" data-i18n="fecha"></label><input id="aFecha" type="date"></div>
-  <label class="switch" style="margin-bottom:6px"><input type="checkbox" id="aRegMov" checked> <span data-i18n="regMovInv"></span></label>
+  <div class="campo"><label data-i18n="origenLbl"></label>
+    <div class="seg" id="aOrigen"><button data-v="ingreso" class="activo" data-i18n="origenIngreso"></button><button data-v="capital" data-i18n="origenCapital"></button></div>
+    <div class="nota" id="aOrigenNota"></div>
+  </div>
+  <div id="aRegMovWrap"><label class="switch" style="margin-bottom:6px"><input type="checkbox" id="aRegMov" checked> <span data-i18n="regMovInv"></span></label></div>
   <div class="acciones"><button class="btn-cancelar" data-cerrar data-i18n="cancelar"></button><button class="btn-guardar" id="btnGuardarAporte" data-i18n="aportarBtn"></button></div>
 </div>
 
@@ -971,6 +975,12 @@ es:{
   queCompras:'¿Qué compras?',instrumento:'Instrumento / ticker',phInstrumento:'Ej. CETE 28 días, AAPL, VOO…',
   tasaAnual:'Tasa anual %',plazoDias:'Plazo (días)',
   regMovInv:'Registrar también como movimiento en Inversiones',
+  origenLbl:'¿De dónde sale este dinero?',
+  origenIngreso:'💰 De mi ingreso',
+  origenCapital:'📦 Capital existente',
+  origenCapitalNota:'Dinero que ya tenías (cartera previa, traspaso). Suma a tu patrimonio sin tocar el flujo de este mes.',
+  origenIngresoNota:'Dinero nuevo de tu ingreso: cuenta como salida del mes hacia tu patrimonio.',
+  capitalTag:'capital inicial',
   aportarBtn:'Aportar',invertirEn:'Invertir en %s',
   rendEst:'Rendimiento estimado al vencimiento: +%s el %s.',
   capturaTasa:'Captura tasa y plazo para estimar tu rendimiento al vencimiento.',
@@ -1181,6 +1191,12 @@ en:{
   queCompras:'What are you buying?',instrumento:'Instrument / ticker',phInstrumento:'E.g. 28-day T-bill, AAPL, VOO…',
   tasaAnual:'Annual rate %',plazoDias:'Term (days)',
   regMovInv:'Also log as an Investments transaction',
+  origenLbl:'Where does this money come from?',
+  origenIngreso:'💰 From my income',
+  origenCapital:'📦 Existing capital',
+  origenCapitalNota:'Money you already had (prior portfolio, transfer). Adds to your wealth without touching this month cash flow.',
+  origenIngresoNota:'New money from your income: counts as a monthly outflow into your wealth.',
+  capitalTag:'existing capital',
   aportarBtn:'Contribute',invertirEn:'Invest in %s',
   rendEst:'Estimated yield at maturity: +%s on %s.',
   capturaTasa:'Enter rate and term to estimate your yield at maturity.',
@@ -1706,7 +1722,7 @@ function actualizarHist(){
 function renderCartera(){
   const {total,liqBancos,liqEfectivo,bienes,inmuebles,activosTot,pasTot,neto}=calcularPatrimonio();
   const anio=new Date().getFullYear()+'';
-  const totAnio=D.aportes.filter(a=>a.fecha.slice(0,4)===anio).reduce((s,a)=>s+conv(a.monto,a.moneda||'USD'),0);
+  const totAnio=D.aportes.filter(a=>a.fecha.slice(0,4)===anio && !a.inicial).reduce((s,a)=>s+conv(a.monto,a.moneda||'USD'),0);
   const patrimonio=activosTot;
   const ept=document.getElementById('patrimonioTotal');
   ept.classList.toggle('oro',neto>=0);
@@ -1989,7 +2005,7 @@ function renderCartera(){
     const row=document.createElement('div'); row.className='mov';
     row.innerHTML='<span style="font-size:17px;flex-shrink:0">'+ta.emoji+'</span>'+
       '<div class="info"><div class="desc">'+escapar(a.nombre||t('ta_'+ta.id))+'</div>'+
-      '<div class="meta-txt">'+escapar(c?c.nombre:t('cuentaGen'))+' · '+fFecha(a.fecha)+extra+'</div></div>'+
+      '<div class="meta-txt">'+escapar(c?c.nombre:t('cuentaGen'))+' · '+fFecha(a.fecha)+(a.inicial?' · 📦 '+t('capitalTag'):'')+extra+'</div></div>'+
       '<span class="monto-r num">'+fmt2(conv(a.monto,a.moneda||'USD'))+'<br><span class="sub-r">'+(a.moneda||'USD')+'</span></span>';
     const del=document.createElement('button'); del.className='borrar'; del.textContent='×'; del.setAttribute('aria-label',t('eliminar'));
     armarBorrar(del,async()=>{ D.aportes=D.aportes.filter(x=>x.id!==a.id); await guardar(); renderTodo(); });
@@ -2390,6 +2406,10 @@ function setSeg(id,v){
   const seg=document.getElementById(id);
   seg.querySelectorAll('button').forEach(b=>b.classList.toggle('activo',b.dataset.v===v));
 }
+const getOrigenAporte=segInit('aOrigen', v=>{
+  document.getElementById('aRegMovWrap').style.display = v==='capital'? 'none':'block';
+  document.getElementById('aOrigenNota').textContent = t(v==='capital'?'origenCapitalNota':'origenIngresoNota');
+});
 const getMonMov=segInit('mMoneda'), getMonRec=segInit('rMoneda'),
       getMonAporte=segInit('aMoneda'), getMonFondo=segInit('fMoneda'),
       getMonAF=segInit('afMoneda'), getMonNeg=segInit('nMoneda'), getPeriodoNeg=segInit('nPeriodo'),
@@ -2617,6 +2637,10 @@ function abrirAporte(){
   document.getElementById('aMonto').value=''; document.getElementById('aNombre').value='';
   document.getElementById('aTasa').value=''; document.getElementById('aPlazo').value='';
   document.getElementById('aFecha').value=hoyISO();
+  setSeg('aOrigen','ingreso');
+  document.getElementById('aRegMovWrap').style.display='block';
+  document.getElementById('aRegMov').checked=true;
+  document.getElementById('aOrigenNota').textContent=t('origenIngresoNota');
   ajustaDeuda();
   abrir('hojaAporte');
 }
@@ -2626,14 +2650,15 @@ document.getElementById('btnGuardarAporte').onclick=async()=>{
   const fecha=document.getElementById('aFecha').value||hoyISO();
   const moneda=getMonAporte();
   const nombreA=document.getElementById('aNombre').value.trim();
+  const esCapital=getOrigenAporte()==='capital';
   const ap={id:uid(),cuentaId:cuentaAporte.id,monto:Math.round(monto*100)/100,moneda,fecha,
-    tipo:tipoActivoSel,nombre:nombreA};
+    tipo:tipoActivoSel,nombre:nombreA,inicial:esCapital};
   if(tipoActivoSel==='deuda'){
     ap.tasa=parseFloat(document.getElementById('aTasa').value)||0;
     ap.plazo=parseFloat(document.getElementById('aPlazo').value)||0;
   }
   D.aportes.push(ap);
-  if(document.getElementById('aRegMov').checked){
+  if(!esCapital && document.getElementById('aRegMov').checked){
     D.mov.push({id:uid()+'m',cat:'inversiones',monto:Math.round(monto*100)/100,moneda,
       desc:(nombreA||t('ta_'+tipoActivoSel))+' · '+cuentaAporte.nombre,fecha});
   }
