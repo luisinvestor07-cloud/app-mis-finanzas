@@ -367,6 +367,20 @@
   .acc .st b{color:var(--oro)}
   .crono-viva{border:1.5px solid var(--oro) !important;background:linear-gradient(140deg,rgba(199,154,59,.14),transparent) !important}
 
+  /* ---------- línea de ruta y «Más» plegado ---------- */
+  .ruta-linea{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 2px 12px;font-size:12.5px;color:var(--tinta-suave)}
+  .ruta-linea .rl-t{font-weight:600;white-space:nowrap}
+  .ruta-linea .rl-cambiar{border:none;background:none;color:var(--oro);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;padding:2px}
+  .chip.dorada{border-color:rgba(199,154,59,.5);background:linear-gradient(140deg,rgba(199,154,59,.14),transparent)}
+  details.mas{margin-top:8px;border:1px solid var(--linea);border-radius:14px;background:var(--tarjeta);overflow:hidden}
+  details.mas summary{list-style:none;cursor:pointer;padding:13px 15px;font-size:13.5px;font-weight:700;color:var(--tinta-suave);display:flex;align-items:center;gap:8px}
+  details.mas summary::-webkit-details-marker{display:none}
+  details.mas summary::before{content:'▸';color:var(--oro);font-size:12px;transition:transform .2s}
+  details.mas[open] summary::before{transform:rotate(90deg)}
+  details.mas .mas-res{margin-left:auto;font-weight:600;font-size:11.5px;opacity:.85}
+  details.mas .mas-cuerpo{padding:4px 15px 16px}
+  @media(prefers-reduced-motion:reduce){ details.mas summary::before{transition:none} }
+
   /* ---------- rutas de estudio ---------- */
   .r-sel{display:flex;gap:7px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px;scrollbar-width:none}
   .r-sel::-webkit-scrollbar{display:none}
@@ -431,88 +445,32 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- ================= HOY ================= -->
-<div class="pantalla activa" id="p-hoy">
-  <section class="hero">
-    <div class="etq" id="hoyEtq">Tu memoria de conocimiento</div>
-    <div class="grande num" id="hoyGrande">0</div>
-    <div class="sub" id="hoySub">Empieza capturando tu primer concepto.</div>
-    <div class="barra-dom" id="hoyBarra"></div>
-    <div class="ley-dom" id="hoyLeyenda"></div>
-    <div class="mini">
-      <div>Conexiones<b class="num" id="hoyConex">0</b></div>
-      <div>Racha<b class="num" id="hoyRacha">0 d</b></div>
-      <div>Esta semana<b class="num" id="hoySemana">0</b></div>
-    </div>
-  </section>
-
-  <h2 class="sec">Tu hora de hoy</h2>
-  <div id="hoyBloques" class="entrada-esc"></div>
-
-  <h2 class="sec">Tocadas recientemente<button class="cta" id="verTodasRec">Ver todas →</button></h2>
-  <div id="hoyRecientes"></div>
-</div>
-
-<!-- ================= BUSCAR ================= -->
-<div class="pantalla" id="p-buscar">
+<!-- ================= NOTAS ================= -->
+<div class="pantalla activa" id="p-notas">
   <div class="buscador">
     <div class="caja">
       <span class="lupa">🔍</span>
       <input id="qBuscar" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false"
-             placeholder="¿Qué necesito recordar?">
+             placeholder="Buscar en mis notas…">
       <button class="limpiar" id="qLimpiar" aria-label="Limpiar" style="display:none">✕</button>
     </div>
     <div class="filtros" id="filtrosBuscar"></div>
   </div>
+  <div id="rutaLinea"></div>
   <div class="conteo-res" id="conteoRes"></div>
   <div id="resultados"></div>
 </div>
 
-<!-- ================= MAPA ================= -->
-<div class="pantalla" id="p-mapa">
-  <div class="miga" id="migaMapa"></div>
-  <div id="cuerpoMapa"></div>
-</div>
-
-<!-- ================= PRÁCTICA ================= -->
-<div class="pantalla" id="p-practica">
-  <div id="cuerpoPractica"></div>
+<!-- ================= REPASAR ================= -->
+<div class="pantalla" id="p-repasar">
+  <div id="cuerpoRepasar"></div>
 </div>
 
 <!-- ================= REPASO ================= -->
 <div class="pantalla" id="p-repaso">
-  <div class="miga"><button id="repasoSalir">‹ Práctica</button></div>
+  <div class="miga"><button id="repasoSalir">‹ Salir</button></div>
   <div class="prog-rep"><div class="barra-meta"><div id="repasoBarra" style="width:0%"></div></div><b class="num" id="repasoProg"></b></div>
   <div id="cuerpoRepaso"></div>
-</div>
-
-<!-- ================= FEYNMAN ================= -->
-<div class="pantalla" id="p-feynman">
-  <div class="miga"><button id="feySalir">‹ Práctica</button></div>
-  <div id="cuerpoFeynman"></div>
-</div>
-
-<!-- ================= CAZA TU ERROR ================= -->
-<div class="pantalla" id="p-caza">
-  <div class="miga"><button id="cazaSalir">‹ Práctica</button></div>
-  <div class="prog-rep"><div class="barra-meta"><div id="cazaBarra" style="width:0%"></div></div><b class="num" id="cazaProg"></b></div>
-  <div id="cuerpoCaza"></div>
-</div>
-
-<!-- ================= CASOS (lista) ================= -->
-<div class="pantalla" id="p-casos">
-  <div class="miga"><button id="casosSalir">‹ Práctica</button></div>
-  <div id="cuerpoCasos"></div>
-</div>
-
-<!-- ================= CASO (espacio de trabajo) ================= -->
-<div class="pantalla" id="p-caso">
-  <div id="cuerpoCaso"></div>
-</div>
-
-<!-- ================= RUTAS ================= -->
-<div class="pantalla" id="p-rutas">
-  <div id="cuerpoRutas"></div>
 </div>
 
 <!-- ================= AJUSTES ================= -->
@@ -541,22 +499,6 @@
       <div class="seg" id="segTema">
         <button data-v="claro">☀️ Claro</button><button data-v="oscuro">🌙 Oscuro</button><button data-v="auto" class="activo">Auto</button>
       </div>
-    </div>
-    <div class="campo" style="margin-bottom:0">
-      <label>Minutos por sesión de estudio</label>
-      <div class="seg" id="segSesion">
-        <button data-v="20">20 min</button><button data-v="60" class="activo">1 hora</button><button data-v="120">2 h</button>
-      </div>
-      <div class="nota-p">Reparte el tiempo entre capturar, conectar y consolidar en la pantalla «Hoy».</div>
-    </div>
-    <div class="campo" style="margin-bottom:0;margin-top:12px">
-      <label>Meta de práctica deliberada</label>
-      <div class="seg" id="segMeta">
-        <button data-v="100">100 h<small>fundamentos</small></button>
-        <button data-v="1000" class="activo">1,000 h<small>profesional</small></button>
-        <button data-v="10000">10,000 h<small>maestría</small></button>
-      </div>
-      <div class="nota-p">Las horas se acumulan con peso según exigencia: al límite ×1.0, frustrante ×0.75, fácil ×0.5. La proyección vive en la pestaña Práctica.</div>
     </div>
   </div>
 
@@ -594,9 +536,7 @@
     </div>
     <textarea class="titulo" id="notaTitulo" rows="1" placeholder="Título del concepto"></textarea>
     <div class="ruta" id="notaRuta"></div>
-    <div class="dom-fila" id="notaDominio"></div>
   </div>
-  <div class="pestanas" id="notaPestanas"></div>
   <div id="notaPaneles"></div>
   <div class="btn-fila" style="margin-top:18px">
     <button class="btn-mini" id="btnDuplicarPar" style="flex:1">🔁 Crear la nota par</button>
@@ -607,11 +547,8 @@
 
 <!-- ================= TABS ================= -->
 <nav class="tabs">
-  <button data-p="hoy" class="activo"><span class="ic">🎯</span>Hoy</button>
-  <button data-p="practica"><span class="ic">🧠</span>Práctica</button>
-  <button data-p="rutas"><span class="ic">🧭</span>Rutas</button>
-  <button data-p="buscar"><span class="ic">🔍</span>Buscar</button>
-  <button data-p="mapa"><span class="ic">🗺️</span>Mapa</button>
+  <button data-p="notas" class="activo"><span class="ic">📒</span>Notas</button>
+  <button data-p="repasar"><span class="ic">🔁</span>Repasar</button>
   <button data-p="ajustes"><span class="ic">⚙️</span>Ajustes</button>
 </nav>
 <button class="fab" id="fab">+ Nota</button>
@@ -626,119 +563,28 @@
   <div class="acciones"><button class="btn-cancelar" id="peajeLuego">Ahora no</button></div>
 </div>
 
-<div class="hoja" id="h-sesion">
-  <h3>⏱ Sesión de práctica</h3>
-  <div class="h-sub">Elige qué vas a entrenar y arranca. Al terminar te pregunto una sola cosa: qué tan al límite estuviste.</div>
-  <div class="campo"><label>Área</label><select id="seArea"></select></div>
-  <div class="campo" id="seMicrosWrap" style="display:none"><label>Micro-habilidad (opcional)</label>
-    <div class="chips" id="seMicros"></div></div>
-  <div class="acciones">
-    <button class="btn-cancelar" data-cerrar>Cancelar</button>
-    <button class="btn-guardar" id="seEmpezar">▶️ Empezar</button>
-  </div>
-</div>
-
-<div class="hoja" id="h-cerrar">
-  <h3 id="ceTitulo">Cerrar sesión</h3>
-  <div class="h-sub">Sé honesto: solo las horas al límite construyen maestría completa. Las fáciles cuentan a la mitad — son mantenimiento, y también hace falta.</div>
-  <div class="campo"><label>¿Qué tan exigente fue?</label>
-    <div class="seg" id="segCalidad">
-      <button data-v="facil">😌 Fácil<small>×0.5</small></button>
-      <button data-v="limite" class="activo">🔥 Al límite<small>×1.0</small></button>
-      <button data-v="duro">😤 Frustrante<small>×0.75</small></button>
-    </div>
-  </div>
-  <div class="campo" style="margin-bottom:0"><label>¿Qué practicaste? (opcional)</label>
-    <input id="ceTxt" type="text" placeholder="Ej. análisis del balance de Coca-Cola FEMSA"></div>
-  <div class="acciones">
-    <button class="btn-cancelar" data-cerrar>Seguir practicando</button>
-    <button class="btn-guardar" id="ceGuardar">Guardar sesión</button>
-  </div>
-</div>
-
-<div class="hoja" id="h-manual">
-  <h3>Registrar práctica pasada</h3>
-  <div class="h-sub">Una clase que diste, un análisis fuera de la app, estudio con libro. Si fue práctica real, cuenta — pero solo si la registras.</div>
-  <div class="fila2">
-    <div class="campo"><label>Minutos</label><input id="maMin" type="number" inputmode="numeric" min="1" max="600" placeholder="60"></div>
-    <div class="campo"><label>Área</label><select id="maArea"></select></div>
-  </div>
-  <div class="campo"><label>Exigencia</label>
-    <div class="seg" id="segCalidadM">
-      <button data-v="facil">😌 Fácil</button>
-      <button data-v="limite" class="activo">🔥 Al límite</button>
-      <button data-v="duro">😤 Frustrante</button>
-    </div>
-  </div>
-  <div class="campo" style="margin-bottom:0"><label>¿Qué fue? (opcional)</label>
-    <input id="maTxt" type="text" placeholder="Ej. clase de análisis fundamental a mi grupo"></div>
-  <div class="acciones">
-    <button class="btn-cancelar" data-cerrar>Cancelar</button>
-    <button class="btn-guardar" id="maGuardar">Registrar</button>
-  </div>
-</div>
-
-<div class="hoja" id="h-caso">
-  <h3>📊 Nuevo caso</h3>
-  <div class="h-sub">Un caso es práctica con evidencia: la app te pone tu checklist enfrente, cronometra y guarda tu análisis fechado.</div>
-  <div class="campo"><label>¿Qué vas a analizar?</label>
-    <input id="csTitulo" type="text" placeholder="Ej. Balance de Microsoft · reporte anual 2026"></div>
-  <div class="campo" style="margin-bottom:0"><label>Procedimiento guía (tus notas 🛠️)</label>
-    <select id="csPlantilla"></select></div>
-  <div class="acciones">
-    <button class="btn-cancelar" data-cerrar>Cancelar</button>
-    <button class="btn-guardar" id="csEmpezar">▶️ Abrir espacio de trabajo</button>
-  </div>
-</div>
-
-<div class="hoja" id="h-rev">
-  <h3>Revisar con ojos de hoy</h3>
-  <div class="h-sub">Relee tu análisis de entonces y escribe qué verías distinto ahora. La diferencia entre las dos versiones es tu progreso, medido de la forma más honesta posible.</div>
-  <div class="campo" style="margin-bottom:0"><label>Hoy veo que…</label>
-    <textarea id="revTxt" style="min-height:96px" placeholder="Ej. le di demasiado peso a la razón corriente y no miré el flujo de efectivo…"></textarea></div>
-  <div class="acciones">
-    <button class="btn-cancelar" data-cerrar>Cancelar</button>
-    <button class="btn-guardar" id="revGuardar">Guardar revisión</button>
-  </div>
-</div>
-
-<div class="hoja" id="h-micro">
-  <h3>🎯 Nueva micro-habilidad</h3>
-  <div class="h-sub">«Análisis fundamental» es demasiado grande para entrenarse. Pártelo en piezas chicas y entrena siempre la más débil — eso haría un entrenador profesional.</div>
-  <div class="campo"><label>Nombre</label><input id="miNombre" type="text" placeholder="Ej. leer las notas del 10-K"></div>
-  <div class="campo" style="margin-bottom:0"><label>Área</label><select id="miArea"></select></div>
-  <div class="acciones">
-    <button class="btn-cancelar" data-cerrar>Cancelar</button>
-    <button class="btn-guardar" id="miGuardar">Guardar</button>
-  </div>
-</div>
-
 <div class="hoja" id="h-captura">
-  <h3>Captura rápida</h3>
-  <div class="h-sub">Escribe solo lo esencial. Los demás campos los completas después, cuando los tengas.</div>
+  <h3>Nueva nota</h3>
+  <div class="h-sub">Con el título y una línea basta. Todo lo demás se agrega después, si hace falta.</div>
   <div class="campo">
-    <label>Tipo de nota</label>
-    <div class="seg" id="segTipo">
-      <button data-v="conocimiento" class="activo">📘 Conocimiento<small>qué significa</small></button>
-      <button data-v="aplicacion">🛠️ Aplicación<small>qué hacer</small></button>
-    </div>
-  </div>
-  <div class="campo">
-    <label id="capTituloLbl">Título del concepto</label>
-    <input id="capTitulo" type="text" autocomplete="off" placeholder="Ej. Activo corriente">
-  </div>
-  <div class="campo">
-    <label id="capTextoLbl">Con mis palabras</label>
-    <textarea id="capTexto" placeholder="Explícalo como se lo explicarías a alguien más. Usa [[dobles corchetes]] para mencionar otro concepto."></textarea>
+    <label>Título</label>
+    <input id="capTitulo" type="text" autocomplete="off" placeholder="Ej. git checkout -b">
   </div>
   <div class="campo" style="margin-bottom:0">
-    <label>Área</label>
-    <select id="capArea"></select>
+    <label>¿Qué aprendí?</label>
+    <textarea id="capTexto" placeholder="Dilo con tus palabras. Puedes escribir [[otro concepto]] para conectarlo."></textarea>
   </div>
   <div class="acciones">
     <button class="btn-cancelar" data-cerrar>Cancelar</button>
     <button class="btn-guardar" id="capGuardar">Guardar y abrir</button>
   </div>
+</div>
+
+<div class="hoja" id="h-ruta">
+  <h3>🧭 Ruta de estudio (opcional)</h3>
+  <div class="h-sub">Un temario ya armado: la app te va proponiendo el siguiente concepto y tú solo escribes. Una a la vez; puedes cambiar o quitarla cuando quieras.</div>
+  <div id="rutaOpciones"></div>
+  <div class="acciones"><button class="btn-cancelar" data-cerrar>Cerrar</button></div>
 </div>
 
 <div class="hoja" id="h-conectar">
@@ -871,29 +717,6 @@ const CAMPOS={
 };
 const etq=(campo,tipo,i)=>((CAMPOS[campo]||{})[tipo]||CAMPOS[campo].conocimiento)[i];
 
-/* Orden de pestañas: la aplicación arranca por los pasos. */
-const PESTANAS={
-  conocimiento:[
-    {id:'resumen',   n:'Resumen',   campos:['def','sirve']},
-    {id:'detalles',  n:'Detalles',  campos:['clasif','formulas']},
-    {id:'aplicar',   n:'Aplicar',   campos:['aplico','pasos','errores']},
-    {id:'ejemplos',  n:'Ejemplos',  campos:['ejemplo']},
-    {id:'conexiones',n:'Conexiones',campos:[]},
-    {id:'preguntas', n:'Preguntas', campos:[]},
-    {id:'fuentes',   n:'Fuentes',   campos:[]},
-    {id:'historial', n:'Historial', campos:[]}
-  ],
-  aplicacion:[
-    {id:'aplicar',   n:'Procedimiento',campos:['pasos','def']},
-    {id:'resumen',   n:'Para qué',    campos:['sirve','aplico']},
-    {id:'detalles',  n:'Insumos',     campos:['clasif','formulas']},
-    {id:'ejemplos',  n:'Casos',       campos:['ejemplo','errores']},
-    {id:'conexiones',n:'Conexiones',  campos:[]},
-    {id:'preguntas', n:'Preguntas',   campos:[]},
-    {id:'fuentes',   n:'Fuentes',     campos:[]},
-    {id:'historial', n:'Historial',   campos:[]}
-  ]
-};
 
 /* ---------- utilidades ---------- */
 let contadorId=0;
@@ -1070,13 +893,12 @@ function textoNota(n){
 }
 /* Cuánto le falta a la nota para estar completa (0..1). */
 function completitud(n){
-  const clave=n.tipo==='aplicacion'?['def','pasos','sirve','aplico','errores']:['def','sirve','aplico','ejemplo','errores'];
+  const clave=['def','aplico'];   /* qué aprendí + cómo lo practiqué */
   const hechos=clave.filter(c=>(n[c]||'').trim().length>8).length;
   return hechos/clave.length;
 }
 function faltantes(n){
-  const clave=n.tipo==='aplicacion'?['pasos','def','sirve','aplico','errores']:['def','sirve','aplico','ejemplo','errores'];
-  return clave.filter(c=>(n[c]||'').trim().length<=8);
+  return ['def','aplico'].filter(c=>(n[c]||'').trim().length<=8);
 }
 
 /* Menciones [[concepto]] dentro de una nota. */
@@ -1090,42 +912,25 @@ function porTitulo(t){
   return D.notas.find(n=>norm(n.titulo).trim()===q);
 }
 /* Conceptos que mencionaste en alguna nota pero que todavía no tienen la suya. */
-function conceptosHuerfanos(){
-  const mapa=new Map();
-  D.notas.forEach(n=>menciones(textoNota(n)).forEach(t=>{
-    if(porTitulo(t)) return;
-    const k=norm(t);
-    if(!mapa.has(k)) mapa.set(k,{txt:t,desde:[]});
-    mapa.get(k).desde.push(n.id);
-  }));
-  return [...mapa.values()];
-}
 
 /* ============================================================
    Navegación
    ============================================================ */
-let pantallaActual='hoy', pantallaPrevia='hoy';
+let pantallaActual='notas', pantallaPrevia='notas';
 function ir(p,sinScroll){
   document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));
   const el=document.getElementById('p-'+p);
   if(el) el.classList.add('activa');
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('activo',b.dataset.p===p));
-  document.getElementById('fab').style.display = (p==='nota'||p==='repaso'||p==='feynman'||p==='caza'||p==='caso') ? 'none' : '';
+  document.getElementById('fab').style.display = (p==='nota'||p==='repaso') ? 'none' : '';
   if(p!=='nota') pantallaPrevia=p;
   pantallaActual=p;
   if(!sinScroll) window.scrollTo(0,0);
   if(p!=='nota') notaActual=null;
-  if(p==='hoy') renderHoy();
-  if(p==='practica') renderPractica();
+  if(p==='notas') renderNotas();
+  if(p==='repasar') renderRepasarHome();
   if(p==='repaso') renderRepaso();
-  if(p==='feynman') renderFeynman();
-  if(p==='caza') renderCaza();
-  if(p==='casos') renderCasos();
-  if(p==='caso') renderCaso();
-  if(p==='rutas') renderRutas();
-  if(p==='mapa') renderMapa();
   if(p==='ajustes') renderAjustes();
-  if(p==='buscar') setTimeout(()=>document.getElementById('qBuscar').focus(),120);
 }
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>ir(b.dataset.p));
 
@@ -1134,7 +939,6 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>ir(b.dataset.
    ============================================================ */
 function itemNota(n,tokens){
   const d=dom(n.dominio);
-  const comp=completitud(n);
   const frag=fragmento(n,tokens||[]);
   const pie=[];
   pie.push('<span class="etiq dom" style="background:'+d.c+'">'+esc(d.n)+'</span>');
@@ -1142,7 +946,7 @@ function itemNota(n,tokens){
   else if(n.area) pie.push('<span class="etiq">'+esc(emojiArea(n.area))+' '+esc(nombreArea(n.area))+'</span>');
   if(n.links.length) pie.push('<span class="etiq enlaces">🔗 '+n.links.length+'</span>');
   n.tags.slice(0,2).forEach(t=>pie.push('<span class="etiq tag">'+esc(t)+'</span>'));
-  if(comp<1) pie.push('<span class="etiq" style="background:rgba(181,69,47,.12);color:var(--rojo)">'+Math.round(comp*100)+'% completa</span>');
+  if((n.aplico||'').trim().length<=8) pie.push('<span class="etiq" style="background:rgba(199,154,59,.14);color:#96701F">sin practicar aún</span>');
   return '<button class="n-item" data-nota="'+n.id+'">'
     +'<span class="bandera" style="background:'+d.c+'"></span>'
     +'<span class="cuerpo">'
@@ -1226,29 +1030,23 @@ function fragmento(n,tokens){
 }
 
 let filtroActivo='todo';
-const FILTROS=[
-  {id:'todo',       n:'Todo',            f:()=>true},
-  {id:'conocimiento',n:'📘 Conocimiento', f:n=>n.tipo==='conocimiento'},
-  {id:'aplicacion', n:'🛠️ Aplicación',   f:n=>n.tipo==='aplicacion'},
-  {id:'pordominar', n:'⚠️ Por dominar',  f:n=>n.dominio<=2},
-  {id:'incompletas',n:'✍️ Incompletas',  f:n=>completitud(n)<1},
-  {id:'sinconectar',n:'🔗 Sin conectar', f:n=>!n.links.length},
-  {id:'preguntas',  n:'❓ Con dudas',     f:n=>n.preguntas.some(p=>!p.resuelta)}
-];
 function renderFiltros(){
   const cont=document.getElementById('filtrosBuscar');
-  const areas=D.areas.filter(a=>D.notas.some(n=>n.area===a.id))
-    .map(a=>({id:'area:'+a.id,n:a.emoji+' '+a.nombre}));
-  cont.innerHTML=FILTROS.concat(areas).map(f=>
-    '<button class="chip'+(filtroActivo===f.id?' activo':'')+'" data-filtro="'+f.id+'">'+esc(f.n)+'</button>').join('');
+  /* los filtros son tus propios temas: aparecen solos conforme escribes */
+  const m=new Map();
+  D.notas.forEach(nn=>{ const t=(nn.tema||'').trim(); if(t) m.set(t,(m.get(t)||0)+1); });
+  const temas=[...m.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'es')).slice(0,12);
+  const chips=[{id:'todo',n:'Todo'}].concat(temas.map(t=>({id:'tema:'+t[0],n:t[0]+' · '+t[1]})));
+  if(!chips.some(x=>x.id===filtroActivo)) filtroActivo='todo';
+  cont.innerHTML=chips.map(f=>
+    '<button class="chip'+(filtroActivo===f.id?' activo':'')+'" data-filtro="'+esc(f.id)+'">'+esc(f.n)+'</button>').join('');
   cont.querySelectorAll('[data-filtro]').forEach(b=>b.onclick=()=>{
     filtroActivo=b.dataset.filtro; renderFiltros(); renderBusqueda();
   });
 }
 function pasaFiltro(n){
-  if(filtroActivo.startsWith('area:')) return n.area===filtroActivo.slice(5);
-  const f=FILTROS.find(x=>x.id===filtroActivo);
-  return f?f.f(n):true;
+  if(filtroActivo.startsWith('tema:')) return (n.tema||'').trim()===filtroActivo.slice(5);
+  return true;
 }
 function renderBusqueda(){
   const q=document.getElementById('qBuscar').value.trim();
@@ -1283,15 +1081,83 @@ const inputQ=document.getElementById('qBuscar');
 inputQ.addEventListener('input',renderBusqueda);
 inputQ.addEventListener('keydown',e=>{ if(e.key==='Enter') inputQ.blur(); });
 document.getElementById('qLimpiar').onclick=()=>{ inputQ.value=''; renderBusqueda(); inputQ.focus(); };
-function buscarPor(txt,filtro){
-  filtroActivo=filtro||'todo';
+function buscarPor(txt){
+  filtroActivo='todo';
   inputQ.value=txt||'';
-  ir('buscar');
-  renderFiltros(); renderBusqueda();
+  ir('notas');
 }
 
 /* ============================================================
-   Pantalla HOY
+   Pantalla NOTAS — buscador, tu ruta y la lista, todo junto
+   ============================================================ */
+function renderNotas(){
+  document.getElementById('chipNotasVal').textContent=D.notas.length;
+  pintarRutaLinea();
+  renderFiltros();
+  renderBusqueda();
+}
+function pintarRutaLinea(){
+  const el=document.getElementById('rutaLinea');
+  const r=rutaPorId(D.rutas.activa);
+  if(!r){
+    el.innerHTML='<div class="ruta-linea"><button class="chip mini" id="btnElegirRuta">🧭 Elegir una ruta de estudio (opcional)</button></div>';
+  }else{
+    const pend=pendientesRuta(r,2);
+    const pr=progresoRuta(r);
+    el.innerHTML='<div class="ruta-linea"><span class="rl-t">'+r.emoji+' <b class="num">'+pr.hechos+'/'+pr.total+'</b>'
+      +(pend.length?' · siguiente:':' · 🎉 temario completo')+'</span>'
+      +pend.map(o=>'<button class="chip mini dorada" data-rc="'+r.id+':'+o.i+'">+ '+esc(o.x.titulo)+'</button>').join('')
+      +'<button class="rl-cambiar" id="btnElegirRuta">cambiar</button></div>';
+  }
+  document.getElementById('btnElegirRuta').onclick=abrirRutaPicker;
+}
+function abrirRutaPicker(){
+  abrirHoja('h-ruta',()=>{
+    const cont=document.getElementById('rutaOpciones');
+    cont.innerHTML=RUTAS.map(r=>{
+      const pr=progresoRuta(r);
+      const activa=D.rutas.activa===r.id;
+      return '<button class="sel-f'+(activa?' marcada':'')+'" data-ruta="'+r.id+'"><span class="mk">✓</span>'
+        +'<span class="nm">'+r.emoji+' '+esc(r.nombre)+'<small>'+r.semanas+' semanas · '+pr.hechos+' de '+pr.total+' notas creadas</small></span></button>';
+    }).join('')
+    +'<button class="sel-f'+(!D.rutas.activa?' marcada':'')+'" data-ruta=""><span class="mk">✓</span>'
+    +'<span class="nm">Sin ruta<small>solo mis notas libres</small></span></button>';
+    cont.querySelectorAll('[data-ruta]').forEach(b=>b.onclick=()=>{
+      const id=b.dataset.ruta||null;
+      D.rutas.activa=id;
+      if(id) asegurarArea(rutaPorId(id));
+      guardar(); cerrarHoja(); renderNotas();
+      notificar(id?'Ruta activa: '+rutaPorId(id).emoji+' '+rutaPorId(id).nombre:'Sin ruta — puro cuaderno.');
+    });
+  });
+}
+
+/* ============================================================
+   Pantalla REPASAR — la única función inteligente a la vista
+   ============================================================ */
+function renderRepasarHome(){
+  const cont=document.getElementById('cuerpoRepasar');
+  const due=notasVencidas().length;
+  const man=D.notas.filter(n=>n.rep&&n.rep.due===mananaISO()).length;
+  let h='<div class="q-card" style="text-align:center">'
+    +'<div class="q-etq">Repaso de hoy</div>'
+    +'<div style="font-size:44px;font-weight:800;line-height:1.1" class="num">'+due+'</div>'
+    +'<div class="q-meta" style="margin-top:4px">'+(due===0?'Al día. Tu memoria no tiene pendientes hoy.':(due===1?'nota espera tu repaso':'notas esperan tu repaso'))+'</div>'
+    +'</div>';
+  if(due>0) h+='<button class="rev-btn" id="btnEmpezarRepaso">▶️ Empezar repaso</button>';
+  h+='<div class="kpi-rej" style="margin-top:12px">'
+    +'<div class="kpi"><div class="l">Racha</div><div class="v num">'+racha()+' d</div></div>'
+    +'<div class="kpi"><div class="l">En memoria</div><div class="v num">'+D.notas.length+'</div></div>'
+    +'<div class="kpi"><div class="l">Mañana</div><div class="v num">'+man+'</div></div>'
+    +'</div>'
+    +'<div class="nota-p" style="margin-top:10px">Cada nota tiene su propio calendario: si la recuerdas, se aleja; si la fallas, vuelve pronto. Califícate con honestidad — el sistema solo funciona si no te mientes.</div>';
+  cont.innerHTML=h;
+  const b=document.getElementById('btnEmpezarRepaso');
+  if(b) b.onclick=empezarRepaso;
+}
+
+/* ============================================================
+   Utilerías compartidas (racha y conexiones)
    ============================================================ */
 function racha(){
   const s=new Set(D.dias);
@@ -1299,125 +1165,19 @@ function racha(){
   while(s.has(fechaISO(d))){ n++; d.setDate(d.getDate()-1); }
   return n;
 }
-function creadasDesde(dias){
-  const lim=new Date(); lim.setDate(lim.getDate()-dias);
-  const iso=fechaISO(lim);
-  return D.notas.filter(n=>n.creado>=iso).length;
-}
 function totalConexiones(){
   let c=0; D.notas.forEach(n=>c+=n.links.length); return Math.round(c/2);
 }
-function renderHoy(){
-  const total=D.notas.length;
-  document.getElementById('chipNotasVal').textContent=total;
-  document.getElementById('hoyGrande').textContent=total;
-  document.getElementById('hoyEtq').textContent = total===1?'concepto en tu memoria':'conceptos en tu memoria';
-
-  const dominados=D.notas.filter(n=>n.dominio>=4).length;
-  const pordominar=D.notas.filter(n=>n.dominio<=2).length;
-  document.getElementById('hoySub').textContent = !total
-    ? 'Todavía no hay nada aquí. Toca «+ Nota» y captura el primer concepto que quieras no olvidar.'
-    : dominados+' aplicados o dominados · '+pordominar+' todavía frescos.';
-
-  const cuenta=DOMINIOS.map(d=>D.notas.filter(n=>n.dominio===d.v).length);
-  document.getElementById('hoyBarra').innerHTML = total
-    ? DOMINIOS.map((d,i)=>'<i style="width:'+(cuenta[i]/total*100)+'%;background:'+(d.v===5?'#F6F1E4':d.c)+'"></i>').join('')
-    : '';
-  document.getElementById('hoyLeyenda').innerHTML = total
-    ? DOMINIOS.filter((d,i)=>cuenta[i]>0).map((d,i)=>{
-        const c=D.notas.filter(n=>n.dominio===d.v).length;
-        return '<span><i class="punto" style="background:'+(d.v===5?'#F6F1E4':d.c)+'"></i>'+esc(d.n)+' '+c+'</span>';
-      }).join('')
-    : '';
-  document.getElementById('hoyConex').textContent=totalConexiones();
-  const r=racha();
-  document.getElementById('hoyRacha').textContent=r+' d';
-  document.getElementById('hoySemana').textContent=creadasDesde(7);
-
-  /* --- los tres bloques de la sesión --- */
-  const min=D.cfg.sesion||60;
-  const mm=[Math.round(min*0.40),Math.round(min*0.25),Math.round(min*0.35)];
-  const huerfanos=conceptosHuerfanos();
-  const sinConectar=D.notas.filter(n=>!n.links.length&&D.notas.length>1)
-    .sort((a,b)=>(a.revisado<b.revisado?1:-1)).slice(0,4);
-  const incompletas=D.notas.map(n=>({n:n,c:completitud(n)})).filter(x=>x.c<1)
-    .sort((a,b)=>a.c-b.c).slice(0,4).map(x=>x.n);
-  const dudas=[];
-  D.notas.forEach(n=>n.preguntas.forEach(p=>{ if(!p.resuelta) dudas.push({n:n,p:p}); }));
-
-  let h='';
-  /* 1. capturar */
-  h+='<div class="bloque"><div class="cab"><h3>1 · Capturar</h3><span class="min">'+mm[0]+' min</span></div>'
-   +'<div class="desc">Todo concepto que aparezca hoy y no tenga nota, se queda fuera de tu memoria. Escríbelo aunque sea en una línea.</div>';
-  if(huerfanos.length){
-    h+='<div class="campo-l">Mencionaste estos conceptos, pero no tienen nota</div><div class="listilla">'
-      +huerfanos.slice(0,8).map(x=>'<button class="chip mini" data-crear="'+esc(x.txt)+'">+ '+esc(x.txt)+'</button>').join('')
-      +'</div>';
-  }
-  const rAct=rutaPorId(D.rutas.activa);
-  if(rAct){
-    const pend=pendientesRuta(rAct,3);
-    if(pend.length){
-      h+='<div class="campo-l" style="margin-top:'+(huerfanos.length?'12px':'0')+'">Siguiente en tu ruta '+rAct.emoji+'</div><div class="listilla">'
-        +pend.map(o=>'<button class="chip mini" data-rc="'+rAct.id+':'+o.i+'">+ '+esc(o.x.titulo)+'</button>').join('')+'</div>';
-    }else{
-      const pr=progresoRuta(rAct);
-      if(pr.total&&pr.hechos===pr.total)
-        h+='<div class="nota-p">🎉 Creaste todas las notas de tu ruta '+rAct.emoji+'. Revisa en «Rutas» qué proyectos faltan.</div>';
-    }
-  }
-  h+='<div class="btn-fila"><button class="btn-mini dorado" data-accion="nueva-conocimiento">📘 Concepto nuevo</button>'
-   +'<button class="btn-mini" data-accion="nueva-aplicacion">🛠️ Procedimiento</button></div></div>';
-
-  /* 2. conectar */
-  h+='<div class="bloque b-conectar"><div class="cab"><h3>2 · Conectar</h3><span class="min">'+mm[1]+' min</span></div>'
-   +'<div class="desc">Una nota suelta se olvida; una nota conectada se recupera desde tres caminos distintos.</div>';
-  if(sinConectar.length) h+=sinConectar.map(n=>itemNota(n,[])).join('');
-  else h+='<div class="vacio" style="padding:10px 0">Todas tus notas están conectadas con al menos otra. Bien hecho.</div>';
-  h+='</div>';
-
-  /* 3. consolidar */
-  h+='<div class="bloque b-consolidar"><div class="cab"><h3>3 · Consolidar</h3><span class="min">'+mm[2]+' min</span></div>'
-   +'<div class="desc">Completa lo que dejaste a medias y responde tus propias dudas. Aquí es donde el conocimiento se vuelve utilizable.</div>';
-  const vencidas=notasVencidas().length;
-  if(vencidas>0){
-    h+='<div class="btn-fila" style="margin-top:0;margin-bottom:10px"><button class="btn-mini dorado ancho" data-accion="repasar">🔁 Repasar '+vencidas+(vencidas===1?' nota vencida':' notas vencidas')+'</button></div>';
-  }
-  if(incompletas.length){
-    h+='<div class="campo-l">Les faltan campos clave</div>'+incompletas.map(n=>itemNota(n,[])).join('');
-  }
-  if(dudas.length){
-    h+='<div class="campo-l" style="margin-top:12px">Preguntas que dejaste abiertas</div>'
-      +dudas.slice(0,4).map(d=>'<button class="n-item" data-nota="'+d.n.id+'"><span class="bandera" style="background:var(--rojo)"></span>'
-        +'<span class="cuerpo"><span class="tit">❓ '+esc(d.p.txt)+'</span>'
-        +'<span class="frag">en «'+esc(d.n.titulo)+'»</span></span></button>').join('');
-  }
-  if(!incompletas.length&&!dudas.length) h+='<div class="vacio" style="padding:10px 0">Nada pendiente. Ve por un concepto nuevo.</div>';
-  h+='</div>';
-  document.getElementById('hoyBloques').innerHTML=h;
-
-  const rec=D.notas.slice().sort((a,b)=>(a.revisado<b.revisado?1:a.revisado>b.revisado?-1:0)).slice(0,5);
-  document.getElementById('hoyRecientes').innerHTML = rec.length
-    ? rec.map(n=>itemNota(n,[])).join('')
-    : '<div class="vacio">Tus notas más recientes aparecerán aquí.</div>';
-}
+document.getElementById('chipNotas').onclick=()=>ir('notas');
+/* crear una nota desde una mención [[así]] que aún no existe */
 document.addEventListener('click',e=>{
-  const c=e.target.closest('[data-crear]');
-  if(c) abrirCaptura({titulo:c.dataset.crear});
-  const a=e.target.closest('[data-accion]');
-  if(a){
-    if(a.dataset.accion==='nueva-conocimiento') abrirCaptura({tipo:'conocimiento'});
-    if(a.dataset.accion==='nueva-aplicacion')   abrirCaptura({tipo:'aplicacion'});
-    if(a.dataset.accion==='repasar')            empezarRepaso();
-  }
+  const b=e.target.closest('[data-crear]');
+  if(b) abrirCaptura({titulo:b.dataset.crear,desde:notaActual?notaActual.id:null});
 });
-document.getElementById('verTodasRec').onclick=()=>buscarPor('','todo');
-document.getElementById('chipNotas').onclick=()=>buscarPor('','todo');
 
 /* ============================================================
-   Pantalla MAPA — área › tema › notas
+   Agrupadores por área y tema (para Ajustes y exportación)
    ============================================================ */
-let mapa={area:null,tema:null};
 const SIN_AREA='__sin__', SIN_TEMA='__sinTema__';
 function notasDeArea(id){ return D.notas.filter(n=>(n.area||SIN_AREA)===id); }
 function temasDeArea(id){
@@ -1428,72 +1188,11 @@ function temasDeArea(id){
   });
   return [...m.entries()].sort((a,b)=>a[0]===SIN_TEMA?1:b[0]===SIN_TEMA?-1:a[0].localeCompare(b[0],'es'));
 }
-function todasLasEtiquetas(){
-  const m=new Map();
-  D.notas.forEach(n=>n.tags.forEach(t=>{ const k=t.trim(); if(k) m.set(k,(m.get(k)||0)+1); }));
-  return [...m.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'es'));
-}
-function renderMapa(){
-  const miga=document.getElementById('migaMapa');
-  const cuerpo=document.getElementById('cuerpoMapa');
-
-  if(!mapa.area){
-    miga.innerHTML='<b>Todas las áreas</b>';
-    const cajas=D.areas.map(a=>({id:a.id,nombre:a.nombre,emoji:a.emoji}));
-    if(D.notas.some(n=>!n.area)) cajas.push({id:SIN_AREA,nombre:'Sin área',emoji:'📁'});
-    let h='<div class="rejilla">'+cajas.map(a=>{
-      const c=notasDeArea(a.id).length;
-      const t=temasDeArea(a.id).length;
-      return '<button class="area-c" data-area="'+esc(a.id)+'"><span class="em">'+esc(a.emoji)+'</span>'
-        +'<span class="nm">'+esc(a.nombre)+'</span>'
-        +'<span class="ct">'+c+(c===1?' nota':' notas')+(t?' · '+t+(t===1?' tema':' temas'):'')+'</span></button>';
-    }).join('')+'</div>';
-    const tags=todasLasEtiquetas();
-    if(tags.length){
-      h+='<h2 class="sec">Etiquetas</h2><div class="listilla" style="display:flex;flex-wrap:wrap;gap:7px">'
-        +tags.slice(0,30).map(t=>'<button class="chip mini" data-tag="'+esc(t[0])+'">'+esc(t[0])+' · '+t[1]+'</button>').join('')
-        +'</div><div class="nota-p">Las etiquetas cruzan áreas: sirven para lo que un árbol no puede clasificar.</div>';
-    }
-    if(!D.notas.length) h+='<div class="vacio">Tu mapa se dibuja solo conforme escribes notas.</div>';
-    cuerpo.innerHTML=h;
-    cuerpo.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{ mapa={area:b.dataset.area,tema:null}; renderMapa(); window.scrollTo(0,0); });
-    cuerpo.querySelectorAll('[data-tag]').forEach(b=>b.onclick=()=>buscarPor(b.dataset.tag));
-    return;
-  }
-
-  const nomA=mapa.area===SIN_AREA?'Sin área':nombreArea(mapa.area);
-  const emA =mapa.area===SIN_AREA?'📁':emojiArea(mapa.area);
-
-  if(!mapa.tema){
-    miga.innerHTML='<button data-nivel="raiz">Áreas</button><span>›</span><b>'+esc(emA+' '+nomA)+'</b>';
-    const temas=temasDeArea(mapa.area);
-    cuerpo.innerHTML = temas.length
-      ? temas.map(t=>'<button class="tema-f" data-tema="'+esc(t[0])+'">'
-          +'<span class="nm">'+(t[0]===SIN_TEMA?'<i style="opacity:.7">Sin tema asignado</i>':esc(t[0]))+'</span>'
-          +'<span class="ct">'+t[1]+'</span><span class="fl">›</span></button>').join('')
-      : '<div class="vacio">Todavía no hay notas en esta área.<br><br><button class="btn-mini dorado" data-accion="nueva-conocimiento">+ Primera nota</button></div>';
-    cuerpo.querySelectorAll('[data-tema]').forEach(b=>b.onclick=()=>{ mapa.tema=b.dataset.tema; renderMapa(); window.scrollTo(0,0); });
-    miga.querySelector('[data-nivel]').onclick=()=>{ mapa={area:null,tema:null}; renderMapa(); };
-    return;
-  }
-
-  const nomT=mapa.tema===SIN_TEMA?'Sin tema':mapa.tema;
-  miga.innerHTML='<button data-nivel="raiz">Áreas</button><span>›</span>'
-    +'<button data-nivel="area">'+esc(nomA)+'</button><span>›</span><b>'+esc(nomT)+'</b>';
-  const lista=notasDeArea(mapa.area).filter(n=>((n.tema||'').trim()||SIN_TEMA)===mapa.tema)
-    .sort((a,b)=>a.tipo===b.tipo?a.titulo.localeCompare(b.titulo,'es'):(a.tipo==='aplicacion'?1:-1));
-  cuerpo.innerHTML=lista.map(n=>itemNota(n,[])).join('')||'<div class="vacio">Sin notas aquí.</div>';
-  miga.querySelector('[data-nivel="raiz"]').onclick=()=>{ mapa={area:null,tema:null}; renderMapa(); };
-  miga.querySelector('[data-nivel="area"]').onclick=()=>{ mapa.tema=null; renderMapa(); };
-}
-
-
 
 /* ============================================================
    Repaso espaciado (SM-2) — la app te pregunta tus propias
    notas y reprograma cada una según qué tan bien la recuerdas.
    ============================================================ */
-const PESO_CALIDAD={limite:1,duro:0.75,facil:0.5,repaso:1};
 function registrarSesion(o){
   D.sesiones.push(Object.assign({id:uid(),f:hoyISO(),area:'',micro:null,min:1,cal:'limite',tipo:'practica',txt:''},o));
   const h=hoyISO(); if(!D.dias.includes(h)) D.dias.push(h);
@@ -1584,9 +1283,9 @@ function renderRepaso(){
     cont.innerHTML='<div class="card" style="text-align:center;padding:26px 16px">'
       +'<div style="font-size:34px">🏁</div>'
       +'<div style="font-size:17px;font-weight:800;margin-top:8px">Repaso terminado</div>'
-      +'<div class="nota-p" style="margin-top:6px">'+repasoBien+' recordadas · '+repasoMal+' volverán pronto · '+min+' min registrados a tus horas.</div>'
-      +'<div class="btn-fila" style="justify-content:center"><button class="btn-mini dorado" id="repasoVolver">Volver a Práctica</button></div></div>';
-    document.getElementById('repasoVolver').onclick=()=>ir('practica');
+      +'<div class="nota-p" style="margin-top:6px">'+repasoBien+' recordadas · '+repasoMal+' volverán pronto.</div>'
+      +'<div class="btn-fila" style="justify-content:center"><button class="btn-mini dorado" id="repasoVolver">Listo</button></div></div>';
+    document.getElementById('repasoVolver').onclick=()=>ir('repasar');
     repasoTotal=0;
     return;
   }
@@ -1602,7 +1301,7 @@ function renderRepaso(){
   });
   document.getElementById('repasoAbrirNota').onclick=()=>abrirNota(n.id);
 }
-document.getElementById('repasoSalir').onclick=()=>ir('practica');
+document.getElementById('repasoSalir').onclick=()=>ir('repasar');
 
 /* ---------- pregunta del día (peaje amable) ---------- */
 function mostrarPeaje(){
@@ -1616,547 +1315,15 @@ function mostrarPeaje(){
     D.peajeDia=hoyISO(); guardar();
     cerrarHoja();
     const resto=notasVencidas().length;
-    if(resto>0) notificar('✓ Hecha. Te esperan '+resto+' más en Práctica → Repaso.');
+    if(resto>0) notificar('✓ Hecha. Te esperan '+resto+' más en la pestaña Repasar.');
     else notificar('✓ Al día. Cero notas vencidas.');
-    if(pantallaActual==='hoy') renderHoy();
-    if(pantallaActual==='practica') renderPractica();
+    if(pantallaActual==='notas') renderNotas();
+    if(pantallaActual==='repasar') renderRepasarHome();
   });
   abrirHoja('h-peaje');
 }
 document.getElementById('peajeLuego').onclick=()=>{ D.peajeDia=hoyISO(); guardar(); cerrarHoja(); };
 
-
-/* ============================================================
-   Pantalla PRÁCTICA — horas deliberadas, cronómetro y proyección
-   ============================================================ */
-function horasEfectivas(filtro){
-  let min=0;
-  D.sesiones.forEach(x=>{ if(filtro&&!filtro(x)) return; min+=(x.min||0)*(PESO_CALIDAD[x.cal]||1); });
-  return min/60;
-}
-function ritmoSemanal(){
-  const desde=sumarDias(hoyISO(),-28);
-  let min=0;
-  D.sesiones.forEach(x=>{ if(x.f>=desde) min+=(x.min||0)*(PESO_CALIDAD[x.cal]||1); });
-  return min/60/4;
-}
-function proyeccionTxt(){
-  const total=horasEfectivas(), meta=D.cfg.metaHoras||1000, ritmo=ritmoSemanal();
-  if(total>=meta) return '🎉 Superaste tu meta de '+meta.toLocaleString('es')+' horas. Sube la meta en Ajustes.';
-  if(ritmo<=0.05) return 'Registra tus primeras sesiones y aquí verás tu fecha proyectada para llegar a '+meta.toLocaleString('es')+' h.';
-  const semanas=(meta-total)/ritmo;
-  if(semanas>52*40) return 'A este ritmo la meta de '+meta.toLocaleString('es')+' h queda a más de 40 años. Sube tu ritmo o ajusta la meta: que el número te sirva, no te aplaste.';
-  const d=new Date(); d.setDate(d.getDate()+Math.round(semanas*7));
-  const fecha=d.toLocaleDateString('es',{month:'long',year:'numeric'});
-  const extra=(meta-total)/(ritmo+2);
-  const d2=new Date(); d2.setDate(d2.getDate()+Math.round(extra*7));
-  return 'A tu ritmo llegas a '+meta.toLocaleString('es')+' h en '+fecha+'. Con 2 h más a la semana: '+d2.toLocaleDateString('es',{month:'long',year:'numeric'})+'.';
-}
-const fmtH=h=>h>=100?Math.round(h).toLocaleString('es'):h.toFixed(1).replace('.0','');
-
-/* ---------- cronómetro ---------- */
-let cronoTimer=null;
-const cronoMin=()=>D.cronometro?Math.max(0,(Date.now()-D.cronometro.ini)/60000):0;
-function fmtCrono(){
-  const seg=Math.floor((Date.now()-D.cronometro.ini)/1000);
-  const h=Math.floor(seg/3600), m=Math.floor(seg%3600/60), x=seg%60;
-  return (h?h+':':'')+String(m).padStart(h?2:1,'0')+':'+String(x).padStart(2,'0');
-}
-function tickCrono(){
-  if(!D.cronometro){ clearInterval(cronoTimer); cronoTimer=null; actualizarChipNotas(); return; }
-  const chip=document.getElementById('chipNotas');
-  chip.querySelector('.pl').textContent='⏱ practicando';
-  chip.querySelector('.num').textContent=fmtCrono();
-  const t=document.getElementById('cronoTiempo');
-  if(t) t.textContent=fmtCrono();
-}
-function arrancarTick(){
-  if(!D.cronometro) return;
-  tickCrono();
-  if(!cronoTimer) cronoTimer=setInterval(tickCrono,1000);
-}
-function actualizarChipNotas(){
-  const chip=document.getElementById('chipNotas');
-  if(D.cronometro) return;
-  chip.querySelector('.pl').textContent='Notas';
-  chip.querySelector('.num').textContent=D.notas.length;
-}
-
-function renderPractica(){
-  const cont=document.getElementById('cuerpoPractica');
-  const total=horasEfectivas(), semana=horasEfectivas(x=>x.f>=sumarDias(hoyISO(),-7));
-  const ritmo=ritmoSemanal(), meta=D.cfg.metaHoras||1000;
-  const due=notasVencidas().length;
-  const pct=Math.min(100,total/meta*100);
-
-  let h='<div class="pr-hero">'
-    +'<div class="etq">Práctica deliberada acumulada</div>'
-    +'<div class="horas num">'+fmtH(total)+' h</div>'
-    +'<div class="sub">'+esc(proyeccionTxt())+'</div>'
-    +'<div class="barra-dom" style="margin-top:12px"><i style="width:'+pct+'%;background:linear-gradient(90deg,#C79A3B,#E0B95C)"></i></div>'
-    +'<div class="mini">'
-    +'<div>Esta semana<b class="num">'+fmtH(semana)+' h</b></div>'
-    +'<div>Ritmo (4 sem)<b class="num">'+fmtH(ritmo)+' h/sem</b></div>'
-    +'<div>Meta<b class="num">'+meta.toLocaleString('es')+' h</b></div>'
-    +'</div></div>';
-
-  if(D.cronometro){
-    const ar=area(D.cronometro.area);
-    const mi=D.micros.find(m=>m.id===D.cronometro.micro);
-    h+='<div class="card crono-viva" style="text-align:center;padding:18px">'
-      +'<div class="nota-p" style="margin:0">Sesión en curso · '+(ar?esc(ar.emoji+' '+ar.nombre):'General')+(mi?' · '+esc(mi.nombre):'')+'</div>'
-      +'<div class="num" id="cronoTiempo" style="font-size:38px;font-weight:800;margin:6px 0">'+fmtCrono()+'</div>'
-      +'<div class="btn-fila" style="justify-content:center"><button class="btn-mini dorado" id="cronoParar">■ Terminar y calificar</button>'
-      +'<button class="btn-mini" id="cronoDescartar">Descartar</button></div></div>';
-  }
-
-  h+='<div class="acc-fila">'
-    +'<button class="acc" data-pa="repaso"><span class="ic">🔁</span><span class="tt">Repaso de hoy</span>'
-      +'<span class="st">'+(due?'<b>'+due+' nota'+(due===1?'':'s')+'</b> esperando':'Al día ✓')+'</span></button>'
-    +(D.cronometro?'':'<button class="acc" data-pa="sesion"><span class="ic">⏱</span><span class="tt">Sesión de práctica</span>'
-      +'<span class="st">cronómetro + calidad</span></button>')
-    +'<button class="acc" data-pa="feynman"><span class="ic">🧒</span><span class="tt">Modo Feynman</span>'
-      +'<span class="st">explícalo como a un niño</span></button>'
-    +'<button class="acc" data-pa="caza"><span class="ic">🕵️</span><span class="tt">Caza tu error</span>'
-      +'<span class="st">'+bancoErrores().length+' afirmaciones tuyas</span></button>'
-    +'<button class="acc" data-pa="casos"><span class="ic">📊</span><span class="tt">Simulador de casos</span>'
-      +'<span class="st">'+D.casos.length+' caso'+(D.casos.length===1?'':'s')+' guardados</span></button>'
-    +'<button class="acc" data-pa="manual"><span class="ic">➕</span><span class="tt">Registrar pasada</span>'
-      +'<span class="st">clase, libro, análisis externo</span></button>'
-    +'</div>';
-
-  /* horas por área */
-  const conHoras=D.areas.map(a=>({a:a,h:horasEfectivas(x=>x.area===a.id)})).filter(x=>x.h>0);
-  const maxH=Math.max.apply(null,conHoras.map(x=>x.h).concat([1]));
-  if(conHoras.length){
-    h+='<h2 class="sec">Horas por área</h2><div class="card">'
-      +conHoras.sort((x,y)=>y.h-x.h).map(x=>'<div class="fila-est"><span>'+esc(x.a.emoji)+'</span><span class="nm">'+esc(x.a.nombre)+'</span>'
-        +'<span class="pista"><i style="width:'+(x.h/maxH*100)+'%;background:var(--oro)"></i></span>'
-        +'<span class="vl num">'+fmtH(x.h)+'h</span></div>').join('')+'</div>';
-  }
-
-  /* micro-habilidades */
-  h+=htmlMicros();
-
-  /* últimas sesiones */
-  const ult=D.sesiones.slice(-6).reverse();
-  h+='<h2 class="sec">Últimas sesiones</h2>';
-  h+= ult.length
-    ? ult.map(x=>{
-        const ar=area(x.area);
-        const et={practica:'⏱',repaso:'🔁',feynman:'🧒',errores:'🕵️',caso:'📊'}[x.tipo]||'⏱';
-        return '<div class="fila-lista"><span class="n" style="background:none;font-size:15px">'+et+'</span>'
-          +'<span class="tx">'+(ar?esc(ar.emoji+' '+ar.nombre):'General')+(x.txt?' — '+esc(x.txt):'')
-          +'<small>'+esc(fFecha(x.f))+' · '+x.min+' min · '+(x.cal==='limite'?'🔥 al límite':x.cal==='duro'?'😤 frustrante':'😌 fácil')+'</small></span>'
-          +'<button class="quitar" data-borrasesion="'+x.id+'">✕</button></div>';
-      }).join('')
-    : '<div class="vacio">Tus sesiones registradas aparecerán aquí. La primera hora empieza con un toque en ⏱.</div>';
-
-  cont.innerHTML=h;
-  bindPractica(cont);
-}
-function bindPractica(cont){
-  cont.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>{
-    const a=b.dataset.pa;
-    if(a==='repaso')  empezarRepaso();
-    if(a==='sesion')  abrirHojaSesion();
-    if(a==='manual')  abrirHojaManual();
-    if(a==='feynman') empezarFeynman();
-    if(a==='caza')    empezarCaza();
-    if(a==='casos')   ir('casos');
-  });
-  const parar=cont.querySelector('#cronoParar');
-  if(parar) parar.onclick=()=>{
-    document.getElementById('ceTitulo').textContent='Cerrar sesión · '+Math.max(1,Math.round(cronoMin()))+' min';
-    document.getElementById('ceTxt').value='';
-    setSeg('segCalidad','limite');
-    abrirHoja('h-cerrar');
-  };
-  const desc=cont.querySelector('#cronoDescartar');
-  if(desc) armarBorrar(desc,()=>{ D.cronometro=null; guardar(); tickCrono(); renderPractica(); notificar('Sesión descartada'); });
-  cont.querySelectorAll('[data-borrasesion]').forEach(b=>armarBorrar(b,()=>{
-    D.sesiones=D.sesiones.filter(x=>x.id!==b.dataset.borrasesion);
-    guardar(); renderPractica();
-  }));
-  const nm=cont.querySelector('#btnNuevaMicro');
-  if(nm) nm.onclick=()=>abrirHoja('h-micro',()=>{
-    document.getElementById('miNombre').value='';
-    pintarSelectAreas('miArea',(D.rutas.activa&&rutaPorId(D.rutas.activa))?rutaPorId(D.rutas.activa).area.id:(D.areas[0]?D.areas[0].id:''));
-  });
-  cont.querySelectorAll('[data-borramicro]').forEach(b=>armarBorrar(b,()=>{
-    D.micros=D.micros.filter(m=>m.id!==b.dataset.borramicro);
-    guardar(); renderPractica();
-  }));
-}
-
-/* ---------- hojas de sesión ---------- */
-let microSel=null;
-function abrirHojaSesion(){
-  abrirHoja('h-sesion',()=>{
-    pintarSelectAreas('seArea',(D.rutas.activa&&rutaPorId(D.rutas.activa))?rutaPorId(D.rutas.activa).area.id:(D.areas[0]?D.areas[0].id:''));
-    microSel=null;
-    pintarMicrosSesion();
-    document.getElementById('seArea').onchange=pintarMicrosSesion;
-  });
-}
-function pintarMicrosSesion(){
-  const areaId=document.getElementById('seArea').value;
-  const ms=D.micros.filter(m=>m.area===areaId);
-  const wrap=document.getElementById('seMicrosWrap');
-  wrap.style.display=ms.length?'block':'none';
-  if(!ms.length){ microSel=null; return; }
-  const debil=microMasDebil(areaId);
-  document.getElementById('seMicros').innerHTML=ms.map(m=>
-    '<button class="chip'+(microSel===m.id?' activo':'')+'" data-micro="'+m.id+'">'
-    +esc(m.nombre)+(debil&&debil.id===m.id?' 🎯':'')+'</button>').join('');
-  document.querySelectorAll('#seMicros [data-micro]').forEach(b=>b.onclick=()=>{
-    microSel=(microSel===b.dataset.micro)?null:b.dataset.micro;
-    pintarMicrosSesion();
-  });
-}
-document.getElementById('seEmpezar').onclick=()=>{
-  D.cronometro={ini:Date.now(),area:document.getElementById('seArea').value,micro:microSel,tipo:'practica'};
-  guardar(); cerrarHoja(); arrancarTick(); ir('practica');
-  notificar('⏱ Sesión iniciada. El tiempo corre aunque cambies de pestaña o cierres la app.');
-};
-document.getElementById('ceGuardar').onclick=()=>{
-  if(!D.cronometro) return cerrarHoja();
-  const seg=document.querySelector('#segCalidad .activo');
-  registrarSesion({
-    area:D.cronometro.area, micro:D.cronometro.micro,
-    min:Math.max(1,Math.round(cronoMin())),
-    cal:seg?seg.dataset.v:'limite',
-    tipo:'practica',
-    txt:document.getElementById('ceTxt').value.trim()
-  });
-  D.cronometro=null; guardar(); tickCrono(); cerrarHoja(); renderPractica();
-  notificar('Sesión guardada ✓ — cada hora registrada es una hora que existe.');
-};
-function abrirHojaManual(){
-  abrirHoja('h-manual',()=>{
-    document.getElementById('maMin').value='';
-    document.getElementById('maTxt').value='';
-    setSeg('segCalidadM','limite');
-    pintarSelectAreas('maArea',D.areas[0]?D.areas[0].id:'');
-  });
-}
-document.getElementById('maGuardar').onclick=()=>{
-  const min=parseInt(document.getElementById('maMin').value,10);
-  if(!(min>0)){ notificar('¿Cuántos minutos fueron?',true); return; }
-  const seg=document.querySelector('#segCalidadM .activo');
-  registrarSesion({
-    area:document.getElementById('maArea').value, min:Math.min(600,min),
-    cal:seg?seg.dataset.v:'limite', tipo:'practica',
-    txt:document.getElementById('maTxt').value.trim()
-  });
-  cerrarHoja(); renderPractica();
-  notificar('Registrada ✓');
-};
-
-
-/* ============================================================
-   Modo Feynman — explícalo sin ver la nota, como a un niño.
-   ============================================================ */
-let feyNotaId=null, feyIni=0, feyMostrado=false;
-function candidatosFeynman(){
-  return D.notas.filter(n=>(n.def||'').trim().length>40)
-    .sort((a,b)=>(a.rep.due<b.rep.due?-1:a.rep.due>b.rep.due?1:0));
-}
-function empezarFeynman(){
-  const cand=candidatosFeynman();
-  if(!cand.length){ notificar('Necesitas notas con definición escrita para jugar Feynman. Escribe primero.',true); return; }
-  feyNotaId=cand[0].id; feyIni=Date.now(); feyMostrado=false;
-  ir('feynman');
-}
-function renderFeynman(){
-  const cont=document.getElementById('cuerpoFeynman');
-  const n=nota(feyNotaId);
-  if(!n){ cont.innerHTML='<div class="vacio">Esa nota ya no existe.</div>'; return; }
-  if(!feyMostrado){
-    cont.innerHTML='<div class="q-card">'
-      +'<div class="q-etq">🧒 Modo Feynman</div>'
-      +'<div class="q-txt">Explica «'+esc(n.titulo)+'» como se lo dirías a alguien de 10 años.</div>'
-      +'<div class="q-meta">Sin ver tu nota. Con ejemplos. Si necesitas palabras técnicas para explicarlo, todavía no es tuyo.</div></div>'
-      +'<div class="grupo"><textarea class="edit" id="feyTxt" rows="6" style="min-height:140px" placeholder="Imagina que un niño te pregunta: ¿y eso qué es?"></textarea></div>'
-      +'<button class="rev-btn" id="feyComparar">Comparar con mi nota</button>'
-      +'<div class="btn-fila"><button class="btn-mini" id="feyOtra" style="flex:1">🔀 Otra nota</button></div>';
-    document.getElementById('feyComparar').onclick=()=>{
-      if(document.getElementById('feyTxt').value.trim().length<20){ notificar('Explícalo de verdad — al menos un par de frases.',true); return; }
-      feyTexto=document.getElementById('feyTxt').value.trim();
-      feyMostrado=true; renderFeynman();
-    };
-    document.getElementById('feyOtra').onclick=()=>{
-      const cand=candidatosFeynman().filter(x=>x.id!==feyNotaId);
-      if(!cand.length){ notificar('No hay más candidatas.'); return; }
-      feyNotaId=cand[Math.floor(Math.random()*Math.min(5,cand.length))].id;
-      renderFeynman();
-    };
-    return;
-  }
-  cont.innerHTML='<div class="card"><div class="campo-l">Lo que dijiste</div><div class="txt-render" style="font-size:14.5px">'+esc(feyTexto)+'</div></div>'
-    +'<div class="card"><div class="campo-l">Tu nota original</div><div class="txt-render" style="font-size:14.5px">'+esc(n.def)
-    +((n.sirve||'').trim()?'\n\n¿Para qué sirve?\n'+esc(n.sirve):'')
-    +((n.errores||'').trim()?'\n\nPrecauciones:\n'+esc(n.errores):'')+'</div></div>'
-    +'<div class="card"><div class="campo-l">Sé tu propio maestro: ¿qué te faltó?</div>'
-    +'<div class="btn-fila" style="margin-top:4px">'
-    +'<button class="btn-mini dorado" id="feyCompleto" style="flex:1">✓ Lo tenía completo</button>'
-    +'<button class="btn-mini" id="feyFalto" style="flex:1">Me faltó algo</button></div>'
-    +'<div id="feyFaltaWrap" style="display:none;margin-top:10px">'
-    +'<textarea class="edit" id="feyFalta" rows="2" placeholder="¿Qué parte no dijiste o dijiste mal?"></textarea>'
-    +'<div class="btn-fila"><button class="btn-mini oscuro ancho" id="feyGuardarFalta">Guardar como pregunta pendiente</button></div></div></div>';
-  const cerrarFeynman=(g,faltaTxt)=>{
-    if(!Array.isArray(n.feynman)) n.feynman=[];
-    n.feynman.push({f:hoyISO(),txt:feyTexto});
-    if(faltaTxt) n.preguntas.push({id:uid(),txt:'[Feynman] '+faltaTxt,resuelta:false});
-    calificar(n,g);
-    registrarSesion({tipo:'feynman',area:n.area,min:Math.max(1,Math.round((Date.now()-feyIni)/60000)),cal:'limite',txt:n.titulo});
-    ir('practica');
-    notificar(g===5?'✓ Feynman superado — la nota se aleja en el calendario.':'✓ Registrado. Tu hueco quedó como pregunta pendiente en la nota.');
-  };
-  document.getElementById('feyCompleto').onclick=()=>cerrarFeynman(5,null);
-  document.getElementById('feyFalto').onclick=()=>{
-    document.getElementById('feyFaltaWrap').style.display='block';
-    document.getElementById('feyFalto').style.display='none';
-  };
-  document.getElementById('feyGuardarFalta').onclick=()=>{
-    const t=document.getElementById('feyFalta').value.trim();
-    if(!t){ notificar('Escribe qué te faltó.',true); return; }
-    cerrarFeynman(3,t);
-  };
-}
-let feyTexto='';
-document.getElementById('feySalir').onclick=()=>ir('practica');
-
-/* ============================================================
-   Caza tu error — tus correcciones vuelven como trampas.
-   ============================================================ */
-function bancoErrores(){
-  const pool=[];
-  D.notas.forEach(n=>n.correcciones.forEach(x=>{
-    if((x.antes||'').trim())  pool.push({txt:x.antes,falsa:true, notaId:n.id,f:x.f,par:x.ahora});
-    if((x.ahora||'').trim())  pool.push({txt:x.ahora,falsa:false,notaId:n.id,f:x.f,par:x.antes});
-  }));
-  return pool;
-}
-let cazaCola=[], cazaTotal=0, cazaBien=0, cazaIni=0;
-function empezarCaza(){
-  const pool=bancoErrores();
-  if(!pool.length){
-    notificar('El banco de errores se llena con tus correcciones («antes pensaba / ahora entiendo»). Registra la primera y vuelve.',true);
-    return;
-  }
-  cazaCola=pool.slice().sort(()=>Math.random()-0.5).slice(0,10);
-  cazaTotal=cazaCola.length; cazaBien=0; cazaIni=Date.now();
-  ir('caza');
-}
-function renderCaza(){
-  const cont=document.getElementById('cuerpoCaza');
-  const hechas=cazaTotal-cazaCola.length;
-  document.getElementById('cazaProg').textContent=hechas+' / '+cazaTotal;
-  document.getElementById('cazaBarra').style.width=(cazaTotal?hechas/cazaTotal*100:0)+'%';
-  if(!cazaCola.length){
-    if(cazaTotal>0) registrarSesion({tipo:'errores',min:Math.max(1,Math.round((Date.now()-cazaIni)/60000)),cal:'limite',txt:cazaBien+'/'+cazaTotal+' cazados'});
-    cont.innerHTML='<div class="card" style="text-align:center;padding:26px 16px">'
-      +'<div style="font-size:34px">'+(cazaBien===cazaTotal?'🏆':'🕵️')+'</div>'
-      +'<div style="font-size:17px;font-weight:800;margin-top:8px">'+cazaBien+' de '+cazaTotal+' correctas</div>'
-      +'<div class="nota-p" style="margin-top:6px">'+(cazaBien===cazaTotal
-        ?'Tus viejos errores ya no te engañan. Eso es exactamente aprender.'
-        :'Los que fallaste regresaron a tu cola de repaso. Un error que reaparece no es fracaso: es la señal de dónde practicar.')+'</div>'
-      +'<div class="btn-fila" style="justify-content:center"><button class="btn-mini dorado" id="cazaVolver">Volver a Práctica</button></div></div>';
-    document.getElementById('cazaVolver').onclick=()=>ir('practica');
-    cazaTotal=0;
-    return;
-  }
-  const it=cazaCola[0];
-  const n=nota(it.notaId);
-  cont.innerHTML='<div class="q-card">'
-    +'<div class="q-etq">🕵️ ¿Verdad o viejo error tuyo?</div>'
-    +'<div class="q-txt">«'+esc(it.txt)+'»</div>'
-    +'<div class="q-meta">Tema: '+esc(n?n.titulo:'—')+'</div></div>'
-    +'<div class="calif" style="grid-template-columns:1fr 1fr">'
-    +'<button class="c4" data-r="v">✅ Es correcta</button>'
-    +'<button class="c0" data-r="f">❌ Es un error</button></div>'
-    +'<div id="cazaFeedback"></div>';
-  cont.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
-    const dijoFalsa=b.dataset.r==='f';
-    const acerto=dijoFalsa===it.falsa;
-    if(acerto) cazaBien++;
-    else if(it.falsa&&n) calificar(n,0);   /* creíste tu viejo error: la nota vuelve hoy */
-    cont.querySelectorAll('[data-r]').forEach(x=>x.disabled=true);
-    document.getElementById('cazaFeedback').innerHTML=
-      '<div class="card" style="border-left:4px solid '+(acerto?'var(--verde)':'var(--rojo)')+'">'
-      +'<b>'+(acerto?'✓ Correcto.':'✗ Te atrapó.')+'</b> '
-      +(it.falsa
-        ?'Era tu error del '+esc(fFecha(it.f,true))+'. Lo que entiendes ahora: <i>'+esc(it.par||'')+'</i>'
-        :'Así lo entiendes hoy — antes pensabas: <i>'+esc(it.par||'')+'</i>')
-      +'<div class="btn-fila"><button class="btn-mini oscuro ancho" id="cazaSigue">Siguiente →</button></div></div>';
-    document.getElementById('cazaSigue').onclick=()=>{ cazaCola.shift(); renderCaza(); };
-  });
-}
-document.getElementById('cazaSalir').onclick=()=>ir('practica');
-
-/* ============================================================
-   Simulador de casos — práctica aplicada con evidencia fechada.
-   ============================================================ */
-let casoActualId=null, casoTimer=null;
-function renderCasos(){
-  const cont=document.getElementById('cuerpoCasos');
-  let h='<h2 class="sec" style="margin-top:0">Simulador de casos'
-    +'<button class="cta" id="btnNuevoCaso">+ Nuevo caso</button></h2>'
-    +'<div class="nota-p" style="margin:0 2px 12px">Eliges qué analizar, la app te pone tu checklist enfrente, cronometra y guarda el análisis. Meses después lo revisas «con ojos de hoy»: esa diferencia es tu progreso real.</div>';
-  const lista=D.casos.slice().reverse();
-  h+= lista.length
-    ? lista.map(x=>{
-        const pl=nota(x.plantilla);
-        return '<button class="n-item" data-caso="'+x.id+'">'
-          +'<span class="bandera" style="background:'+(x.abierto?'var(--oro)':'var(--verde)')+'"></span>'
-          +'<span class="cuerpo"><span class="tit">📊 '+esc(x.titulo)+'</span>'
-          +'<span class="frag">'+esc(fFecha(x.f,true))+' · '+(x.min||0)+' min'+(pl?' · guía: '+esc(pl.titulo):'')
-          +(x.rev.length?' · '+x.rev.length+' revisión'+(x.rev.length===1?'':'es'):'')+'</span>'
-          +'<span class="pie"><span class="etiq'+(x.abierto?' enlaces':'')+'">'+(x.abierto?'EN CURSO':'CERRADO')+'</span></span>'
-          +'</span></button>';
-      }).join('')
-    : '<div class="vacio">Sin casos todavía. El primero puede ser hoy: un balance real, tus notas y 30 minutos.</div>';
-  cont.innerHTML=h;
-  document.getElementById('btnNuevoCaso').onclick=abrirHojaCaso;
-  cont.querySelectorAll('[data-caso]').forEach(b=>b.onclick=()=>{ casoActualId=b.dataset.caso; ir('caso'); });
-}
-document.getElementById('casosSalir').onclick=()=>ir('practica');
-
-function abrirHojaCaso(){
-  abrirHoja('h-caso',()=>{
-    document.getElementById('csTitulo').value='';
-    const apps=D.notas.filter(n=>n.tipo==='aplicacion'&&(n.pasos||'').trim());
-    document.getElementById('csPlantilla').innerHTML='<option value="">Sin checklist (caso libre)</option>'
-      +apps.map(n=>'<option value="'+n.id+'">'+esc(n.titulo)+'</option>').join('');
-  });
-}
-document.getElementById('csEmpezar').onclick=()=>{
-  const t=document.getElementById('csTitulo').value.trim();
-  if(!t){ notificar('Ponle nombre al caso.',true); return; }
-  const plId=document.getElementById('csPlantilla').value||null;
-  const pl=plId?nota(plId):null;
-  const caso={id:uid(),titulo:t,plantilla:plId,f:hoyISO(),ini:Date.now(),min:0,
-    check:pl?lineas(pl.pasos).map(()=>false):[],txt:'',rev:[],abierto:true};
-  D.casos.push(caso); guardar();
-  casoActualId=caso.id; cerrarHoja(); ir('caso');
-};
-
-function renderCaso(){
-  const cont=document.getElementById('cuerpoCaso');
-  const x=D.casos.find(k=>k.id===casoActualId);
-  if(!x){ cont.innerHTML='<div class="vacio">Ese caso ya no existe.</div>'; return; }
-  const pl=nota(x.plantilla);
-  const pasos=pl?lineas(pl.pasos):[];
-  let h='<div class="n-cab"><div class="arriba">'
-    +'<button class="volver" id="casoVolver">‹ Casos</button>'
-    +'<span class="tipo-b aplicacion">📊 '+(x.abierto?'EN CURSO':'CERRADO')+'</span></div>'
-    +'<div style="font-size:21px;font-weight:800;line-height:1.25">'+esc(x.titulo)+'</div>'
-    +'<div class="ruta">'+esc(fFecha(x.f,true))+(pl?' · guía: '+esc(pl.titulo):'')
-    +(x.abierto?' · <b class="num" id="casoCrono"></b>':' · '+(x.min||0)+' min')+'</div></div>';
-
-  if(pasos.length){
-    h+='<h2 class="sec" style="margin-top:0">Checklist</h2>';
-    pasos.forEach((tx,i)=>{
-      const ok=!!x.check[i];
-      h+='<label class="fila-lista" style="cursor:pointer'+(x.abierto?'':';opacity:.8')+'">'
-        +'<input type="checkbox" data-chk="'+i+'" '+(ok?'checked':'')+(x.abierto?'':' disabled')+' style="width:19px;height:19px;margin-top:2px">'
-        +'<span class="tx"'+(ok?' style="text-decoration:line-through;opacity:.65"':'')+'>'+esc(tx)+'</span></label>';
-    });
-  }
-  h+='<h2 class="sec">Mi análisis</h2>'
-    +(x.abierto
-      ?'<textarea class="edit" id="casoTxt" rows="6" style="min-height:150px" placeholder="Escribe aquí lo que vas encontrando. Se guarda solo.">'+esc(x.txt)+'</textarea>'
-      :'<div class="card"><div class="txt-render" style="font-size:14.5px">'+esc(x.txt||'(sin análisis escrito)')+'</div></div>');
-
-  if(pl){
-    const rel=[pl].concat(pl.links.map(id=>nota(id)).filter(Boolean));
-    h+='<h2 class="sec">Tus notas a la mano</h2><div class="listilla" style="display:flex;flex-wrap:wrap;gap:7px">'
-      +rel.map(nn=>'<button class="chip mini" data-nota="'+nn.id+'">'+icTipo(nn.tipo)+' '+esc(nn.titulo)+'</button>').join('')+'</div>';
-  }
-  if(x.rev.length){
-    h+='<h2 class="sec">Revisiones posteriores</h2>'
-      +x.rev.map(r=>'<div class="corr"><div class="f">'+esc(fFecha(r.f,true))+'</div><div class="b">'+esc(r.txt)+'</div></div>').join('');
-  }
-  h+='<div class="btn-fila" style="margin-top:16px">'
-    +(x.abierto
-      ?'<button class="btn-mini dorado" id="casoCerrar" style="flex:1">■ Terminar caso y registrar horas</button>'
-      :'<button class="btn-mini dorado" id="casoRevisar" style="flex:1">👓 Revisar con ojos de hoy</button>')
-    +'<button class="btn-mini" id="casoBorrar" style="color:var(--rojo);border-color:rgba(181,69,47,.4)">🗑</button></div>';
-  cont.innerHTML=h;
-
-  document.getElementById('casoVolver').onclick=()=>ir('casos');
-  if(x.abierto){
-    const pintaCrono=()=>{
-      const el=document.getElementById('casoCrono');
-      if(el&&x.ini) el.textContent=Math.max(0,Math.round((Date.now()-x.ini)/60000)+(x.min||0))+' min';
-    };
-    pintaCrono();
-    clearInterval(casoTimer);
-    casoTimer=setInterval(pintaCrono,30000);
-    const ta=document.getElementById('casoTxt');
-    ta.addEventListener('input',()=>{ x.txt=ta.value; guardarPronto(); });
-    cont.querySelectorAll('[data-chk]').forEach(ch=>ch.onchange=()=>{ x.check[+ch.dataset.chk]=ch.checked; guardar(); });
-    document.getElementById('casoCerrar').onclick=()=>{
-      x.min=(x.min||0)+Math.max(1,Math.round((Date.now()-x.ini)/60000));
-      x.ini=null; x.abierto=false; guardar();
-      registrarSesion({tipo:'caso',area:pl?pl.area:'',min:x.min,cal:'limite',txt:x.titulo});
-      renderCaso();
-      notificar('Caso cerrado ✓ — '+x.min+' min a tus horas. Vuelve en unos meses a revisarlo con ojos de hoy.');
-    };
-  }else{
-    const br=document.getElementById('casoRevisar');
-    if(br) br.onclick=()=>abrirHoja('h-rev',()=>{ document.getElementById('revTxt').value=''; });
-  }
-  armarBorrar(document.getElementById('casoBorrar'),()=>{
-    D.casos=D.casos.filter(k=>k.id!==casoActualId);
-    guardar(); ir('casos'); notificar('Caso borrado');
-  });
-}
-document.getElementById('revGuardar').onclick=()=>{
-  const x=D.casos.find(k=>k.id===casoActualId);
-  const t=document.getElementById('revTxt').value.trim();
-  if(!x||!t){ notificar('Escribe qué ves distinto hoy.',true); return; }
-  x.rev.push({f:hoyISO(),txt:t}); guardar(); cerrarHoja(); renderCaso();
-  notificar('Revisión guardada ✓ — esto es progreso medible.');
-};
-
-/* ============================================================
-   Micro-habilidades — entrena siempre la pieza más débil.
-   ============================================================ */
-function horasMicro(id){ return horasEfectivas(x=>x.micro===id); }
-function microMasDebil(areaId){
-  const ms=D.micros.filter(m=>m.area===areaId);
-  if(!ms.length) return null;
-  return ms.slice().sort((a,b)=>horasMicro(a.id)-horasMicro(b.id))[0];
-}
-function htmlMicros(){
-  let h='<h2 class="sec">Micro-habilidades<button class="cta" id="btnNuevaMicro">+ Nueva</button></h2>';
-  if(!D.micros.length){
-    return h+'<div class="nota-p" style="margin:0 2px 10px">Parte tus habilidades grandes en piezas entrenables («leer notas del 10-K», «detectar inventario inflado»). Al iniciar una sesión, la app te sugiere la más débil 🎯.</div>';
-  }
-  const maxH=Math.max.apply(null,D.micros.map(m=>horasMicro(m.id)).concat([0.5]));
-  h+='<div class="card">'+D.areas.filter(a=>D.micros.some(m=>m.area===a.id)).map(a=>{
-    const debil=microMasDebil(a.id);
-    return '<div class="bg-cab" style="font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-suave);padding:8px 0 3px">'+esc(a.emoji+' '+a.nombre)+'</div>'
-      +D.micros.filter(m=>m.area===a.id).map(m=>{
-        const hh=horasMicro(m.id);
-        return '<div class="fila-est"><span class="nm">'+esc(m.nombre)+(debil&&debil.id===m.id?' <b style="color:var(--oro)">🎯 la más débil</b>':'')+'</span>'
-          +'<span class="pista"><i style="width:'+(hh/maxH*100)+'%;background:var(--verde)"></i></span>'
-          +'<span class="vl num">'+fmtH(hh)+'h</span>'
-          +'<button class="quitar" data-borramicro="'+m.id+'">✕</button></div>';
-      }).join('');
-  }).join('')+'</div>';
-  return h;
-}
-document.getElementById('miGuardar').onclick=()=>{
-  const nom=document.getElementById('miNombre').value.trim();
-  if(!nom){ notificar('Ponle nombre.',true); return; }
-  D.micros.push({id:uid(),nombre:nom,area:document.getElementById('miArea').value});
-  guardar(); cerrarHoja();
-  if(pantallaActual==='practica') renderPractica();
-  notificar('Micro-habilidad creada 🎯');
-};
 
 /* ============================================================
    Rutas de estudio — el temario vive en la app y el progreso
@@ -2289,97 +1456,6 @@ const progresoRuta=r=>{
 };
 const pendientesRuta=(r,n)=>itemsRuta(r).map((x,i)=>({x:x,i:i})).filter(o=>!porTitulo(o.x.titulo)).slice(0,n||3);
 
-let vistaPicker=false;
-function renderRutas(){
-  const cont=document.getElementById('cuerpoRutas');
-  const act=rutaPorId(D.rutas.activa);
-
-  if(!act||vistaPicker){
-    cont.innerHTML='<h2 class="sec" style="margin-top:4px">Elige tu ruta</h2>'
-      +'<div class="nota-p" style="margin:0 2px 12px">Una ruta activa a la vez. Las otras esperan sin caducar: estudiar tres cosas a medias enseña menos que tres completas, una tras otra.</div>'
-      +RUTAS.map(r=>{
-        const pr=progresoRuta(r);
-        const nc=itemsRuta(r).filter(x=>x.tipo==='conocimiento').length;
-        const na=itemsRuta(r).filter(x=>x.tipo==='aplicacion').length;
-        return '<div class="r-card"><span class="em">'+r.emoji+'</span>'
-          +'<div class="nm">'+esc(r.nombre)+'</div>'
-          +'<div class="mt">'+esc(r.meta)+'</div>'
-          +'<div class="dt">'+r.semanas+' semanas · '+nc+' conceptos 📘 · '+na+' procedimientos 🛠️</div>'
-          +(pr.hechos?'<div class="r-prog"><div class="barra-meta"><div style="width:'+(pr.hechos/pr.total*100)+'%"></div></div><b class="num">'+pr.hechos+'/'+pr.total+'</b></div>':'')
-          +'<div class="btn-fila"><button class="btn-mini '+(pr.hechos?'':'dorado')+'" data-activar="'+r.id+'">'
-          +(D.rutas.activa===r.id?'Continuar':pr.hechos?'Retomar esta ruta':'Empezar esta ruta')+'</button></div></div>';
-      }).join('');
-    bindRutas(cont);
-    return;
-  }
-
-  const pr=progresoRuta(act);
-  const items=itemsRuta(act);
-  let h='<div class="r-sel">'+RUTAS.map(r=>
-      '<button class="chip'+(r.id===act.id?' activo':'')+'" data-activar="'+r.id+'">'+r.emoji+' '+esc(r.corto)+'</button>').join('')
-    +'<button class="chip" data-verpicker="1">Todas ›</button></div>';
-
-  h+='<div class="r-card" style="border-top-color:var(--oro)">'
-    +'<div class="nm">'+act.emoji+' '+esc(act.nombre)+'</div>'
-    +'<div class="mt">'+esc(act.meta)+'</div>'
-    +'<div class="r-prog"><div class="barra-meta"><div style="width:'+(pr.total?pr.hechos/pr.total*100:0)+'%"></div></div>'
-    +'<b class="num">'+pr.hechos+' de '+pr.total+'</b></div>'
-    +'<div class="nota-p">Cada título de la lista se convierte en una nota tuya. Toca uno pendiente para crearla con el área y el tema ya puestos; toca uno hecho para abrir tu nota.</div></div>';
-
-  let idxGlobal=0;
-  act.temas.forEach((t,i)=>{
-    const propios=items.filter(x=>x.tema===i);
-    const hechos=propios.filter(x=>porTitulo(x.titulo)).length;
-    const proyKey=act.id+':'+i;
-    const proyHecho=!!D.rutas.proyectos[proyKey];
-    const completo=hechos===propios.length&&proyHecho;
-    h+='<div class="bloque" style="border-left-color:'+(completo?'var(--verde)':'var(--oro)')+'">'
-      +'<div class="cab"><h3>'+(i+1)+' · '+esc(t.t)+'</h3>'
-      +'<span class="rt-tag'+(completo?' ok':'')+'">'+(completo?'✓ completo':hechos+'/'+propios.length)+'</span></div>'
-      +'<div class="desc">'+esc(t.por)+' <i style="opacity:.8">('+esc(t.sem)+')</i></div>';
-    propios.forEach(x=>{
-      const ya=porTitulo(x.titulo);
-      const ic=x.tipo==='aplicacion'?'🛠️':'📘';
-      if(ya){
-        const d=dom(ya.dominio);
-        h+='<button class="rt-fila hecha" data-nota="'+ya.id+'">'
-          +'<span class="est" style="background:'+d.c+'" title="'+esc(d.n)+'">✓</span>'
-          +'<span class="tt">'+esc(x.titulo)+'</span><span class="tp">'+ic+'</span></button>';
-      }else{
-        h+='<button class="rt-fila" data-rc="'+act.id+':'+idxGlobal+'">'
-          +'<span class="est"></span><span class="tt">'+esc(x.titulo)+'</span>'
-          +'<span class="tp">'+ic+'</span><span class="mas">+ crear</span></button>';
-      }
-      idxGlobal++;
-    });
-    h+='<div class="rt-proy"><div class="campo-l" style="margin-bottom:4px">Proyecto del tema'
-      +(proyHecho?'<span class="guardado ver" style="margin-left:8px">hecho el '+esc(fFecha(D.rutas.proyectos[proyKey]))+'</span>':'')+'</div>'
-      +'<div class="tx">'+esc(t.p)+'</div>'
-      +'<button class="btn-mini'+(proyHecho?'':' dorado')+'" data-proy="'+proyKey+'">'
-      +(proyHecho?'Desmarcar':'✓ Lo hice — marcar proyecto')+'</button></div>'
-      +'<div class="rt-logro"><b style="font-style:normal">Dominaste el tema cuando:</b> '+esc(t.l)+'</div>'
-      +'</div>';
-  });
-  cont.innerHTML=h;
-  bindRutas(cont);
-}
-function bindRutas(cont){
-  cont.querySelectorAll('[data-activar]').forEach(b=>b.onclick=()=>{
-    const r=rutaPorId(b.dataset.activar); if(!r) return;
-    const nueva=D.rutas.activa!==r.id;
-    D.rutas.activa=r.id; vistaPicker=false;
-    asegurarArea(r); guardar(); renderRutas();
-    if(nueva) notificar('Ruta activa: '+r.emoji+' '+r.nombre);
-    window.scrollTo(0,0);
-  });
-  cont.querySelectorAll('[data-verpicker]').forEach(b=>b.onclick=()=>{ vistaPicker=true; renderRutas(); window.scrollTo(0,0); });
-  cont.querySelectorAll('[data-proy]').forEach(b=>b.onclick=()=>{
-    const k=b.dataset.proy;
-    if(D.rutas.proyectos[k]) delete D.rutas.proyectos[k];
-    else{ D.rutas.proyectos[k]=hoyISO(); notificar('Proyecto marcado ✓ — ahora sí puedes subir esas notas a «Aplicado»'); }
-    guardar(); renderRutas();
-  });
-}
 /* Crear una nota desde una ruta (funciona también desde los chips de «Hoy»). */
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-rc]');
@@ -2436,8 +1512,6 @@ function renderAjustes(){
     guardar(); renderAjustes(); notificar('Área borrada. Sus notas quedaron sin área.');
   }));
   setSeg('segTema',D.cfg.tema||'auto');
-  setSeg('segSesion',String(D.cfg.sesion||60));
-  setSeg('segMeta',String(D.cfg.metaHoras||1000));
 }
 
 /* ---------- segmentos ---------- */
@@ -2455,15 +1529,7 @@ function setSeg(id,v){
   seg.querySelectorAll('button').forEach(b=>b.classList.toggle('activo',b.dataset.v===v));
 }
 segInit('segTema',v=>{ D.cfg.tema=v; guardar(); aplicarTema(); });
-segInit('segSesion',v=>{ D.cfg.sesion=parseInt(v,10)||60; guardar(); });
-segInit('segMeta',v=>{ D.cfg.metaHoras=parseInt(v,10)||1000; guardar(); });
-segInit('segCalidad');
-segInit('segCalidadM');
-const getTipoCaptura=segInit('segTipo',v=>{
-  document.getElementById('capTituloLbl').textContent = v==='aplicacion'?'Nombre del procedimiento':'Título del concepto';
-  document.getElementById('capTitulo').placeholder    = v==='aplicacion'?'Ej. Cómo analizar un balance general':'Ej. Activo corriente';
-  document.getElementById('capTextoLbl').textContent  = v==='aplicacion'?'Cuándo uso esto':'Con mis palabras';
-});
+
 
 /* ---------- tema claro / oscuro ---------- */
 function aplicarTema(){
@@ -2478,7 +1544,7 @@ if(window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEvent
 /* ============================================================
    Detalle de nota — todo se edita en el sitio y se guarda solo
    ============================================================ */
-let notaActual=null, pestanaActual='resumen';
+let notaActual=null, masAbierto=false, camposAbiertos=new Set();
 
 function autoAlto(ta){
   ta.style.height='auto';
@@ -2502,7 +1568,7 @@ function abrirNota(id){
   const n=nota(id);
   if(!n){ notificar('Esa nota ya no existe.',true); return; }
   notaActual=n;
-  pestanaActual=(PESTANAS[n.tipo]||PESTANAS.conocimiento)[0].id;
+  masAbierto=false; camposAbiertos=new Set();
   ir('nota');
   renderNota();
 }
@@ -2516,11 +1582,7 @@ function renderNota(){
   bTipo.title='Cambiar el tipo de nota';
   bTipo.onclick=()=>{
     n.tipo = n.tipo==='aplicacion'?'conocimiento':'aplicacion';
-    tocar(n); guardar();
-    const tabs=PESTANAS[n.tipo];
-    if(!tabs.some(t=>t.id===pestanaActual)) pestanaActual=tabs[0].id;
-    renderNota();
-    notificar('Ahora es una nota de '+(n.tipo==='aplicacion'?'aplicación':'conocimiento'));
+    tocar(n); guardar(); renderNota();
   };
 
   const tit=document.getElementById('notaTitulo');
@@ -2528,44 +1590,65 @@ function renderNota(){
   autoAlto(tit);
 
   const ruta=document.getElementById('notaRuta');
+  const d=dom(n.dominio);
   const trozos=[];
+  trozos.push('<span style="background:'+d.c+';color:#fff;border-radius:6px;padding:2px 7px;font-weight:700">'+esc(d.n)+'</span>');
   trozos.push(esc(emojiArea(n.area)+' '+nombreArea(n.area)));
   if(n.tema) trozos.push('› '+esc(n.tema));
   n.tags.forEach(t=>trozos.push('#'+esc(t)));
   ruta.innerHTML=trozos.join(' ')+' <button id="btnUbicacion">✎ ubicar</button>';
   document.getElementById('btnUbicacion').onclick=()=>abrirUbicacion();
 
-  document.getElementById('notaDominio').innerHTML=DOMINIOS.map(d=>
-    '<button data-dom="'+d.v+'" class="'+(n.dominio===d.v?'activo':'')+'"'
-    +(n.dominio===d.v?' style="background:'+d.c+'"':'')+' title="'+esc(d.d)+'">'+esc(d.n)+'</button>').join('');
-  document.querySelectorAll('[data-dom]').forEach(b=>b.onclick=()=>{
-    n.dominio=parseInt(b.dataset.dom,10); tocar(n); guardar(); renderNota();
-  });
-
-  /* --- pestañas --- */
-  const tabs=PESTANAS[n.tipo]||PESTANAS.conocimiento;
-  document.getElementById('notaPestanas').innerHTML=tabs.map(t=>{
-    let pt='';
-    if(t.id==='conexiones'&&n.links.length) pt='<span class="pt">'+n.links.length+'</span>';
-    if(t.id==='preguntas'){ const ab=n.preguntas.filter(p=>!p.resuelta).length; if(ab) pt='<span class="pt">'+ab+'</span>'; }
-    if(t.id==='fuentes'&&n.fuentes.length) pt='<span class="pt">'+n.fuentes.length+'</span>';
-    if(t.id==='historial'&&n.correcciones.length) pt='<span class="pt">'+n.correcciones.length+'</span>';
-    return '<button data-tab="'+t.id+'" class="'+(pestanaActual===t.id?'activo':'')+'">'+esc(t.n)+pt+'</button>';
-  }).join('');
-  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
-    pestanaActual=b.dataset.tab; renderNota();
-  });
-
-  /* --- panel activo --- */
-  const tab=tabs.find(t=>t.id===pestanaActual)||tabs[0];
+  /* --- las tres preguntas, sin pestañas --- */
   let h='';
-  tab.campos.forEach(c=>{ h+=campoEditable(n,c); });
-  if(tab.id==='conexiones') h+=panelConexiones(n);
-  if(tab.id==='preguntas')  h+=panelPreguntas(n);
-  if(tab.id==='fuentes')    h+=panelFuentes(n);
-  if(tab.id==='historial')  h+=panelHistorial(n);
+  h+=campoEditable(n,'def',{l:'¿Qué aprendí?',ayuda:'con mis palabras',ph:'La prueba de que lo entendiste es poder decirlo sin copiar.'});
+  h+=campoEditable(n,'formulas',{l:'El comando · la fórmula · el ejemplo',ayuda:'tal cual lo usarías',ph:'git checkout -b mi-rama',copiar:true});
+  h+=campoEditable(n,'aplico',{l:'¿Cómo lo practiqué?',ayuda:'la evidencia de que lo hiciste de verdad',ph:'Creé una rama en mi repositorio y subí un cambio…'});
+
+  /* --- lo demás vive plegado en «Más» --- */
+  const EXTRA=['sirve','clasif','pasos','errores','ejemplo'];
+  const conTexto=EXTRA.filter(x=>(n[x]||'').trim()||camposAbiertos.has(x));
+  const sinTexto=EXTRA.filter(x=>!conTexto.includes(x));
+  const abiertas=n.preguntas.filter(q=>!q.resuelta).length;
+  const resumenMas=[];
+  if(n.links.length) resumenMas.push('🔗 '+n.links.length);
+  if(abiertas) resumenMas.push('❓ '+abiertas);
+  if(n.fuentes.length) resumenMas.push('📚 '+n.fuentes.length);
+  if(n.correcciones.length) resumenMas.push('🔄 '+n.correcciones.length);
+
+  h+='<details class="mas" id="masDetalles"'+(masAbierto?' open':'')+'>'
+    +'<summary>Más — conexiones, dudas y detalles'+(resumenMas.length?' <span class="mas-res">'+resumenMas.join(' · ')+'</span>':'')+'</summary>'
+    +'<div class="mas-cuerpo">';
+  conTexto.forEach(x=>{ h+=campoEditable(n,x); });
+  if(sinTexto.length){
+    h+='<div class="listilla" style="margin-bottom:16px">'
+      +sinTexto.map(x=>'<button class="chip mini" data-agregacampo="'+x+'">+ '+esc(etq(x,n.tipo,0).toLowerCase())+'</button>').join('')+'</div>';
+  }
+  h+='<div class="campo-l">Conexiones</div>'+panelConexiones(n);
+  h+='<div class="campo-l" style="margin-top:18px">Dudas</div>'+panelPreguntas(n);
+  h+='<div class="campo-l" style="margin-top:18px">Fuentes</div>'+panelFuentes(n);
+  h+='<div class="campo-l" style="margin-top:18px">Historial</div>'+panelHistorial(n);
+  h+='</div></details>';
+
   document.getElementById('notaPaneles').innerHTML=h;
   bindPanel(n);
+
+  const det=document.getElementById('masDetalles');
+  det.addEventListener('toggle',()=>{
+    masAbierto=det.open;
+    if(det.open) det.querySelectorAll('textarea[data-campo]').forEach(autoAlto);
+  });
+  document.querySelectorAll('[data-agregacampo]').forEach(b=>b.onclick=()=>{
+    camposAbiertos.add(b.dataset.agregacampo);
+    masAbierto=true; renderNota();
+  });
+  document.querySelectorAll('[data-copiar]').forEach(b=>b.onclick=async e=>{
+    e.stopPropagation();
+    const txt=(n[b.dataset.copiar]||'').trim();
+    if(!txt){ notificar('Aún no hay nada que copiar.',true); return; }
+    try{ await navigator.clipboard.writeText(txt); notificar('Copiado ✓'); }
+    catch(err){ notificar('No pude copiar en este navegador.',true); }
+  });
 
   actualizarPie();
 }
@@ -2575,19 +1658,21 @@ function actualizarPie(){
   const falta=faltantes(n);
   document.getElementById('notaPie').innerHTML =
     'Creada el '+fFecha(n.creado,true)+' · revisada '+haceCuanto(n.revisado)+' · '+c+'% completa.'
-    +(falta.length?'<br>Te falta: '+falta.map(f=>esc(etq(f,n.tipo,0).toLowerCase())).join(', ')+'.':'')
+    +(falta.length?'<br>Te falta: '+falta.map(f=>f==='def'?'qué aprendí':'cómo lo practiqué').join(' y ')+'.':'')
     +(n.semilla?'<br><i>Nota de ejemplo — edítala o bórrala desde Ajustes.</i>':'');
 }
 
 const ES_LISTA=c=>(c==='pasos'||c==='clasif'||c==='errores');
-function campoEditable(n,campo){
-  const l=etq(campo,n.tipo,0), ayuda=etq(campo,n.tipo,1), ph=etq(campo,n.tipo,2);
+function campoEditable(n,campo,ov){
+  ov=ov||{};
+  const l=ov.l||etq(campo,n.tipo,0), ayuda=ov.ayuda||etq(campo,n.tipo,1), ph=ov.ph||etq(campo,n.tipo,2);
   const lista=ES_LISTA(campo);
   /* Con contenido, un campo de lista se muestra ya formateado: es la tarjeta que lees
      cuando tienes el balance enfrente. El textarea aparece solo si tocas «editar». */
   const enVista=lista&&(n[campo]||'').trim().length>0;
   return '<div class="grupo'+(enVista?' en-vista':'')+'" data-grupo="'+campo+'">'
     +'<div class="campo-l">'+esc(l)+' <span class="ayuda">'+esc(ayuda)+'</span>'
+    +(ov.copiar?'<button class="lapiz" data-copiar="'+campo+'">⧉ copiar</button>':'')
     +(lista?'<button class="lapiz" data-editar="'+campo+'">✎ editar</button>':'')
     +'<span class="guardado" id="g-'+campo+'">guardado ✓</span></div>'
     +'<textarea class="edit'+(campo==='formulas'?' mono':'')+'" data-campo="'+campo+'" rows="1" '
@@ -2841,15 +1926,8 @@ let capturaPref={};
 function abrirCaptura(pref){
   capturaPref=pref||{};
   abrirHoja('h-captura',()=>{
-    const tipo=capturaPref.tipo||'conocimiento';
-    setSeg('segTipo',tipo);
-    document.getElementById('capTituloLbl').textContent = tipo==='aplicacion'?'Nombre del procedimiento':'Título del concepto';
-    document.getElementById('capTitulo').placeholder    = tipo==='aplicacion'?'Ej. Cómo analizar un balance general':'Ej. Activo corriente';
-    document.getElementById('capTextoLbl').textContent  = tipo==='aplicacion'?'Cuándo uso esto':'Con mis palabras';
     document.getElementById('capTitulo').value=capturaPref.titulo||'';
     document.getElementById('capTexto').value='';
-    const areaSug = capturaPref.area || (notaActual&&notaActual.area) || (mapa.area&&mapa.area!==SIN_AREA?mapa.area:'') || (D.areas[0]?D.areas[0].id:'');
-    pintarSelectAreas('capArea',areaSug);
     setTimeout(()=>document.getElementById('capTitulo').focus(),160);
   });
 }
@@ -2864,11 +1942,14 @@ document.getElementById('capGuardar').onclick=()=>{
     abrirNota(ya.id);
     return;
   }
+  /* área y tema se resuelven solos: los de la ruta, los de la nota desde
+     la que capturas, o el área de tu ruta activa — nunca un formulario más */
+  const rAct=rutaPorId(D.rutas.activa);
   const n=notaNueva({
-    tipo:getTipoCaptura()||'conocimiento',
+    tipo:capturaPref.tipo||'conocimiento',
     titulo:titulo,
     def:document.getElementById('capTexto').value.trim(),
-    area:document.getElementById('capArea').value,
+    area:('area' in capturaPref)?capturaPref.area:((notaActual&&notaActual.area)||(rAct?rAct.area.id:(D.areas[0]?D.areas[0].id:''))),
     tema:(capturaPref.tema||(notaActual&&notaActual.tema)||'')
   });
   D.notas.push(n);
@@ -3011,7 +2092,7 @@ document.getElementById('fileRestaurar').onchange=e=>{
       if(!datos||!Array.isArray(datos.notas)) throw new Error('formato');
       D=Object.assign({v:1,cfg:{tema:'auto',sesion:60},areas:[],notas:[],dias:[]},datos);
       cargarNormalizar();
-      guardar(); aplicarTema(); renderHoy(); ir('hoy');
+      guardar(); aplicarTema(); ir('notas');
       notificar('Restaurado: '+D.notas.length+' notas ✓');
     }catch(err){
       notificar('Ese archivo no es un respaldo válido de Mi Conocimiento.',true);
@@ -3094,9 +2175,9 @@ armarBorrar(document.getElementById('btnBorrarSemillas'),()=>{
 armarBorrar(document.getElementById('btnBorrarTodo'),()=>{
   D={v:1,cfg:{tema:D.cfg.tema||'auto',sesion:D.cfg.sesion||60,metaHoras:D.cfg.metaHoras||1000},
      areas:AREAS_BASE.map(a=>Object.assign({},a)),notas:[],dias:[hoyISO()]};
-  cargarNormalizar();          /* completa rutas, sesiones, casos, micros… */
-  guardar(); mapa={area:null,tema:null}; notaActual=null;
-  renderAjustes(); ir('hoy');
+  cargarNormalizar();          /* completa rutas, sesiones y demás estructura */
+  guardar(); notaActual=null;
+  renderAjustes(); ir('notas');
   notificar('Todo borrado');
 });
 
@@ -3105,9 +2186,7 @@ armarBorrar(document.getElementById('btnBorrarTodo'),()=>{
    ============================================================ */
 cargar();
 aplicarTema();
-renderFiltros();
-renderHoy();
-arrancarTick();
+renderNotas();
 setTimeout(mostrarPeaje,600);
 
 if('serviceWorker' in navigator){

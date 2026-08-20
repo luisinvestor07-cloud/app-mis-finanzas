@@ -35,24 +35,24 @@ preguntas escritas de corrido: *«¿qué fórmula usé para capital de trabajo?�
 
 ## Cómo se usa
 
-- **Hoy** — organiza tu sesión de estudio en tres bloques: capturar, conectar y consolidar.
-  Si tienes una ruta activa, te muestra el siguiente concepto por crear.
-  Te muestra qué conceptos mencionaste sin crearles nota, qué notas quedaron sueltas y cuáles
-  dejaste a medias.
-- **Práctica** — el taller de las 10,000 horas: repaso espaciado (SM-2) que te pregunta tus propias
-  notas y reprograma cada una según qué tan bien la recuerdas; cronómetro de práctica deliberada con
-  peso por exigencia (al límite ×1.0, frustrante ×0.75, fácil ×0.5); proyección de fecha para tu meta
-  de horas; modo Feynman («explícalo como a un niño»); caza tu error (tus correcciones vuelven como
-  trampas); simulador de casos con checklist, cronómetro y revisión posterior «con ojos de hoy»; y
-  micro-habilidades para entrenar siempre la pieza más débil. Al abrir la app, una pregunta del día
-  de 15 segundos mantiene viva la memoria.
-- **Buscar** — búsqueda instantánea con filtros: por dominar, incompletas, sin conectar, con dudas.
-- **Rutas** — tres temarios completos listos para estudiar (inteligencia artificial aplicada,
-  edición de video para cursos y fiscal para inversionista/educador en México). Cada concepto del
-  temario se convierte en una nota tuya con un toque; el progreso se mide contra tus notas reales
-  y cada tema cierra con un proyecto que te da derecho a marcar «Aplicado».
-- **Mapa** — área › tema › notas, más todas tus etiquetas.
-- **Ajustes** — estadísticas, áreas, tema, respaldo.
+La app es un cuaderno de tres pestañas:
+
+- **📒 Notas** — todo en una pantalla: buscador arriba, tus temas como filtros, la lista de
+  notas y (si quieres) tu ruta de estudio como una sola línea que te propone el siguiente
+  concepto. El botón «+ Nota» pide dos cosas: título y qué aprendiste.
+- **🔁 Repasar** — la única función inteligente a la vista: cuántas notas vencen hoy y un botón
+  para repasarlas. Cada nota tiene su propio calendario (repaso espaciado): si la recuerdas se
+  aleja, si la fallas vuelve pronto. Al abrir la app, una pregunta del día de 15 segundos.
+- **⚙️ Ajustes** — tema, áreas, estadísticas, respaldo.
+
+Cada nota es una sola pantalla con tres preguntas:
+
+1. **¿Qué aprendí?** — con tus palabras.
+2. **El comando · la fórmula · el ejemplo** — en letra de código, con botón de copiar.
+3. **¿Cómo lo practiqué?** — la evidencia de que lo hiciste de verdad.
+
+Y un apartado **«Más»** plegado para lo que no siempre hace falta: campos extra (pasos,
+errores, ejemplos…), conexiones entre notas, dudas, fuentes y el historial de correcciones.
 
 ### Enlaces `[[así]]`
 
