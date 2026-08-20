@@ -25,13 +25,24 @@ Aplicación personal de finanzas: ingresos, gastos, ahorro, inversiones, patrimo
 
 > 💡 **Haz respaldos**: Safari puede borrar datos de sitios que no visitas en semanas. Entra a **Plan → Respaldar (JSON)** de vez en cuando y guarda el archivo en iCloud/Archivos. Con **Restaurar** recuperas todo en cualquier dispositivo.
 
+## 🧠 Mi Conocimiento
+
+En este mismo repositorio vive una segunda app: **[Mi Conocimiento](conocimiento/)**, una
+memoria personal de aprendizaje. Notas pequeñas y conectadas, separadas en *conocimiento*
+(qué significa) y *aplicación* (qué hacer), con búsqueda instantánea sobre tus propias
+palabras, niveles de dominio e historial de correcciones.
+
+Se instala aparte, con su propio ícono:
+`https://<tu-usuario>.github.io/app-mis-finanzas/conocimiento/`
+
 ## 🗂 Estructura
 
 ```
-index.html    ← la app completa (HTML + CSS + JS)
-manifest.json ← manifiesto PWA (nombre, ícono, colores)
-sw.js         ← service worker (funciona offline)
-icons/        ← logo e íconos de la app
+index.html        ← Mis Finanzas: la app completa (HTML + CSS + JS)
+manifest.json     ← manifiesto PWA (nombre, ícono, colores)
+sw.js             ← service worker (funciona offline)
+icons/            ← logo e íconos de la app
+conocimiento/     ← Mi Conocimiento: la app de notas (misma estructura, datos aparte)
 ```
 
 `MIS FINANZAS/misfinanzas.html` es la versión anterior; se conserva como referencia y puede borrarse cuando quieras.

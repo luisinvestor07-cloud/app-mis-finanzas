@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mi Conocimiento">
+<meta name="theme-color" content="#16211B">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<title>Mi Conocimiento</title>
+<style>
+  :root{
+    --papel:#F3F5F1; --tarjeta:#FFFFFF; --tinta:#16211B; --tinta-suave:#5A6A61;
+    --linea:#E2E7E0; --radio:16px; --oro:#C79A3B; --oro-claro:#E0B95C;
+    --verde:#1F7A4D; --rojo:#B5452F; --azul:#2E5E8C; --lila:#6B5B95;
+    --fondo1:#F5F7F3; --fondo2:#EEF1EC; --tabs-bg:rgba(255,255,255,.86);
+    --marca:rgba(22,33,27,.05);
+  }
+  :root[data-tema="oscuro"]{
+    --papel:#0F1712; --tarjeta:#161F1A; --tinta:#EDF1EC; --tinta-suave:#95A89B;
+    --linea:#26332B; --fondo1:#0B100D; --fondo2:#070B09; --tabs-bg:rgba(16,23,19,.9);
+    --marca:rgba(243,245,241,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:
+      radial-gradient(ellipse 70% 40% at 88% -4%,rgba(199,154,59,.14),transparent 62%),
+      radial-gradient(ellipse 60% 36% at -8% 6%,rgba(31,122,77,.11),transparent 60%),
+      linear-gradient(180deg,var(--fondo1) 0%,var(--fondo2) 100%);
+    background-attachment:fixed;
+    color:var(--tinta);
+    padding:calc(14px + env(safe-area-inset-top)) 14px calc(140px + env(safe-area-inset-bottom));
+    max-width:560px;margin:0 auto;
+    -webkit-text-size-adjust:100%;
+  }
+  .num{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums}
+  h2.sec{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta-suave);margin:18px 0 10px;display:flex;align-items:center;gap:7px}
+  h2.sec::before{content:'';width:14px;height:2.5px;border-radius:2px;background:linear-gradient(90deg,var(--oro),var(--oro-claro));flex-shrink:0}
+  h2.sec .cta{margin-left:auto;text-transform:none;letter-spacing:0;font-size:12px;color:var(--oro);font-weight:700;cursor:pointer;background:none;border:none;font-family:inherit}
+
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+  .marca-app{display:flex;align-items:center;gap:10px;min-width:0}
+  .marca-app svg{width:34px;height:34px;border-radius:9px;box-shadow:0 3px 8px rgba(22,33,27,.25);flex-shrink:0}
+  header h1{font-size:15px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;line-height:1.1}
+  header h1 small{display:block;font-size:9px;font-weight:600;letter-spacing:.14em;color:var(--oro);text-transform:uppercase}
+  .hdr-chip{border:1px solid rgba(199,154,59,.4);background:linear-gradient(140deg,rgba(199,154,59,.16),rgba(199,154,59,.04));
+    border-radius:12px;padding:5px 10px;cursor:pointer;font-family:inherit;color:var(--tinta);text-align:right;line-height:1.15;flex-shrink:0}
+  .hdr-chip .pl{display:block;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--oro);font-weight:700}
+  .hdr-chip b{font-size:13px;font-weight:800}
+
+  .toast{position:fixed;left:50%;bottom:calc(122px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
+    background:var(--tinta);color:var(--fondo1);padding:11px 18px;border-radius:999px;font-size:13px;font-weight:600;
+    box-shadow:0 8px 22px rgba(22,33,27,.35);opacity:0;transition:opacity .25s,transform .25s;z-index:30;pointer-events:none;max-width:88vw;text-align:center}
+  .toast.ver{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .card{background:var(--tarjeta);border:1px solid var(--marca);border-radius:18px;padding:15px;margin-bottom:10px;box-shadow:0 2px 10px rgba(22,33,27,.05)}
+  .vacio{text-align:center;color:var(--tinta-suave);font-size:13px;padding:22px 10px;line-height:1.5}
+  .nota-p{font-size:12px;color:var(--tinta-suave);line-height:1.45;margin-top:6px}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:linear-gradient(150deg,#1B2A21 0%,#16211B 55%,#0F1712 100%);
+    color:#F3F5F1;border-radius:20px;padding:20px 18px;margin-bottom:12px;
+    box-shadow:0 10px 26px rgba(22,33,27,.3),0 0 26px rgba(199,154,59,.12);
+    border:1px solid rgba(199,154,59,.24);position:relative;overflow:hidden;
+  }
+  .hero::after{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;
+    background:radial-gradient(circle,rgba(199,154,59,.16),transparent 70%)}
+  .hero::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background-image:linear-gradient(rgba(243,245,241,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(243,245,241,.045) 1px,transparent 1px);
+    background-size:26px 26px;
+    -webkit-mask-image:radial-gradient(circle at 78% 12%,#000,transparent 72%);
+    mask-image:radial-gradient(circle at 78% 12%,#000,transparent 72%)}
+  .hero>*{position:relative;z-index:1}
+  .hero .etq{font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+  .hero .grande{font-size:32px;font-weight:800;margin:3px 0 2px;letter-spacing:-.02em;
+    background:linear-gradient(115deg,#F6F1E4 8%,#E8C56A 55%,#C79A3B 96%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero .sub{font-size:12px;opacity:.72;line-height:1.45}
+  .hero .mini{display:flex;gap:16px;margin-top:13px;padding-top:12px;border-top:1px solid rgba(243,245,241,.14)}
+  .hero .mini div{font-size:10.5px;opacity:.72;flex:1;min-width:0}
+  .hero .mini b{display:block;font-size:15px;opacity:1;font-weight:800;margin-top:2px}
+
+  /* ---------- barra de dominio ---------- */
+  .barra-dom{display:flex;height:9px;border-radius:5px;overflow:hidden;background:rgba(243,245,241,.14);margin-top:13px}
+  .barra-dom i{height:100%;display:block;transition:width .5s cubic-bezier(.22,1,.36,1)}
+  .ley-dom{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:9px}
+  .ley-dom span{display:flex;align-items:center;gap:5px;font-size:10.5px;opacity:.8}
+  .punto{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+
+  /* ---------- bloques de sesión ---------- */
+  .bloque{background:var(--tarjeta);border:1px solid var(--marca);border-radius:18px;padding:14px 15px;margin-bottom:10px;
+    box-shadow:0 2px 10px rgba(22,33,27,.05);border-left:4px solid var(--oro)}
+  .bloque.b-conectar{border-left-color:var(--azul)}
+  .bloque.b-consolidar{border-left-color:var(--verde)}
+  .bloque .cab{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+  .bloque .cab h3{font-size:14.5px;font-weight:800;flex:1}
+  .bloque .cab .min{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-suave);
+    background:var(--papel);padding:3px 8px;border-radius:999px}
+  .bloque .desc{font-size:12px;color:var(--tinta-suave);line-height:1.45;margin-bottom:10px}
+  .bloque .listilla{display:flex;flex-wrap:wrap;gap:7px}
+
+  /* ---------- nota (tarjeta en listas) ---------- */
+  .n-item{background:var(--tarjeta);border:1px solid var(--marca);border-radius:14px;padding:12px 13px;margin-bottom:8px;
+    box-shadow:0 1px 3px rgba(22,33,27,.05);cursor:pointer;display:flex;gap:11px;align-items:flex-start;
+    transition:transform .14s ease;text-align:left;width:100%;font-family:inherit;color:var(--tinta)}
+  .n-item:active{transform:scale(.985)}
+  .n-item .bandera{width:4px;align-self:stretch;border-radius:3px;flex-shrink:0;min-height:34px}
+  .n-item .cuerpo{flex:1;min-width:0}
+  .n-item .tit{font-size:14.5px;font-weight:700;line-height:1.25;display:flex;align-items:center;gap:6px}
+  .n-item .tit .tipo-ic{font-size:12px;flex-shrink:0;opacity:.85}
+  .n-item .frag{font-size:12px;color:var(--tinta-suave);margin-top:3px;line-height:1.42;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .n-item .frag mark{background:rgba(199,154,59,.3);color:inherit;border-radius:3px;padding:0 2px}
+  .n-item .pie{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;align-items:center}
+  .etiq{font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;background:var(--papel);color:var(--tinta-suave);
+    text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+  .etiq.dom{color:#fff}
+  .etiq.tag{text-transform:none;letter-spacing:0;font-weight:600;background:rgba(46,94,140,.12);color:var(--azul)}
+  :root[data-tema="oscuro"] .etiq.tag{background:rgba(120,170,220,.16);color:#8FBBE4}
+  .etiq.enlaces{background:rgba(199,154,59,.14);color:#96701F}
+  :root[data-tema="oscuro"] .etiq.enlaces{background:rgba(199,154,59,.18);color:var(--oro-claro)}
+
+  /* ---------- búsqueda ---------- */
+  .buscador{position:sticky;top:calc(env(safe-area-inset-top));z-index:4;padding:8px 0 10px;
+    background:linear-gradient(180deg,var(--fondo1) 62%,transparent)}
+  .buscador .caja{display:flex;align-items:center;gap:9px;background:var(--tarjeta);border:1px solid var(--linea);
+    border-radius:14px;padding:0 13px;box-shadow:0 2px 10px rgba(22,33,27,.06)}
+  .buscador input{flex:1;border:none;background:none;padding:14px 0;font-size:16px;color:var(--tinta);font-family:inherit;min-width:0}
+  .buscador input:focus{outline:none}
+  /* el navegador dibuja su propia ✕ en los input[type=search]; usamos la nuestra */
+  .buscador input::-webkit-search-cancel-button,
+  .buscador input::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none}
+  .buscador .lupa{font-size:16px;opacity:.5;flex-shrink:0}
+  .buscador .limpiar{border:none;background:none;color:var(--tinta-suave);font-size:19px;cursor:pointer;padding:6px;font-family:inherit;flex-shrink:0}
+  .filtros{display:flex;gap:7px;overflow-x:auto;margin-top:9px;padding-bottom:2px;scrollbar-width:none}
+  .filtros::-webkit-scrollbar{display:none}
+  .chip{padding:8px 13px;border-radius:999px;border:1px solid var(--linea);background:var(--tarjeta);font-size:12.5px;
+    font-weight:600;cursor:pointer;color:var(--tinta);font-family:inherit;white-space:nowrap;flex-shrink:0}
+  .chip.activo{background:var(--tinta);color:var(--fondo1);border-color:var(--tinta)}
+  .chip.mini{padding:6px 11px;font-size:11.5px;font-weight:600}
+  .conteo-res{font-size:11px;color:var(--tinta-suave);margin:4px 2px 10px;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+
+  /* ---------- mapa ---------- */
+  .miga{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;margin-bottom:12px;color:var(--tinta-suave)}
+  .miga button{border:none;background:none;color:var(--oro);font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;padding:0}
+  .rejilla{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .area-c{background:var(--tarjeta);border:1px solid var(--marca);border-radius:16px;padding:14px 13px;cursor:pointer;
+    box-shadow:0 1px 3px rgba(22,33,27,.06);border-top:3px solid var(--oro);text-align:left;font-family:inherit;color:var(--tinta);
+    transition:transform .14s ease}
+  .area-c:active{transform:scale(.975)}
+  .area-c .em{font-size:22px;line-height:1}
+  .area-c .nm{font-size:13.5px;font-weight:800;margin-top:7px;line-height:1.2}
+  .area-c .ct{font-size:11px;color:var(--tinta-suave);margin-top:3px}
+  .tema-f{background:var(--tarjeta);border:1px solid var(--marca);border-radius:14px;padding:13px 14px;margin-bottom:8px;
+    display:flex;align-items:center;gap:11px;cursor:pointer;box-shadow:0 1px 3px rgba(22,33,27,.05);
+    width:100%;font-family:inherit;color:var(--tinta);text-align:left}
+  .tema-f .nm{flex:1;font-size:14px;font-weight:700;min-width:0}
+  .tema-f .ct{font-size:11px;color:var(--tinta-suave);font-weight:600}
+  .tema-f .fl{color:var(--tinta-suave);font-size:16px}
+
+  /* ---------- detalle de nota ---------- */
+  .n-cab{background:linear-gradient(150deg,#1B2A21 0%,#16211B 55%,#0F1712 100%);color:#F3F5F1;border-radius:20px;
+    padding:17px 17px 15px;margin-bottom:12px;border:1px solid rgba(199,154,59,.24);
+    box-shadow:0 10px 26px rgba(22,33,27,.3);position:relative;overflow:hidden}
+  .n-cab::after{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;
+    background:radial-gradient(circle,rgba(199,154,59,.16),transparent 70%)}
+  .n-cab>*{position:relative;z-index:1}
+  .n-cab .arriba{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .n-cab .volver{border:1px solid rgba(243,245,241,.22);background:rgba(243,245,241,.07);color:#F3F5F1;
+    border-radius:10px;padding:7px 11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+  .n-cab .tipo-b{margin-left:auto;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;
+    padding:5px 10px;border-radius:999px}
+  .n-cab .tipo-b.conocimiento{background:rgba(232,197,106,.2);color:var(--oro-claro);border:1px solid rgba(232,197,106,.35)}
+  .n-cab .tipo-b.aplicacion{background:rgba(66,160,110,.22);color:#7FD3A8;border:1px solid rgba(127,211,168,.35)}
+  .n-cab textarea.titulo{width:100%;background:none;border:none;color:#F3F5F1;font-size:22px;font-weight:800;
+    line-height:1.2;font-family:inherit;resize:none;overflow:hidden;padding:0;letter-spacing:-.01em}
+  .n-cab textarea.titulo:focus{outline:none}
+  .n-cab .ruta{font-size:11px;opacity:.65;margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .n-cab .ruta button{border:1px dashed rgba(243,245,241,.3);background:none;color:#F3F5F1;opacity:.85;
+    border-radius:8px;padding:4px 9px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600}
+  .n-cab .dom-fila{display:flex;gap:5px;margin-top:12px}
+  .n-cab .dom-fila button{flex:1;border:1px solid rgba(243,245,241,.18);background:rgba(243,245,241,.05);color:#F3F5F1;
+    border-radius:9px;padding:7px 2px;font-size:9.5px;font-weight:700;cursor:pointer;font-family:inherit;opacity:.6;line-height:1.15}
+  .n-cab .dom-fila button.activo{opacity:1;border-color:transparent;color:#fff}
+
+  .pestanas{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:3px;scrollbar-width:none}
+  .pestanas::-webkit-scrollbar{display:none}
+  .pestanas button{border:1px solid var(--linea);background:var(--tarjeta);border-radius:999px;padding:8px 14px;
+    font-size:12.5px;font-weight:700;cursor:pointer;color:var(--tinta-suave);font-family:inherit;white-space:nowrap;flex-shrink:0}
+  .pestanas button.activo{background:var(--tinta);color:var(--fondo1);border-color:var(--tinta)}
+  .pestanas button .pt{display:inline-block;margin-left:5px;font-size:10px;opacity:.7}
+  .panel{display:none}.panel.activo{display:block;animation:subir .22s ease}
+
+  .campo-l{font-size:11px;font-weight:800;color:var(--tinta-suave);margin:0 0 6px;text-transform:uppercase;letter-spacing:.06em;
+    display:flex;align-items:center;gap:6px}
+  .campo-l .ayuda{font-weight:500;text-transform:none;letter-spacing:0;font-size:11px;opacity:.75}
+  .edit{width:100%;border:1px solid var(--linea);border-radius:13px;background:var(--tarjeta);color:var(--tinta);
+    font-family:inherit;font-size:15px;line-height:1.55;padding:12px 13px;resize:none;overflow:hidden;display:block}
+  .edit:focus{outline:2px solid var(--oro);outline-offset:-1px;border-color:transparent}
+  .edit::placeholder{color:var(--tinta-suave);opacity:.65}
+  .edit.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:13.5px}
+  .grupo{margin-bottom:14px}
+  .campo-l .lapiz{border:1px solid var(--linea);background:var(--tarjeta);color:var(--tinta-suave);border-radius:8px;
+    padding:3px 8px;font-size:10.5px;font-weight:700;cursor:pointer;font-family:inherit;text-transform:none;
+    letter-spacing:0;white-space:nowrap;flex-shrink:0;margin-left:auto}
+  .grupo.en-vista>.edit{display:none}
+  .grupo:not(.en-vista)>[data-vista]{display:none}
+  .guardado{font-size:10.5px;color:var(--verde);font-weight:700;opacity:0;transition:opacity .3s;margin-left:auto;
+    text-transform:none;letter-spacing:0;white-space:nowrap}
+  .campo-l .lapiz + .guardado{margin-left:8px}
+  .guardado.ver{opacity:1}
+
+  /* ---------- listas dentro de la nota ---------- */
+  .fila-lista{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;background:var(--tarjeta);border:1px solid var(--marca);
+    border-radius:12px;margin-bottom:7px;box-shadow:0 1px 2px rgba(22,33,27,.04)}
+  .fila-lista .n{width:22px;height:22px;border-radius:7px;background:var(--papel);color:var(--tinta-suave);font-size:11px;
+    font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .fila-lista .tx{flex:1;font-size:14px;line-height:1.45;min-width:0;word-wrap:break-word}
+  .fila-lista .tx small{display:block;font-size:11.5px;color:var(--tinta-suave);margin-top:3px;line-height:1.4}
+  .fila-lista a{color:var(--azul);word-break:break-all}
+  :root[data-tema="oscuro"] .fila-lista a{color:#8FBBE4}
+  .quitar{border:none;background:none;color:#C4CCC6;font-size:17px;padding:2px 4px;cursor:pointer;font-family:inherit;flex-shrink:0;line-height:1}
+  .quitar.armado{color:#fff;background:var(--rojo);border-radius:7px;font-size:10.5px;font-weight:800;padding:5px 7px}
+
+  .btn-mini{border:1px solid var(--linea);background:var(--tarjeta);border-radius:11px;padding:10px 14px;font-size:13px;
+    font-weight:700;cursor:pointer;font-family:inherit;color:var(--tinta)}
+  .btn-mini.oscuro{background:var(--tinta);color:var(--fondo1);border-color:var(--tinta)}
+  .btn-mini.dorado{background:linear-gradient(135deg,#B8862F,var(--oro-claro));color:#16211B;border-color:transparent}
+  .btn-mini.ancho{width:100%}
+  .btn-mini.armado{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+  .btn-fila{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+  /* ---------- enlaces wiki ---------- */
+  .txt-render{font-size:15px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word}
+  .wl{border:none;background:rgba(199,154,59,.16);color:#8A6614;border-radius:6px;padding:1px 6px;font-size:14px;
+    font-weight:700;cursor:pointer;font-family:inherit;line-height:1.4}
+  :root[data-tema="oscuro"] .wl{background:rgba(199,154,59,.2);color:var(--oro-claro)}
+  .wl.falta{background:rgba(181,69,47,.13);color:#9C3B28;border:1px dashed rgba(181,69,47,.4)}
+  :root[data-tema="oscuro"] .wl.falta{background:rgba(181,69,47,.2);color:#E39182;border-color:rgba(227,145,130,.4)}
+
+  /* ---------- correcciones ---------- */
+  .corr{background:var(--tarjeta);border:1px solid var(--marca);border-radius:14px;padding:13px 14px;margin-bottom:8px;
+    border-left:4px solid var(--lila);box-shadow:0 1px 3px rgba(22,33,27,.05)}
+  .corr .f{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-suave)}
+  .corr .a{font-size:13.5px;line-height:1.5;margin-top:6px;color:var(--tinta-suave);text-decoration:line-through;text-decoration-color:rgba(181,69,47,.5)}
+  .corr .b{font-size:14px;line-height:1.5;margin-top:6px;font-weight:600}
+  .corr .flecha{font-size:11px;color:var(--lila);font-weight:800;margin-top:6px}
+
+  /* ---------- tabs y fab ---------- */
+  .tabs{position:fixed;bottom:0;left:0;right:0;background:var(--tabs-bg);backdrop-filter:blur(14px) saturate(1.5);
+    -webkit-backdrop-filter:blur(14px) saturate(1.5);border-top:1px solid var(--linea);display:flex;max-width:560px;
+    margin:0 auto;z-index:5;padding-bottom:env(safe-area-inset-bottom)}
+  .tabs button{flex:1;border:none;background:none;padding:9px 0 8px;font-size:10px;font-weight:600;color:var(--tinta-suave);cursor:pointer;font-family:inherit}
+  .tabs .ic{display:block;font-size:17px;margin-bottom:2px;filter:grayscale(1);opacity:.55;transition:filter .2s,opacity .2s}
+  .tabs button.activo .ic{filter:none;opacity:1}
+  .tabs button.activo{color:var(--tinta)}
+  .tabs button.activo::after{content:'';display:block;width:20px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--oro),var(--oro-claro));margin:4px auto 0}
+  .pantalla{display:none}.pantalla.activa{display:block;animation:subir .28s ease}
+  @keyframes subir{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .fab{position:fixed;bottom:calc(66px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    background:linear-gradient(135deg,#B8862F,var(--oro-claro));color:#16211B;border:none;border-radius:999px;
+    padding:14px 26px;font-size:14px;font-weight:800;box-shadow:0 6px 18px rgba(184,134,47,.42);cursor:pointer;z-index:6;font-family:inherit}
+
+  /* ---------- hojas ---------- */
+  .velo{position:fixed;inset:0;background:rgba(22,33,27,.45);display:none;z-index:10}
+  .velo.abierto{display:block}
+  .hoja{position:fixed;left:0;right:0;bottom:0;background:var(--papel);z-index:11;border-radius:22px 22px 0 0;
+    padding:20px 16px calc(28px + env(safe-area-inset-bottom));max-width:560px;margin:0 auto;transform:translateY(105%);
+    transition:transform .28s ease;max-height:90vh;overflow-y:auto}
+  .hoja.abierta{transform:translateY(0)}
+  .hoja h3{font-size:16px;font-weight:800;margin-bottom:4px}
+  .hoja .h-sub{font-size:12px;color:var(--tinta-suave);margin-bottom:14px;line-height:1.45}
+  .campo{margin-bottom:12px}
+  .campo label{display:block;font-size:11px;font-weight:700;color:var(--tinta-suave);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+  .campo input,.campo select,.campo textarea{width:100%;padding:12px 13px;border:1px solid var(--linea);border-radius:12px;
+    font-size:16px;background:var(--tarjeta);color:var(--tinta);font-family:inherit;appearance:none;line-height:1.5}
+  .campo textarea{resize:vertical;min-height:96px}
+  .campo input:focus,.campo select:focus,.campo textarea:focus{outline:2px solid var(--tinta);outline-offset:-1px}
+  .seg{display:flex;background:var(--tarjeta);border:1px solid var(--linea);border-radius:12px;overflow:hidden}
+  .seg button{flex:1;border:none;background:none;padding:11px 6px;font-size:13.5px;font-weight:700;color:var(--tinta-suave);cursor:pointer;font-family:inherit;line-height:1.25}
+  .seg button.activo{background:var(--tinta);color:var(--fondo1)}
+  .seg button small{display:block;font-size:10px;font-weight:600;opacity:.75;margin-top:2px}
+  .acciones{display:flex;gap:10px;margin-top:14px}
+  .acciones button{flex:1;padding:14px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn-guardar{background:var(--tinta);color:var(--fondo1)}
+  .btn-cancelar{background:var(--tarjeta);color:var(--tinta);border:1px solid var(--linea) !important}
+  .lista-sel{max-height:46vh;overflow-y:auto;margin-top:4px}
+  .sel-f{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;background:var(--tarjeta);
+    border:1px solid var(--linea);margin-bottom:7px;cursor:pointer;width:100%;font-family:inherit;color:var(--tinta);text-align:left}
+  .sel-f.marcada{border-color:var(--oro);background:linear-gradient(140deg,rgba(199,154,59,.12),transparent)}
+  .sel-f .mk{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--linea);display:flex;align-items:center;
+    justify-content:center;font-size:12px;flex-shrink:0;color:transparent}
+  .sel-f.marcada .mk{background:var(--oro);border-color:var(--oro);color:#16211B}
+  .sel-f .nm{flex:1;font-size:14px;font-weight:600;min-width:0;line-height:1.3}
+  .sel-f .nm small{display:block;font-size:11px;color:var(--tinta-suave);font-weight:500;margin-top:2px}
+
+  /* ---------- estadísticas ---------- */
+  .kpi-rej{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+  .kpi{background:var(--tarjeta);border-radius:12px;padding:13px 10px;box-shadow:0 1px 3px rgba(22,33,27,.06);position:relative;overflow:hidden;border:1px solid var(--marca)}
+  .kpi::before{content:'';position:absolute;top:0;left:12px;right:12px;height:2.5px;border-radius:2px;background:linear-gradient(90deg,var(--oro),var(--oro-claro))}
+  .kpi .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--tinta-suave);font-weight:700}
+  .kpi .v{font-size:19px;font-weight:800;margin-top:4px}
+  .fila-est{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--linea);font-size:13px}
+  .fila-est:last-child{border-bottom:none}
+  .fila-est .nm{flex:1;font-weight:600}
+  .fila-est .pista{width:96px;height:8px;border-radius:4px;background:var(--linea);overflow:hidden}
+  .fila-est .pista i{display:block;height:100%;border-radius:4px}
+  .fila-est .vl{font-size:12px;font-weight:800;min-width:26px;text-align:right}
+
+  .switch{display:flex;align-items:center;gap:10px;font-size:13.5px;cursor:pointer;line-height:1.4}
+  .switch input{width:19px;height:19px;flex-shrink:0}
+  .entrada-esc>*{animation:entrar .42s cubic-bezier(.22,1,.36,1) backwards}
+  .entrada-esc>*:nth-child(1){animation-delay:.02s}
+  .entrada-esc>*:nth-child(2){animation-delay:.06s}
+  .entrada-esc>*:nth-child(3){animation-delay:.1s}
+  .entrada-esc>*:nth-child(4){animation-delay:.14s}
+  .entrada-esc>*:nth-child(n+5){animation-delay:.18s}
+  @keyframes entrar{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){
+    .hoja{transition:none}.pantalla.activa{animation:none}.entrada-esc>*{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca-app">
+    <svg viewBox="0 0 1024 1024" aria-hidden="true">
+      <defs>
+        <linearGradient id="kg-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#263B2E"/><stop offset=".55" stop-color="#16211B"/><stop offset="1" stop-color="#0C130F"/></linearGradient>
+        <linearGradient id="kg-oro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8C56A"/><stop offset="1" stop-color="#B8862F"/></linearGradient>
+      </defs>
+      <rect width="1024" height="1024" rx="200" fill="url(#kg-bg)"/>
+      <g stroke="#F6F1E4" stroke-width="21" stroke-linecap="round" opacity=".55">
+        <path d="M512 512 L272 300 M512 512 L760 262 M512 512 L246 742 M512 512 L782 726 M272 300 L760 262 M246 742 L782 726 M272 300 L246 742"/>
+      </g>
+      <circle cx="272" cy="300" r="50" fill="url(#kg-oro)"/>
+      <circle cx="760" cy="262" r="56" fill="url(#kg-oro)"/>
+      <circle cx="246" cy="742" r="47" fill="url(#kg-oro)"/>
+      <circle cx="782" cy="726" r="52" fill="url(#kg-oro)"/>
+      <circle cx="512" cy="512" r="86" fill="url(#kg-oro)"/>
+      <circle cx="512" cy="512" r="36" fill="#F6F1E4"/>
+    </svg>
+  </div>
+  <h1>Mi Conocimiento<small>Memoria de aprendizaje</small></h1>
+  <button class="hdr-chip" id="chipNotas">
+    <span class="pl">Notas</span>
+    <b class="num" id="chipNotasVal">0</b>
+  </button>
+</header>
+
+<div class="toast" id="toast"></div>
+
+<!-- ================= HOY ================= -->
+<div class="pantalla activa" id="p-hoy">
+  <section class="hero">
+    <div class="etq" id="hoyEtq">Tu memoria de conocimiento</div>
+    <div class="grande num" id="hoyGrande">0</div>
+    <div class="sub" id="hoySub">Empieza capturando tu primer concepto.</div>
+    <div class="barra-dom" id="hoyBarra"></div>
+    <div class="ley-dom" id="hoyLeyenda"></div>
+    <div class="mini">
+      <div>Conexiones<b class="num" id="hoyConex">0</b></div>
+      <div>Racha<b class="num" id="hoyRacha">0 d</b></div>
+      <div>Esta semana<b class="num" id="hoySemana">0</b></div>
+    </div>
+  </section>
+
+  <h2 class="sec">Tu hora de hoy</h2>
+  <div id="hoyBloques" class="entrada-esc"></div>
+
+  <h2 class="sec">Tocadas recientemente<button class="cta" id="verTodasRec">Ver todas →</button></h2>
+  <div id="hoyRecientes"></div>
+</div>
+
+<!-- ================= BUSCAR ================= -->
+<div class="pantalla" id="p-buscar">
+  <div class="buscador">
+    <div class="caja">
+      <span class="lupa">🔍</span>
+      <input id="qBuscar" type="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false"
+             placeholder="¿Qué necesito recordar?">
+      <button class="limpiar" id="qLimpiar" aria-label="Limpiar" style="display:none">✕</button>
+    </div>
+    <div class="filtros" id="filtrosBuscar"></div>
+  </div>
+  <div class="conteo-res" id="conteoRes"></div>
+  <div id="resultados"></div>
+</div>
+
+<!-- ================= MAPA ================= -->
+<div class="pantalla" id="p-mapa">
+  <div class="miga" id="migaMapa"></div>
+  <div id="cuerpoMapa"></div>
+</div>
+
+<!-- ================= AJUSTES ================= -->
+<div class="pantalla" id="p-ajustes">
+  <h2 class="sec" style="margin-top:4px">Tu avance</h2>
+  <div class="kpi-rej">
+    <div class="kpi"><div class="l">Notas</div><div class="v num" id="estNotas">0</div></div>
+    <div class="kpi"><div class="l">Conexiones</div><div class="v num" id="estConex">0</div></div>
+    <div class="kpi"><div class="l">Días activo</div><div class="v num" id="estDias">0</div></div>
+  </div>
+  <div class="card">
+    <div class="campo-l">Por nivel de dominio</div>
+    <div id="estDominio"></div>
+  </div>
+  <div class="card">
+    <div class="campo-l">Por área</div>
+    <div id="estAreas"></div>
+  </div>
+
+  <h2 class="sec">Áreas de estudio<button class="cta" id="btnNuevaArea">+ Nueva</button></h2>
+  <div id="listaAreas"></div>
+
+  <h2 class="sec">Preferencias</h2>
+  <div class="card">
+    <div class="campo"><label>Tema</label>
+      <div class="seg" id="segTema">
+        <button data-v="claro">☀️ Claro</button><button data-v="oscuro">🌙 Oscuro</button><button data-v="auto" class="activo">Auto</button>
+      </div>
+    </div>
+    <div class="campo" style="margin-bottom:0">
+      <label>Minutos por sesión de estudio</label>
+      <div class="seg" id="segSesion">
+        <button data-v="20">20 min</button><button data-v="60" class="activo">1 hora</button><button data-v="120">2 h</button>
+      </div>
+      <div class="nota-p">Reparte el tiempo entre capturar, conectar y consolidar en la pantalla «Hoy».</div>
+    </div>
+  </div>
+
+  <h2 class="sec">Respaldo de datos</h2>
+  <div class="card">
+    <div class="btn-fila" style="margin-top:0">
+      <button class="btn-mini oscuro" id="btnRespaldar">💾 Respaldar (JSON)</button>
+      <button class="btn-mini" id="btnRestaurar">📂 Restaurar</button>
+    </div>
+    <div class="btn-fila">
+      <button class="btn-mini ancho" id="btnMarkdown">📝 Exportar todo a Markdown</button>
+    </div>
+    <input type="file" id="fileRestaurar" accept="application/json,.json" style="display:none">
+    <div class="nota-p">Tus notas viven solo en este dispositivo. Safari puede borrar los datos de sitios que no visitas en semanas: descarga un respaldo cada tanto y guárdalo en iCloud o Archivos. El Markdown sirve para llevarte tus notas a cualquier otra app.</div>
+  </div>
+
+  <h2 class="sec">Zona delicada</h2>
+  <div class="card">
+    <div class="btn-fila" style="margin-top:0">
+      <button class="btn-mini" id="btnBorrarSemillas">🌱 Borrar notas de ejemplo</button>
+    </div>
+    <div class="btn-fila">
+      <button class="btn-mini" id="btnBorrarTodo" style="color:var(--rojo);border-color:rgba(181,69,47,.4)">🗑 Borrar todo</button>
+    </div>
+    <div class="nota-p">Respalda antes de borrar. No hay forma de deshacerlo.</div>
+  </div>
+</div>
+
+<!-- ================= NOTA (detalle) ================= -->
+<div class="pantalla" id="p-nota">
+  <div class="n-cab">
+    <div class="arriba">
+      <button class="volver" id="notaVolver">‹ Volver</button>
+      <span class="tipo-b" id="notaTipoB"></span>
+    </div>
+    <textarea class="titulo" id="notaTitulo" rows="1" placeholder="Título del concepto"></textarea>
+    <div class="ruta" id="notaRuta"></div>
+    <div class="dom-fila" id="notaDominio"></div>
+  </div>
+  <div class="pestanas" id="notaPestanas"></div>
+  <div id="notaPaneles"></div>
+  <div class="btn-fila" style="margin-top:18px">
+    <button class="btn-mini" id="btnDuplicarPar" style="flex:1">🔁 Crear la nota par</button>
+    <button class="btn-mini" id="btnBorrarNota" style="color:var(--rojo);border-color:rgba(181,69,47,.4)">🗑</button>
+  </div>
+  <div class="nota-p" id="notaPie"></div>
+</div>
+
+<!-- ================= TABS ================= -->
+<nav class="tabs">
+  <button data-p="hoy" class="activo"><span class="ic">🎯</span>Hoy</button>
+  <button data-p="buscar"><span class="ic">🔍</span>Buscar</button>
+  <button data-p="mapa"><span class="ic">🗺️</span>Mapa</button>
+  <button data-p="ajustes"><span class="ic">⚙️</span>Ajustes</button>
+</nav>
+<button class="fab" id="fab">+ Nota</button>
+
+<!-- ================= HOJAS ================= -->
+<div class="velo" id="velo"></div>
+
+<div class="hoja" id="h-captura">
+  <h3>Captura rápida</h3>
+  <div class="h-sub">Escribe solo lo esencial. Los demás campos los completas después, cuando los tengas.</div>
+  <div class="campo">
+    <label>Tipo de nota</label>
+    <div class="seg" id="segTipo">
+      <button data-v="conocimiento" class="activo">📘 Conocimiento<small>qué significa</small></button>
+      <button data-v="aplicacion">🛠️ Aplicación<small>qué hacer</small></button>
+    </div>
+  </div>
+  <div class="campo">
+    <label id="capTituloLbl">Título del concepto</label>
+    <input id="capTitulo" type="text" autocomplete="off" placeholder="Ej. Activo corriente">
+  </div>
+  <div class="campo">
+    <label id="capTextoLbl">Con mis palabras</label>
+    <textarea id="capTexto" placeholder="Explícalo como se lo explicarías a alguien más. Usa [[dobles corchetes]] para mencionar otro concepto."></textarea>
+  </div>
+  <div class="campo" style="margin-bottom:0">
+    <label>Área</label>
+    <select id="capArea"></select>
+  </div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="capGuardar">Guardar y abrir</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-conectar">
+  <h3>Conectar con otros conceptos</h3>
+  <div class="h-sub" id="conectarSub"></div>
+  <div class="campo"><input id="conectarQ" type="search" autocomplete="off" placeholder="Buscar concepto..."></div>
+  <div class="lista-sel" id="conectarLista"></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Listo</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-fuente">
+  <h3>Agregar fuente</h3>
+  <div class="h-sub">De dónde salió esto: un libro, un curso, un video, un reporte financiero o una explicación de IA.</div>
+  <div class="campo"><label>Fuente</label><input id="fuTitulo" type="text" placeholder="Ej. Reporte anual 2025 de Microsoft, pág. 42"></div>
+  <div class="campo"><label>Enlace (opcional)</label><input id="fuUrl" type="url" inputmode="url" autocapitalize="off" placeholder="https://..."></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="fuGuardar">Agregar</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-correccion">
+  <h3>Cómo cambió mi entendimiento</h3>
+  <div class="h-sub">Registrar una corrección es la prueba más honesta de que aprendiste algo. Queda fechada y no se borra al editar la nota.</div>
+  <div class="campo"><label>Antes pensaba que…</label><textarea id="coAntes" style="min-height:72px" placeholder="Una razón corriente alta siempre era buena señal."></textarea></div>
+  <div class="campo"><label>Ahora entiendo que…</label><textarea id="coAhora" style="min-height:72px" placeholder="Un exceso de inventario puede inflar la razón corriente sin que haya liquidez real."></textarea></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="coGuardar">Guardar corrección</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-pregunta">
+  <h3>Pregunta pendiente</h3>
+  <div class="h-sub">Lo que todavía no entiendes vale tanto como lo que ya sabes. Anótalo antes de que se te olvide que no lo sabías.</div>
+  <div class="campo"><label>Mi duda</label><textarea id="prTexto" style="min-height:80px" placeholder="¿Cómo distingo un inventario sano de uno que ya no se va a vender?"></textarea></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="prGuardar">Agregar</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-area">
+  <h3 id="arTitulo">Nueva área</h3>
+  <div class="h-sub">Una rama grande de tu estudio: Finanzas, Tecnología, Idiomas… No hagas muchas; el detalle vive en los temas y las etiquetas.</div>
+  <div class="campo"><label>Nombre</label><input id="arNombre" type="text" placeholder="Ej. Finanzas"></div>
+  <div class="campo"><label>Emoji</label><input id="arEmoji" type="text" maxlength="4" placeholder="📊"></div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="arGuardar">Guardar</button>
+  </div>
+</div>
+
+<div class="hoja" id="h-ubicacion">
+  <h3>Dónde vive esta nota</h3>
+  <div class="h-sub">El área es la rama grande; el tema es la carpeta dentro de ella. Las etiquetas cruzan áreas y sirven para lo que no cabe en un árbol.</div>
+  <div class="campo"><label>Área</label><select id="ubArea"></select></div>
+  <div class="campo"><label>Tema</label>
+    <input id="ubTema" type="text" list="dlTemas" autocomplete="off" placeholder="Ej. Balance general">
+    <datalist id="dlTemas"></datalist>
+  </div>
+  <div class="campo" style="margin-bottom:0"><label>Etiquetas (separadas por coma)</label>
+    <input id="ubTags" type="text" autocapitalize="off" autocomplete="off" placeholder="liquidez, razones financieras">
+  </div>
+  <div class="acciones">
+    <button class="btn-cancelar" data-cerrar>Cancelar</button>
+    <button class="btn-guardar" id="ubGuardar">Guardar</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   Mi Conocimiento — memoria personal de aprendizaje
+   Todo vive en este dispositivo. Sin servidores, sin cuentas.
+   ============================================================ */
+
+/* ---------- almacenamiento ---------- */
+const KEY='miConocimiento_v1';
+const almacen={
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+};
+
+/* ---------- modelo ---------- */
+const DOMINIOS=[
+  {v:1,n:'Aprendiendo',c:'#8B93B5',d:'Lo leí, todavía no lo explico solo.'},
+  {v:2,n:'Comprendido',c:'#2E5E8C',d:'Lo explico con mis palabras.'},
+  {v:3,n:'Practicado', c:'#B8862F',d:'Ya hice ejercicios con esto.'},
+  {v:4,n:'Aplicado',   c:'#1F7A4D',d:'Lo usé en un caso real.'},
+  {v:5,n:'Dominado',   c:'#16211B',d:'Lo enseño y detecto sus matices.'}
+];
+const dom=v=>DOMINIOS[Math.max(0,Math.min(4,(v||1)-1))];
+
+/* Campos de texto de una nota, con etiqueta según el tipo. */
+const CAMPOS={
+  def:{
+    conocimiento:['Con mis palabras','La prueba de que entendiste algo es poder decirlo sin copiar.','Recursos que la empresa espera convertir en efectivo dentro de doce meses…'],
+    aplicacion:['Cuándo uso esto','En qué situación real echas mano de este procedimiento.','Cuando tengo enfrente el balance de una empresa que estoy evaluando…']
+  },
+  sirve:{
+    conocimiento:['¿Para qué sirve?','Qué te permite ver o decidir que antes no podías.','Permite analizar los recursos disponibles para cubrir obligaciones de corto plazo.'],
+    aplicacion:['¿Qué resuelve?','Qué decisión te ayuda a tomar este procedimiento.','Decidir si la empresa aguanta un año difícil sin refinanciarse.']
+  },
+  clasif:{
+    conocimiento:['Clasificación o partes','Los pedazos que lo componen. Una por línea.','Efectivo y equivalentes\nCuentas por cobrar\nInventarios'],
+    aplicacion:['Qué necesito a la mano','Datos, documentos o herramientas que requieres antes de empezar.','Balance de los últimos 3 años\nEstado de flujo de efectivo\nNotas al reporte']
+  },
+  formulas:{
+    conocimiento:['Fórmulas relacionadas','Escríbelas como las vas a usar, no como vienen en el libro.','Capital de trabajo = Activos corrientes − Pasivos corrientes'],
+    aplicacion:['Fórmulas del procedimiento','Los cálculos que aplicas en estos pasos.','Razón corriente = Activos corrientes ÷ Pasivos corrientes']
+  },
+  pasos:{
+    conocimiento:['Pasos para usarlo','Una acción por línea. Esto convierte el concepto en procedimiento.','Comparar activos y pasivos corrientes\nCalcular el capital de trabajo'],
+    aplicacion:['Lista de verificación','Una acción por línea, en el orden en que las harías.','Comparar activos y pasivos corrientes\nCalcular el capital de trabajo']
+  },
+  aplico:{
+    conocimiento:['¿Cómo lo aplico?','El puente entre saber y hacer. Sin esto, la nota es trivia.','Lo uso para evaluar la liquidez de una empresa y compararla con su sector.'],
+    aplicacion:['Cómo leo el resultado','Qué significa cada desenlace posible del procedimiento.','Si el capital de trabajo es negativo dos años seguidos, hay tensión real.']
+  },
+  errores:{
+    conocimiento:['Errores y precauciones','Lo que te va a engañar si no lo tienes presente.','Una razón corriente alta no siempre significa buena administración.'],
+    aplicacion:['Dónde me equivoco','Los tropiezos que ya cometiste o que viste cometer.','Comparar contra empresas de otro sector y sacar conclusiones falsas.']
+  },
+  ejemplo:{
+    conocimiento:['Ejemplo real','Con números concretos. Un ejemplo vale más que tres definiciones.','Activos corrientes 500 M, pasivos corrientes 350 M → capital de trabajo 150 M.'],
+    aplicacion:['Caso donde lo usé','Una vez real en que aplicaste esto y qué salió.','Lo apliqué al balance de Microsoft en agosto y detecté…']
+  }
+};
+const etq=(campo,tipo,i)=>((CAMPOS[campo]||{})[tipo]||CAMPOS[campo].conocimiento)[i];
+
+/* Orden de pestañas: la aplicación arranca por los pasos. */
+const PESTANAS={
+  conocimiento:[
+    {id:'resumen',   n:'Resumen',   campos:['def','sirve']},
+    {id:'detalles',  n:'Detalles',  campos:['clasif','formulas']},
+    {id:'aplicar',   n:'Aplicar',   campos:['aplico','pasos','errores']},
+    {id:'ejemplos',  n:'Ejemplos',  campos:['ejemplo']},
+    {id:'conexiones',n:'Conexiones',campos:[]},
+    {id:'preguntas', n:'Preguntas', campos:[]},
+    {id:'fuentes',   n:'Fuentes',   campos:[]},
+    {id:'historial', n:'Historial', campos:[]}
+  ],
+  aplicacion:[
+    {id:'aplicar',   n:'Procedimiento',campos:['pasos','def']},
+    {id:'resumen',   n:'Para qué',    campos:['sirve','aplico']},
+    {id:'detalles',  n:'Insumos',     campos:['clasif','formulas']},
+    {id:'ejemplos',  n:'Casos',       campos:['ejemplo','errores']},
+    {id:'conexiones',n:'Conexiones',  campos:[]},
+    {id:'preguntas', n:'Preguntas',   campos:[]},
+    {id:'fuentes',   n:'Fuentes',     campos:[]},
+    {id:'historial', n:'Historial',   campos:[]}
+  ]
+};
+
+/* ---------- utilidades ---------- */
+let contadorId=0;
+const uid=()=>Date.now().toString(36)+(contadorId++).toString(36)+Math.random().toString(36).slice(2,6);
+const fechaISO=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const hoyISO=()=>fechaISO(new Date());
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const norm=s=>String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const lineas=s=>String(s||'').split('\n').map(x=>x.trim()).filter(Boolean);
+function fFecha(iso,largo){
+  const d=new Date(iso+'T12:00:00');
+  if(isNaN(d)) return iso;
+  return d.toLocaleDateString('es',largo?{day:'numeric',month:'long',year:'numeric'}:{day:'numeric',month:'short'});
+}
+function haceCuanto(iso){
+  const dias=Math.floor((new Date(hoyISO()+'T12:00:00')-new Date(iso+'T12:00:00'))/86400000);
+  if(dias<=0) return 'hoy';
+  if(dias===1) return 'ayer';
+  if(dias<30) return 'hace '+dias+' días';
+  if(dias<365) return 'hace '+Math.round(dias/30)+' meses';
+  return 'hace '+(dias/365).toFixed(1)+' años';
+}
+
+/* ---------- estado ---------- */
+const AREAS_BASE=[
+  {id:'finanzas',  nombre:'Finanzas',   emoji:'📊'},
+  {id:'tecnologia',nombre:'Tecnología', emoji:'💻'}
+];
+let D={ v:1, cfg:{tema:'auto',sesion:60}, areas:[], notas:[], dias:[] };
+
+function notaNueva(p){
+  return Object.assign({
+    id:uid(), tipo:'conocimiento', titulo:'', area:'', tema:'', tags:[],
+    def:'', sirve:'', clasif:'', formulas:'', pasos:'', aplico:'', errores:'', ejemplo:'',
+    fuentes:[], links:[], preguntas:[], correcciones:[],
+    dominio:1, creado:hoyISO(), revisado:hoyISO(), semilla:false
+  },p||{});
+}
+
+/* ---------- semillas: salen de tu propio documento ---------- */
+function semillas(){
+  const a=notaNueva({
+    tipo:'conocimiento', titulo:'Activo corriente', area:'finanzas', tema:'Balance general',
+    tags:['liquidez','activos'], dominio:2, semilla:true,
+    def:'Recursos que la empresa espera convertir en efectivo, vender o consumir dentro de su ciclo operativo o, normalmente, en doce meses.',
+    sirve:'Permite analizar los recursos disponibles para cubrir obligaciones y operar en el corto plazo.',
+    clasif:'Efectivo y equivalentes\nCuentas por cobrar\nInventarios\nInversiones de corto plazo\nGastos pagados por anticipado',
+    formulas:'Capital de trabajo = Activos corrientes − Pasivos corrientes\nRazón corriente = Activos corrientes ÷ Pasivos corrientes',
+    ejemplo:'Una empresa tiene activos corrientes por USD 500 millones y pasivos corrientes por USD 350 millones.\nCapital de trabajo = 500 − 350 = 150 millones.',
+    aplico:'Lo utilizo para evaluar la liquidez de una empresa y compararla con sus competidores y con periodos anteriores.',
+    errores:'Una razón corriente alta no siempre significa buena administración.\nParte del inventario podría ser difícil de vender.\nLas cuentas por cobrar podrían tener problemas de recuperación.\nSe debe comparar con empresas del mismo sector.'
+  });
+  const b=notaNueva({
+    tipo:'conocimiento', titulo:'Capital de trabajo', area:'finanzas', tema:'Balance general',
+    tags:['liquidez','razones financieras'], dominio:2, semilla:true,
+    def:'Lo que le queda a la empresa después de cubrir todo lo que debe en el corto plazo. Es el colchón con el que opera el día a día.',
+    sirve:'Mide si la empresa puede sostener su operación sin pedir dinero prestado de urgencia.',
+    formulas:'Capital de trabajo = Activos corrientes − Pasivos corrientes',
+    ejemplo:'Activos corrientes 500 M − pasivos corrientes 350 M = 150 M de capital de trabajo.',
+    aplico:'Lo reviso en varios periodos: lo que importa no es el número de un año, sino si crece o se está encogiendo.',
+    errores:'Un capital de trabajo grande puede significar dinero ocioso o inventario que no se vende.\nUn capital de trabajo negativo no siempre es malo: hay negocios que cobran antes de pagar.'
+  });
+  const c=notaNueva({
+    tipo:'conocimiento', titulo:'Razón corriente', area:'finanzas', tema:'Balance general',
+    tags:['liquidez','razones financieras'], dominio:1, semilla:true,
+    def:'Cuántas veces los activos de corto plazo alcanzan a cubrir las deudas de corto plazo.',
+    sirve:'Es la primera lectura rápida de liquidez antes de entrar al detalle.',
+    formulas:'Razón corriente = Activos corrientes ÷ Pasivos corrientes',
+    ejemplo:'500 ÷ 350 = 1.43 veces.',
+    aplico:'La comparo contra el mismo indicador de años anteriores y contra empresas del mismo sector, nunca sola.',
+    errores:'Una razón corriente alta no siempre es positiva: puede venir de inventario estancado o de cuentas por cobrar que no se cobran.'
+  });
+  const d=notaNueva({
+    tipo:'aplicacion', titulo:'Cómo analizar un balance general', area:'finanzas', tema:'Balance general',
+    tags:['procedimiento','balance general'], dominio:1, semilla:true,
+    def:'Cuando tengo enfrente el balance de una empresa que estoy evaluando para invertir.',
+    sirve:'Convierte una hoja llena de números en una opinión defendible sobre la salud financiera de la empresa.',
+    pasos:'Comparar activos y pasivos corrientes\nCalcular el capital de trabajo\nEvaluar efectivo, cuentas por cobrar e inventarios\nRevisar el crecimiento de la deuda\nComparar deuda con capital\nAnalizar varios periodos\nComparar con competidores del mismo sector\nBuscar cambios anormales\nLeer las notas del reporte financiero\nRelacionar los resultados con el flujo de efectivo',
+    aplico:'Si el capital de trabajo cae dos años seguidos mientras la deuda sube, ahí hay una historia que el balance solo no cuenta: hay que ir al flujo de efectivo.',
+    errores:'Quedarme en el número de un solo año.\nComparar contra empresas de otro sector.\nSaltarme las notas del reporte, que es donde se esconde lo incómodo.'
+  });
+  a.links=[b.id,c.id,d.id];
+  b.links=[a.id,c.id,d.id];
+  c.links=[a.id,b.id,d.id];
+  d.links=[a.id,b.id,c.id];
+  return [a,b,c,d];
+}
+
+/* ---------- carga y guardado ---------- */
+function cargar(){
+  const v=almacen.get(KEY);
+  if(v){
+    try{
+      const p=JSON.parse(v);
+      D=Object.assign(D,p,{cfg:Object.assign({tema:'auto',sesion:60},p.cfg||{})});
+    }catch(e){}
+  }
+  if(!Array.isArray(D.notas)) D.notas=[];
+  if(!Array.isArray(D.dias))  D.dias=[];
+  if(!Array.isArray(D.areas)||!D.areas.length) D.areas=AREAS_BASE.map(a=>Object.assign({},a));
+  D.notas.forEach(n=>{
+    ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });
+    if(!n.creado)   n.creado=hoyISO();
+    if(!n.revisado) n.revisado=n.creado;
+    if(!n.dominio)  n.dominio=1;
+  });
+  if(!v){ D.notas=semillas(); }
+  const h=hoyISO();
+  if(!D.dias.includes(h)) D.dias.push(h);
+  guardar();
+}
+let avisoGuardar=false;
+function guardar(){
+  const ok=almacen.set(KEY,JSON.stringify(D));
+  if(ok===false&&!avisoGuardar){
+    avisoGuardar=true;
+    notificar('No se pudo guardar: el almacenamiento está lleno o bloqueado.',true);
+  }
+}
+let tGuardar=null;
+function guardarPronto(){ clearTimeout(tGuardar); tGuardar=setTimeout(guardar,450); }
+
+/* ---------- toast ---------- */
+let tToast=null;
+function notificar(txt,esError){
+  const el=document.getElementById('toast');
+  el.textContent=txt;
+  el.style.background=esError?'var(--rojo)':'var(--tinta)';
+  el.classList.add('ver');
+  clearTimeout(tToast);
+  tToast=setTimeout(()=>el.classList.remove('ver'),esError?5000:2600);
+}
+
+/* ---------- borrado en dos pasos ---------- */
+function armarBorrar(btn,cb){
+  let armado=false,timer=null;
+  const orig=btn.textContent;
+  btn.onclick=e=>{
+    e.stopPropagation();
+    if(!armado){
+      armado=true; btn.classList.add('armado'); btn.textContent='¿Seguro?';
+      timer=setTimeout(()=>{armado=false;btn.classList.remove('armado');btn.textContent=orig;},2800);
+      return;
+    }
+    clearTimeout(timer); cb();
+  };
+}
+
+/* ---------- accesos al modelo ---------- */
+const nota=id=>D.notas.find(n=>n.id===id);
+const area=id=>D.areas.find(a=>a.id===id);
+const nombreArea=id=>{ const a=area(id); return a?a.nombre:'Sin área'; };
+const emojiArea=id=>{ const a=area(id); return a?a.emoji:'📁'; };
+const icTipo=t=>t==='aplicacion'?'🛠️':'📘';
+
+/* Texto plano de una nota, para búsqueda y para detectar vacíos. */
+const CAMPOS_TXT=['def','sirve','clasif','formulas','pasos','aplico','errores','ejemplo'];
+function textoNota(n){
+  return [n.titulo,n.tema,n.tags.join(' ')]
+    .concat(CAMPOS_TXT.map(c=>n[c]||''))
+    .concat(n.fuentes.map(f=>f.t||''))
+    .concat(n.preguntas.map(p=>p.txt||''))
+    .concat(n.correcciones.map(c=>(c.antes||'')+' '+(c.ahora||'')))
+    .join(' \n ');
+}
+/* Cuánto le falta a la nota para estar completa (0..1). */
+function completitud(n){
+  const clave=n.tipo==='aplicacion'?['def','pasos','sirve','aplico','errores']:['def','sirve','aplico','ejemplo','errores'];
+  const hechos=clave.filter(c=>(n[c]||'').trim().length>8).length;
+  return hechos/clave.length;
+}
+function faltantes(n){
+  const clave=n.tipo==='aplicacion'?['pasos','def','sirve','aplico','errores']:['def','sirve','aplico','ejemplo','errores'];
+  return clave.filter(c=>(n[c]||'').trim().length<=8);
+}
+
+/* Menciones [[concepto]] dentro de una nota. */
+function menciones(txt){
+  const out=[]; const re=/\[\[([^\]\n]{1,80})\]\]/g; let m;
+  while((m=re.exec(txt||''))!==null){ const t=m[1].trim(); if(t&&!out.includes(t)) out.push(t); }
+  return out;
+}
+function porTitulo(t){
+  const q=norm(t).trim();
+  return D.notas.find(n=>norm(n.titulo).trim()===q);
+}
+/* Conceptos que mencionaste en alguna nota pero que todavía no tienen la suya. */
+function conceptosHuerfanos(){
+  const mapa=new Map();
+  D.notas.forEach(n=>menciones(textoNota(n)).forEach(t=>{
+    if(porTitulo(t)) return;
+    const k=norm(t);
+    if(!mapa.has(k)) mapa.set(k,{txt:t,desde:[]});
+    mapa.get(k).desde.push(n.id);
+  }));
+  return [...mapa.values()];
+}
+
+/* ============================================================
+   Navegación
+   ============================================================ */
+let pantallaActual='hoy', pantallaPrevia='hoy';
+function ir(p,sinScroll){
+  document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));
+  const el=document.getElementById('p-'+p);
+  if(el) el.classList.add('activa');
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('activo',b.dataset.p===p));
+  document.getElementById('fab').style.display = p==='nota' ? 'none' : '';
+  if(p!=='nota') pantallaPrevia=p;
+  pantallaActual=p;
+  if(!sinScroll) window.scrollTo(0,0);
+  if(p==='hoy') renderHoy();
+  if(p==='mapa') renderMapa();
+  if(p==='ajustes') renderAjustes();
+  if(p==='buscar') setTimeout(()=>document.getElementById('qBuscar').focus(),120);
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>ir(b.dataset.p));
+
+/* ============================================================
+   Tarjeta de nota reutilizable
+   ============================================================ */
+function itemNota(n,tokens){
+  const d=dom(n.dominio);
+  const comp=completitud(n);
+  const frag=fragmento(n,tokens||[]);
+  const pie=[];
+  pie.push('<span class="etiq dom" style="background:'+d.c+'">'+esc(d.n)+'</span>');
+  if(n.tema) pie.push('<span class="etiq">'+esc(emojiArea(n.area))+' '+esc(n.tema)+'</span>');
+  else if(n.area) pie.push('<span class="etiq">'+esc(emojiArea(n.area))+' '+esc(nombreArea(n.area))+'</span>');
+  if(n.links.length) pie.push('<span class="etiq enlaces">🔗 '+n.links.length+'</span>');
+  n.tags.slice(0,2).forEach(t=>pie.push('<span class="etiq tag">'+esc(t)+'</span>'));
+  if(comp<1) pie.push('<span class="etiq" style="background:rgba(181,69,47,.12);color:var(--rojo)">'+Math.round(comp*100)+'% completa</span>');
+  return '<button class="n-item" data-nota="'+n.id+'">'
+    +'<span class="bandera" style="background:'+d.c+'"></span>'
+    +'<span class="cuerpo">'
+      +'<span class="tit"><span class="tipo-ic">'+icTipo(n.tipo)+'</span>'+esc(n.titulo||'Sin título')+'</span>'
+      +(frag?'<span class="frag">'+frag+'</span>':'')
+      +'<span class="pie">'+pie.join('')+'</span>'
+    +'</span></button>';
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-nota]');
+  if(b&&!e.target.closest('.quitar')) abrirNota(b.dataset.nota);
+});
+
+/* ============================================================
+   Búsqueda instantánea (local, sobre tus propias palabras)
+   ============================================================ */
+const VACIAS=new Set(['que','es','un','una','el','la','los','las','de','del','mi','mis','sobre','como','se','y','o',
+  'para','por','en','donde','escribi','muestrame','muestra','ensename','cual','cuales','me','lo','al','con','notas',
+  'nota','todo','todos','toda','hay','tengo','usar','uso','use','cuando','cuanto','existe','entre','mas','pero','si','no','a']);
+function tokenizar(q){
+  const bruto=norm(q).split(/[^a-z0-9áéíóúñ]+/i).filter(Boolean);
+  const utiles=bruto.filter(t=>t.length>1&&!VACIAS.has(t));
+  return utiles.length?utiles:bruto;
+}
+function camposPesados(n){
+  return [
+    [norm(n.titulo),12],
+    [norm(n.tags.join(' ')),7],
+    [norm(n.tema+' '+nombreArea(n.area)),5],
+    [norm(n.def),4],
+    [norm([n.sirve,n.aplico,n.pasos,n.errores,n.clasif,n.formulas,n.ejemplo].join(' ')),2],
+    [norm(n.fuentes.map(f=>f.t).join(' ')+' '+n.preguntas.map(p=>p.txt).join(' ')
+      +' '+n.correcciones.map(c=>(c.antes||'')+' '+(c.ahora||'')).join(' ')),1]
+  ];
+}
+function puntuar(n,tokens){
+  const campos=camposPesados(n);
+  let total=0,cubiertos=0;
+  tokens.forEach(t=>{
+    let mejor=0;
+    campos.forEach(par=>{
+      const i=par[0].indexOf(t);
+      if(i>=0){
+        const arranque=(i===0)||!/[a-z0-9]/.test(par[0][i-1]);
+        mejor=Math.max(mejor,par[1]*(arranque?1:0.55));
+      }
+    });
+    if(mejor>0){ cubiertos++; total+=mejor; }
+  });
+  if(!cubiertos) return 0;
+  /* No exigimos que aparezcan todas las palabras: una pregunta escrita en voz natural
+     («¿qué fórmula usé para capital de trabajo?») traería cero resultados. Puntuamos por
+     peso del campo y damos un bono a la nota que cubre más palabras de la consulta. */
+  return total*(1+0.35*(cubiertos/tokens.length));
+}
+function fragmento(n,tokens){
+  const partes=[['',n.def],['',n.sirve],['',n.aplico],['',n.pasos],['',n.errores],['',n.ejemplo],['',n.clasif],['',n.formulas]];
+  if(!tokens.length){
+    const t=(partes.find(p=>(p[1]||'').trim())||['',''])[1];
+    return esc(String(t||'').replace(/\n+/g,' · ').slice(0,150));
+  }
+  for(let i=0;i<partes.length;i++){
+    const txt=String(partes[i][1]||''); if(!txt) continue;
+    const bajo=norm(txt);
+    for(let j=0;j<tokens.length;j++){
+      const p=bajo.indexOf(tokens[j]);
+      if(p>=0){
+        const ini=Math.max(0,p-55), fin=Math.min(txt.length,p+95);
+        let corte=txt.slice(ini,fin).replace(/\n+/g,' · ');
+        let salida=esc((ini>0?'…':'')+corte+(fin<txt.length?'…':''));
+        tokens.forEach(tk=>{
+          const re=new RegExp('('+tk.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+          salida=salida.replace(re,'<mark>$1</mark>');
+        });
+        return salida;
+      }
+    }
+  }
+  const t=(partes.find(p=>(p[1]||'').trim())||['',''])[1];
+  return esc(String(t||'').replace(/\n+/g,' · ').slice(0,150));
+}
+
+let filtroActivo='todo';
+const FILTROS=[
+  {id:'todo',       n:'Todo',            f:()=>true},
+  {id:'conocimiento',n:'📘 Conocimiento', f:n=>n.tipo==='conocimiento'},
+  {id:'aplicacion', n:'🛠️ Aplicación',   f:n=>n.tipo==='aplicacion'},
+  {id:'pordominar', n:'⚠️ Por dominar',  f:n=>n.dominio<=2},
+  {id:'incompletas',n:'✍️ Incompletas',  f:n=>completitud(n)<1},
+  {id:'sinconectar',n:'🔗 Sin conectar', f:n=>!n.links.length},
+  {id:'preguntas',  n:'❓ Con dudas',     f:n=>n.preguntas.some(p=>!p.resuelta)}
+];
+function renderFiltros(){
+  const cont=document.getElementById('filtrosBuscar');
+  const areas=D.areas.filter(a=>D.notas.some(n=>n.area===a.id))
+    .map(a=>({id:'area:'+a.id,n:a.emoji+' '+a.nombre}));
+  cont.innerHTML=FILTROS.concat(areas).map(f=>
+    '<button class="chip'+(filtroActivo===f.id?' activo':'')+'" data-filtro="'+f.id+'">'+esc(f.n)+'</button>').join('');
+  cont.querySelectorAll('[data-filtro]').forEach(b=>b.onclick=()=>{
+    filtroActivo=b.dataset.filtro; renderFiltros(); renderBusqueda();
+  });
+}
+function pasaFiltro(n){
+  if(filtroActivo.startsWith('area:')) return n.area===filtroActivo.slice(5);
+  const f=FILTROS.find(x=>x.id===filtroActivo);
+  return f?f.f(n):true;
+}
+function renderBusqueda(){
+  const q=document.getElementById('qBuscar').value.trim();
+  const tokens=q?tokenizar(q):[];
+  const cont=document.getElementById('resultados');
+  const conteo=document.getElementById('conteoRes');
+  document.getElementById('qLimpiar').style.display=q?'':'none';
+
+  let lista=D.notas.filter(pasaFiltro);
+  if(tokens.length){
+    lista=lista.map(n=>({n:n,p:puntuar(n,tokens)})).filter(x=>x.p>0)
+      .sort((a,b)=>b.p-a.p||(a.n.revisado<b.n.revisado?1:-1)).map(x=>x.n);
+  }else{
+    lista=lista.slice().sort((a,b)=>(a.revisado<b.revisado?1:a.revisado>b.revisado?-1:0));
+  }
+  conteo.textContent = lista.length
+    ? lista.length+(lista.length===1?' nota':' notas')+(q?' para «'+q+'»':'')
+    : '';
+  if(!lista.length){
+    cont.innerHTML=q
+      ? '<div class="vacio">No encontré nada tuyo sobre «'+esc(q)+'».<br><br>'
+        +'<button class="btn-mini dorado" id="crearDesdeBusqueda">+ Crear la nota «'+esc(q)+'»</button></div>'
+      : '<div class="vacio">Sin notas con este filtro todavía.</div>';
+    const b=document.getElementById('crearDesdeBusqueda');
+    if(b) b.onclick=()=>abrirCaptura({titulo:q});
+    return;
+  }
+  cont.innerHTML=lista.slice(0,120).map(n=>itemNota(n,tokens)).join('')
+    +(lista.length>120?'<div class="nota-p" style="text-align:center">Mostrando las primeras 120. Afina la búsqueda.</div>':'');
+}
+const inputQ=document.getElementById('qBuscar');
+inputQ.addEventListener('input',renderBusqueda);
+inputQ.addEventListener('keydown',e=>{ if(e.key==='Enter') inputQ.blur(); });
+document.getElementById('qLimpiar').onclick=()=>{ inputQ.value=''; renderBusqueda(); inputQ.focus(); };
+function buscarPor(txt,filtro){
+  filtroActivo=filtro||'todo';
+  inputQ.value=txt||'';
+  ir('buscar');
+  renderFiltros(); renderBusqueda();
+}
+
+/* ============================================================
+   Pantalla HOY
+   ============================================================ */
+function racha(){
+  const s=new Set(D.dias);
+  let n=0, d=new Date();
+  while(s.has(fechaISO(d))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function creadasDesde(dias){
+  const lim=new Date(); lim.setDate(lim.getDate()-dias);
+  const iso=fechaISO(lim);
+  return D.notas.filter(n=>n.creado>=iso).length;
+}
+function totalConexiones(){
+  let c=0; D.notas.forEach(n=>c+=n.links.length); return Math.round(c/2);
+}
+function renderHoy(){
+  const total=D.notas.length;
+  document.getElementById('chipNotasVal').textContent=total;
+  document.getElementById('hoyGrande').textContent=total;
+  document.getElementById('hoyEtq').textContent = total===1?'concepto en tu memoria':'conceptos en tu memoria';
+
+  const dominados=D.notas.filter(n=>n.dominio>=4).length;
+  const pordominar=D.notas.filter(n=>n.dominio<=2).length;
+  document.getElementById('hoySub').textContent = !total
+    ? 'Todavía no hay nada aquí. Toca «+ Nota» y captura el primer concepto que quieras no olvidar.'
+    : dominados+' aplicados o dominados · '+pordominar+' todavía frescos.';
+
+  const cuenta=DOMINIOS.map(d=>D.notas.filter(n=>n.dominio===d.v).length);
+  document.getElementById('hoyBarra').innerHTML = total
+    ? DOMINIOS.map((d,i)=>'<i style="width:'+(cuenta[i]/total*100)+'%;background:'+(d.v===5?'#F6F1E4':d.c)+'"></i>').join('')
+    : '';
+  document.getElementById('hoyLeyenda').innerHTML = total
+    ? DOMINIOS.filter((d,i)=>cuenta[i]>0).map((d,i)=>{
+        const c=D.notas.filter(n=>n.dominio===d.v).length;
+        return '<span><i class="punto" style="background:'+(d.v===5?'#F6F1E4':d.c)+'"></i>'+esc(d.n)+' '+c+'</span>';
+      }).join('')
+    : '';
+  document.getElementById('hoyConex').textContent=totalConexiones();
+  const r=racha();
+  document.getElementById('hoyRacha').textContent=r+' d';
+  document.getElementById('hoySemana').textContent=creadasDesde(7);
+
+  /* --- los tres bloques de la sesión --- */
+  const min=D.cfg.sesion||60;
+  const mm=[Math.round(min*0.40),Math.round(min*0.25),Math.round(min*0.35)];
+  const huerfanos=conceptosHuerfanos();
+  const sinConectar=D.notas.filter(n=>!n.links.length&&D.notas.length>1)
+    .sort((a,b)=>(a.revisado<b.revisado?1:-1)).slice(0,4);
+  const incompletas=D.notas.map(n=>({n:n,c:completitud(n)})).filter(x=>x.c<1)
+    .sort((a,b)=>a.c-b.c).slice(0,4).map(x=>x.n);
+  const dudas=[];
+  D.notas.forEach(n=>n.preguntas.forEach(p=>{ if(!p.resuelta) dudas.push({n:n,p:p}); }));
+
+  let h='';
+  /* 1. capturar */
+  h+='<div class="bloque"><div class="cab"><h3>1 · Capturar</h3><span class="min">'+mm[0]+' min</span></div>'
+   +'<div class="desc">Todo concepto que aparezca hoy y no tenga nota, se queda fuera de tu memoria. Escríbelo aunque sea en una línea.</div>';
+  if(huerfanos.length){
+    h+='<div class="campo-l">Mencionaste estos conceptos, pero no tienen nota</div><div class="listilla">'
+      +huerfanos.slice(0,8).map(x=>'<button class="chip mini" data-crear="'+esc(x.txt)+'">+ '+esc(x.txt)+'</button>').join('')
+      +'</div>';
+  }
+  h+='<div class="btn-fila"><button class="btn-mini dorado" data-accion="nueva-conocimiento">📘 Concepto nuevo</button>'
+   +'<button class="btn-mini" data-accion="nueva-aplicacion">🛠️ Procedimiento</button></div></div>';
+
+  /* 2. conectar */
+  h+='<div class="bloque b-conectar"><div class="cab"><h3>2 · Conectar</h3><span class="min">'+mm[1]+' min</span></div>'
+   +'<div class="desc">Una nota suelta se olvida; una nota conectada se recupera desde tres caminos distintos.</div>';
+  if(sinConectar.length) h+=sinConectar.map(n=>itemNota(n,[])).join('');
+  else h+='<div class="vacio" style="padding:10px 0">Todas tus notas están conectadas con al menos otra. Bien hecho.</div>';
+  h+='</div>';
+
+  /* 3. consolidar */
+  h+='<div class="bloque b-consolidar"><div class="cab"><h3>3 · Consolidar</h3><span class="min">'+mm[2]+' min</span></div>'
+   +'<div class="desc">Completa lo que dejaste a medias y responde tus propias dudas. Aquí es donde el conocimiento se vuelve utilizable.</div>';
+  if(incompletas.length){
+    h+='<div class="campo-l">Les faltan campos clave</div>'+incompletas.map(n=>itemNota(n,[])).join('');
+  }
+  if(dudas.length){
+    h+='<div class="campo-l" style="margin-top:12px">Preguntas que dejaste abiertas</div>'
+      +dudas.slice(0,4).map(d=>'<button class="n-item" data-nota="'+d.n.id+'"><span class="bandera" style="background:var(--rojo)"></span>'
+        +'<span class="cuerpo"><span class="tit">❓ '+esc(d.p.txt)+'</span>'
+        +'<span class="frag">en «'+esc(d.n.titulo)+'»</span></span></button>').join('');
+  }
+  if(!incompletas.length&&!dudas.length) h+='<div class="vacio" style="padding:10px 0">Nada pendiente. Ve por un concepto nuevo.</div>';
+  h+='</div>';
+  document.getElementById('hoyBloques').innerHTML=h;
+
+  const rec=D.notas.slice().sort((a,b)=>(a.revisado<b.revisado?1:a.revisado>b.revisado?-1:0)).slice(0,5);
+  document.getElementById('hoyRecientes').innerHTML = rec.length
+    ? rec.map(n=>itemNota(n,[])).join('')
+    : '<div class="vacio">Tus notas más recientes aparecerán aquí.</div>';
+}
+document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-crear]');
+  if(c) abrirCaptura({titulo:c.dataset.crear});
+  const a=e.target.closest('[data-accion]');
+  if(a){
+    if(a.dataset.accion==='nueva-conocimiento') abrirCaptura({tipo:'conocimiento'});
+    if(a.dataset.accion==='nueva-aplicacion')   abrirCaptura({tipo:'aplicacion'});
+  }
+});
+document.getElementById('verTodasRec').onclick=()=>buscarPor('','todo');
+document.getElementById('chipNotas').onclick=()=>buscarPor('','todo');
+
+/* ============================================================
+   Pantalla MAPA — área › tema › notas
+   ============================================================ */
+let mapa={area:null,tema:null};
+const SIN_AREA='__sin__', SIN_TEMA='__sinTema__';
+function notasDeArea(id){ return D.notas.filter(n=>(n.area||SIN_AREA)===id); }
+function temasDeArea(id){
+  const m=new Map();
+  notasDeArea(id).forEach(n=>{
+    const t=(n.tema||'').trim()||SIN_TEMA;
+    m.set(t,(m.get(t)||0)+1);
+  });
+  return [...m.entries()].sort((a,b)=>a[0]===SIN_TEMA?1:b[0]===SIN_TEMA?-1:a[0].localeCompare(b[0],'es'));
+}
+function todasLasEtiquetas(){
+  const m=new Map();
+  D.notas.forEach(n=>n.tags.forEach(t=>{ const k=t.trim(); if(k) m.set(k,(m.get(k)||0)+1); }));
+  return [...m.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'es'));
+}
+function renderMapa(){
+  const miga=document.getElementById('migaMapa');
+  const cuerpo=document.getElementById('cuerpoMapa');
+
+  if(!mapa.area){
+    miga.innerHTML='<b>Todas las áreas</b>';
+    const cajas=D.areas.map(a=>({id:a.id,nombre:a.nombre,emoji:a.emoji}));
+    if(D.notas.some(n=>!n.area)) cajas.push({id:SIN_AREA,nombre:'Sin área',emoji:'📁'});
+    let h='<div class="rejilla">'+cajas.map(a=>{
+      const c=notasDeArea(a.id).length;
+      const t=temasDeArea(a.id).length;
+      return '<button class="area-c" data-area="'+esc(a.id)+'"><span class="em">'+esc(a.emoji)+'</span>'
+        +'<span class="nm">'+esc(a.nombre)+'</span>'
+        +'<span class="ct">'+c+(c===1?' nota':' notas')+(t?' · '+t+(t===1?' tema':' temas'):'')+'</span></button>';
+    }).join('')+'</div>';
+    const tags=todasLasEtiquetas();
+    if(tags.length){
+      h+='<h2 class="sec">Etiquetas</h2><div class="listilla" style="display:flex;flex-wrap:wrap;gap:7px">'
+        +tags.slice(0,30).map(t=>'<button class="chip mini" data-tag="'+esc(t[0])+'">'+esc(t[0])+' · '+t[1]+'</button>').join('')
+        +'</div><div class="nota-p">Las etiquetas cruzan áreas: sirven para lo que un árbol no puede clasificar.</div>';
+    }
+    if(!D.notas.length) h+='<div class="vacio">Tu mapa se dibuja solo conforme escribes notas.</div>';
+    cuerpo.innerHTML=h;
+    cuerpo.querySelectorAll('[data-area]').forEach(b=>b.onclick=()=>{ mapa={area:b.dataset.area,tema:null}; renderMapa(); window.scrollTo(0,0); });
+    cuerpo.querySelectorAll('[data-tag]').forEach(b=>b.onclick=()=>buscarPor(b.dataset.tag));
+    return;
+  }
+
+  const nomA=mapa.area===SIN_AREA?'Sin área':nombreArea(mapa.area);
+  const emA =mapa.area===SIN_AREA?'📁':emojiArea(mapa.area);
+
+  if(!mapa.tema){
+    miga.innerHTML='<button data-nivel="raiz">Áreas</button><span>›</span><b>'+esc(emA+' '+nomA)+'</b>';
+    const temas=temasDeArea(mapa.area);
+    cuerpo.innerHTML = temas.length
+      ? temas.map(t=>'<button class="tema-f" data-tema="'+esc(t[0])+'">'
+          +'<span class="nm">'+(t[0]===SIN_TEMA?'<i style="opacity:.7">Sin tema asignado</i>':esc(t[0]))+'</span>'
+          +'<span class="ct">'+t[1]+'</span><span class="fl">›</span></button>').join('')
+      : '<div class="vacio">Todavía no hay notas en esta área.<br><br><button class="btn-mini dorado" data-accion="nueva-conocimiento">+ Primera nota</button></div>';
+    cuerpo.querySelectorAll('[data-tema]').forEach(b=>b.onclick=()=>{ mapa.tema=b.dataset.tema; renderMapa(); window.scrollTo(0,0); });
+    miga.querySelector('[data-nivel]').onclick=()=>{ mapa={area:null,tema:null}; renderMapa(); };
+    return;
+  }
+
+  const nomT=mapa.tema===SIN_TEMA?'Sin tema':mapa.tema;
+  miga.innerHTML='<button data-nivel="raiz">Áreas</button><span>›</span>'
+    +'<button data-nivel="area">'+esc(nomA)+'</button><span>›</span><b>'+esc(nomT)+'</b>';
+  const lista=notasDeArea(mapa.area).filter(n=>((n.tema||'').trim()||SIN_TEMA)===mapa.tema)
+    .sort((a,b)=>a.tipo===b.tipo?a.titulo.localeCompare(b.titulo,'es'):(a.tipo==='aplicacion'?1:-1));
+  cuerpo.innerHTML=lista.map(n=>itemNota(n,[])).join('')||'<div class="vacio">Sin notas aquí.</div>';
+  miga.querySelector('[data-nivel="raiz"]').onclick=()=>{ mapa={area:null,tema:null}; renderMapa(); };
+  miga.querySelector('[data-nivel="area"]').onclick=()=>{ mapa.tema=null; renderMapa(); };
+}
+
+/* ============================================================
+   Pantalla AJUSTES
+   ============================================================ */
+function renderAjustes(){
+  document.getElementById('estNotas').textContent=D.notas.length;
+  document.getElementById('estConex').textContent=totalConexiones();
+  document.getElementById('estDias').textContent=D.dias.length;
+
+  const total=D.notas.length||1;
+  document.getElementById('estDominio').innerHTML=DOMINIOS.map(d=>{
+    const c=D.notas.filter(n=>n.dominio===d.v).length;
+    return '<div class="fila-est"><span class="punto" style="background:'+d.c+'"></span>'
+      +'<span class="nm">'+esc(d.n)+'<small style="display:block;font-size:11px;color:var(--tinta-suave);font-weight:500">'+esc(d.d)+'</small></span>'
+      +'<span class="pista"><i style="width:'+(c/total*100)+'%;background:'+d.c+'"></i></span>'
+      +'<span class="vl num">'+c+'</span></div>';
+  }).join('');
+
+  const areas=D.areas.slice();
+  if(D.notas.some(n=>!n.area)) areas.push({id:SIN_AREA,nombre:'Sin área',emoji:'📁'});
+  document.getElementById('estAreas').innerHTML = D.notas.length
+    ? areas.map(a=>{
+        const c=notasDeArea(a.id).length;
+        return '<div class="fila-est"><span>'+esc(a.emoji)+'</span><span class="nm">'+esc(a.nombre)+'</span>'
+          +'<span class="pista"><i style="width:'+(c/total*100)+'%;background:var(--oro)"></i></span>'
+          +'<span class="vl num">'+c+'</span></div>';
+      }).join('')
+    : '<div class="nota-p">Sin datos todavía.</div>';
+
+  document.getElementById('listaAreas').innerHTML=D.areas.map(a=>
+    '<div class="fila-lista"><span class="n" style="background:none;font-size:16px">'+esc(a.emoji)+'</span>'
+    +'<span class="tx"><b>'+esc(a.nombre)+'</b><small>'+notasDeArea(a.id).length+' notas</small></span>'
+    +'<button class="btn-mini" data-editarea="'+esc(a.id)+'" style="padding:6px 10px;font-size:12px">Editar</button>'
+    +'<button class="quitar" data-borrarea="'+esc(a.id)+'">✕</button></div>').join('')
+    ||'<div class="nota-p">Sin áreas.</div>';
+
+  document.querySelectorAll('[data-editarea]').forEach(b=>b.onclick=()=>abrirArea(b.dataset.editarea));
+  document.querySelectorAll('[data-borrarea]').forEach(b=>armarBorrar(b,()=>{
+    const id=b.dataset.borrarea;
+    D.notas.forEach(n=>{ if(n.area===id) n.area=''; });
+    D.areas=D.areas.filter(a=>a.id!==id);
+    guardar(); renderAjustes(); notificar('Área borrada. Sus notas quedaron sin área.');
+  }));
+  setSeg('segTema',D.cfg.tema||'auto');
+  setSeg('segSesion',String(D.cfg.sesion||60));
+}
+
+/* ---------- segmentos ---------- */
+function segInit(id,cb){
+  const seg=document.getElementById(id);
+  seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    seg.querySelectorAll('button').forEach(x=>x.classList.remove('activo'));
+    b.classList.add('activo'); if(cb) cb(b.dataset.v);
+  });
+  return ()=>{ const a=seg.querySelector('.activo'); return a?a.dataset.v:null; };
+}
+function setSeg(id,v){
+  const seg=document.getElementById(id);
+  if(!seg) return;
+  seg.querySelectorAll('button').forEach(b=>b.classList.toggle('activo',b.dataset.v===v));
+}
+segInit('segTema',v=>{ D.cfg.tema=v; guardar(); aplicarTema(); });
+segInit('segSesion',v=>{ D.cfg.sesion=parseInt(v,10)||60; guardar(); });
+const getTipoCaptura=segInit('segTipo',v=>{
+  document.getElementById('capTituloLbl').textContent = v==='aplicacion'?'Nombre del procedimiento':'Título del concepto';
+  document.getElementById('capTitulo').placeholder    = v==='aplicacion'?'Ej. Cómo analizar un balance general':'Ej. Activo corriente';
+  document.getElementById('capTextoLbl').textContent  = v==='aplicacion'?'Cuándo uso esto':'Con mis palabras';
+});
+
+/* ---------- tema claro / oscuro ---------- */
+function aplicarTema(){
+  const t=D.cfg.tema||'auto';
+  const oscuro = t==='oscuro' || (t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.setAttribute('data-tema',oscuro?'oscuro':'claro');
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content',oscuro?'#0B100D':'#16211B');
+}
+if(window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ if((D.cfg.tema||'auto')==='auto') aplicarTema(); });
+
+/* ============================================================
+   Detalle de nota — todo se edita en el sitio y se guarda solo
+   ============================================================ */
+let notaActual=null, pestanaActual='resumen';
+
+function autoAlto(ta){
+  ta.style.height='auto';
+  const h=ta.scrollHeight;
+  ta.style.height = h>0 ? (h+2)+'px' : '';
+}
+function tocar(n){
+  n.revisado=hoyISO();
+  const h=hoyISO();
+  if(!D.dias.includes(h)) D.dias.push(h);
+}
+function marcarGuardado(campo){
+  const el=document.getElementById('g-'+campo);
+  if(!el) return;
+  el.classList.add('ver');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('ver'),1400);
+}
+
+function abrirNota(id){
+  const n=nota(id);
+  if(!n){ notificar('Esa nota ya no existe.',true); return; }
+  notaActual=n;
+  pestanaActual=(PESTANAS[n.tipo]||PESTANAS.conocimiento)[0].id;
+  ir('nota');
+  renderNota();
+}
+function renderNota(){
+  const n=notaActual; if(!n) return;
+  /* --- cabecera --- */
+  const bTipo=document.getElementById('notaTipoB');
+  bTipo.className='tipo-b '+n.tipo;
+  bTipo.textContent = n.tipo==='aplicacion'?'🛠️ Aplicación':'📘 Conocimiento';
+  bTipo.style.cursor='pointer';
+  bTipo.title='Cambiar el tipo de nota';
+  bTipo.onclick=()=>{
+    n.tipo = n.tipo==='aplicacion'?'conocimiento':'aplicacion';
+    tocar(n); guardar();
+    const tabs=PESTANAS[n.tipo];
+    if(!tabs.some(t=>t.id===pestanaActual)) pestanaActual=tabs[0].id;
+    renderNota();
+    notificar('Ahora es una nota de '+(n.tipo==='aplicacion'?'aplicación':'conocimiento'));
+  };
+
+  const tit=document.getElementById('notaTitulo');
+  if(tit.value!==n.titulo) tit.value=n.titulo;
+  autoAlto(tit);
+
+  const ruta=document.getElementById('notaRuta');
+  const trozos=[];
+  trozos.push(esc(emojiArea(n.area)+' '+nombreArea(n.area)));
+  if(n.tema) trozos.push('› '+esc(n.tema));
+  n.tags.forEach(t=>trozos.push('#'+esc(t)));
+  ruta.innerHTML=trozos.join(' ')+' <button id="btnUbicacion">✎ ubicar</button>';
+  document.getElementById('btnUbicacion').onclick=()=>abrirUbicacion();
+
+  document.getElementById('notaDominio').innerHTML=DOMINIOS.map(d=>
+    '<button data-dom="'+d.v+'" class="'+(n.dominio===d.v?'activo':'')+'"'
+    +(n.dominio===d.v?' style="background:'+d.c+'"':'')+' title="'+esc(d.d)+'">'+esc(d.n)+'</button>').join('');
+  document.querySelectorAll('[data-dom]').forEach(b=>b.onclick=()=>{
+    n.dominio=parseInt(b.dataset.dom,10); tocar(n); guardar(); renderNota();
+  });
+
+  /* --- pestañas --- */
+  const tabs=PESTANAS[n.tipo]||PESTANAS.conocimiento;
+  document.getElementById('notaPestanas').innerHTML=tabs.map(t=>{
+    let pt='';
+    if(t.id==='conexiones'&&n.links.length) pt='<span class="pt">'+n.links.length+'</span>';
+    if(t.id==='preguntas'){ const ab=n.preguntas.filter(p=>!p.resuelta).length; if(ab) pt='<span class="pt">'+ab+'</span>'; }
+    if(t.id==='fuentes'&&n.fuentes.length) pt='<span class="pt">'+n.fuentes.length+'</span>';
+    if(t.id==='historial'&&n.correcciones.length) pt='<span class="pt">'+n.correcciones.length+'</span>';
+    return '<button data-tab="'+t.id+'" class="'+(pestanaActual===t.id?'activo':'')+'">'+esc(t.n)+pt+'</button>';
+  }).join('');
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{
+    pestanaActual=b.dataset.tab; renderNota();
+  });
+
+  /* --- panel activo --- */
+  const tab=tabs.find(t=>t.id===pestanaActual)||tabs[0];
+  let h='';
+  tab.campos.forEach(c=>{ h+=campoEditable(n,c); });
+  if(tab.id==='conexiones') h+=panelConexiones(n);
+  if(tab.id==='preguntas')  h+=panelPreguntas(n);
+  if(tab.id==='fuentes')    h+=panelFuentes(n);
+  if(tab.id==='historial')  h+=panelHistorial(n);
+  document.getElementById('notaPaneles').innerHTML=h;
+  bindPanel(n);
+
+  actualizarPie();
+}
+function actualizarPie(){
+  const n=notaActual; if(!n) return;
+  const c=Math.round(completitud(n)*100);
+  const falta=faltantes(n);
+  document.getElementById('notaPie').innerHTML =
+    'Creada el '+fFecha(n.creado,true)+' · revisada '+haceCuanto(n.revisado)+' · '+c+'% completa.'
+    +(falta.length?'<br>Te falta: '+falta.map(f=>esc(etq(f,n.tipo,0).toLowerCase())).join(', ')+'.':'')
+    +(n.semilla?'<br><i>Nota de ejemplo — edítala o bórrala desde Ajustes.</i>':'');
+}
+
+const ES_LISTA=c=>(c==='pasos'||c==='clasif'||c==='errores');
+function campoEditable(n,campo){
+  const l=etq(campo,n.tipo,0), ayuda=etq(campo,n.tipo,1), ph=etq(campo,n.tipo,2);
+  const lista=ES_LISTA(campo);
+  /* Con contenido, un campo de lista se muestra ya formateado: es la tarjeta que lees
+     cuando tienes el balance enfrente. El textarea aparece solo si tocas «editar». */
+  const enVista=lista&&(n[campo]||'').trim().length>0;
+  return '<div class="grupo'+(enVista?' en-vista':'')+'" data-grupo="'+campo+'">'
+    +'<div class="campo-l">'+esc(l)+' <span class="ayuda">'+esc(ayuda)+'</span>'
+    +(lista?'<button class="lapiz" data-editar="'+campo+'">✎ editar</button>':'')
+    +'<span class="guardado" id="g-'+campo+'">guardado ✓</span></div>'
+    +'<textarea class="edit'+(campo==='formulas'?' mono':'')+'" data-campo="'+campo+'" rows="1" '
+      +'placeholder="'+esc(String(ph).replace(/\n/g,' · '))+'">'+esc(n[campo]||'')+'</textarea>'
+    +'<div data-menciones="'+campo+'"></div>'
+    +(lista?'<div data-vista="'+campo+'"></div>':'')
+    +'</div>';
+}
+
+function chipsMenciones(txt){
+  const ms=menciones(txt);
+  if(!ms.length) return '';
+  return '<div class="listilla" style="margin-top:8px">'+ms.map(t=>{
+    const ex=porTitulo(t);
+    return ex
+      ? '<button class="wl" data-nota="'+ex.id+'">'+icTipo(ex.tipo)+' '+esc(t)+'</button>'
+      : '<button class="wl falta" data-crear="'+esc(t)+'">+ crear «'+esc(t)+'»</button>';
+  }).join(' ')+'</div>';
+}
+function vistaLista(n,campo){
+  const items=lineas(n[campo]);
+  if(!items.length) return '';
+  const numerada=(campo==='pasos');
+  return '<div style="margin-top:9px">'+items.map((x,i)=>
+    '<div class="fila-lista"><span class="n">'+(numerada?(i+1):'•')+'</span><span class="tx">'+esc(x)+'</span></div>').join('')+'</div>';
+}
+function bindPanel(n){
+  document.querySelectorAll('#notaPaneles [data-campo]').forEach(ta=>{
+    const campo=ta.dataset.campo;
+    autoAlto(ta);
+    const pintarExtras=()=>{
+      const m=document.querySelector('#notaPaneles [data-menciones="'+campo+'"]');
+      if(m) m.innerHTML=chipsMenciones(ta.value);
+      const v=document.querySelector('#notaPaneles [data-vista="'+campo+'"]');
+      if(v) v.innerHTML=vistaLista(n,campo);
+    };
+    pintarExtras();
+    let tExtras=null;
+    ta.addEventListener('input',()=>{
+      autoAlto(ta);
+      n[campo]=ta.value;
+      tocar(n); guardarPronto(); marcarGuardado(campo);
+      clearTimeout(tExtras);
+      tExtras=setTimeout(()=>{ pintarExtras(); actualizarPie(); },300);
+    });
+    ta.addEventListener('blur',()=>{
+      guardar();
+      if(ES_LISTA(campo)&&ta.value.trim()){ pintarExtras(); grupo.classList.add('en-vista'); }
+    });
+    const grupo=ta.closest('.grupo');
+    const lapiz=grupo?grupo.querySelector('[data-editar]'):null;
+    if(lapiz) lapiz.onclick=()=>{
+      grupo.classList.remove('en-vista');
+      autoAlto(ta); ta.focus();
+      ta.setSelectionRange(ta.value.length,ta.value.length);
+    };
+  });
+}
+
+/* ---------- panel: conexiones ---------- */
+function panelConexiones(n){
+  let h='<div class="campo-l">Conceptos conectados</div>';
+  const vinc=n.links.map(id=>nota(id)).filter(Boolean);
+  h += vinc.length
+    ? vinc.map(v=>'<div class="fila-lista"><span class="n" style="background:none;font-size:15px">'+icTipo(v.tipo)+'</span>'
+        +'<span class="tx" data-nota="'+v.id+'" style="cursor:pointer"><b>'+esc(v.titulo)+'</b>'
+        +'<small>'+esc(dom(v.dominio).n)+(v.tema?' · '+esc(v.tema):'')+'</small></span>'
+        +'<button class="quitar" data-desconectar="'+v.id+'">✕</button></div>').join('')
+    : '<div class="nota-p">Sin conexiones todavía. Una nota aislada es una nota que vas a perder.</div>';
+  h+='<div class="btn-fila"><button class="btn-mini dorado ancho" id="btnConectar">🔗 Conectar con otro concepto</button></div>';
+
+  /* sugerencias por tema y etiquetas compartidas */
+  const sug=D.notas.filter(o=>o.id!==n.id&&!n.links.includes(o.id))
+    .map(o=>{
+      let p=0;
+      if(o.tema&&n.tema&&norm(o.tema)===norm(n.tema)) p+=3;
+      o.tags.forEach(t=>{ if(n.tags.some(x=>norm(x)===norm(t))) p+=2; });
+      if(o.area&&o.area===n.area) p+=1;
+      return {o:o,p:p};
+    }).filter(x=>x.p>=2).sort((a,b)=>b.p-a.p).slice(0,6);
+  if(sug.length){
+    h+='<div class="campo-l" style="margin-top:16px">Quizá van juntas<span class="ayuda">comparten tema o etiquetas</span></div>'
+      +'<div class="listilla">'+sug.map(s=>'<button class="chip mini" data-conectar="'+s.o.id+'">+ '+esc(s.o.titulo)+'</button>').join('')+'</div>';
+  }
+  const ms=menciones(textoNota(n)).filter(t=>!porTitulo(t));
+  if(ms.length){
+    h+='<div class="campo-l" style="margin-top:16px">Mencionaste, pero no existen</div><div class="listilla">'
+      +ms.map(t=>'<button class="wl falta" data-crear="'+esc(t)+'">+ crear «'+esc(t)+'»</button>').join(' ')+'</div>';
+  }
+  h+='<div class="nota-p">Truco: escribe [[así]] dentro de cualquier campo y ese concepto queda enlazado, exista o no todavía.</div>';
+  return h;
+}
+
+/* ---------- panel: preguntas ---------- */
+function panelPreguntas(n){
+  let h='<div class="campo-l">Lo que todavía no sé</div>';
+  h += n.preguntas.length
+    ? n.preguntas.map(p=>'<div class="fila-lista"><span class="n" style="background:none;font-size:14px">'+(p.resuelta?'✅':'❓')+'</span>'
+        +'<span class="tx" data-resolver="'+p.id+'" style="cursor:pointer'+(p.resuelta?';opacity:.55;text-decoration:line-through':'')+'">'+esc(p.txt)+'</span>'
+        +'<button class="quitar" data-borrarpregunta="'+p.id+'">✕</button></div>').join('')
+    : '<div class="nota-p">Sin dudas anotadas. Cuando algo no te cuadre, escríbelo aquí en vez de dejarlo pasar.</div>';
+  h+='<div class="btn-fila"><button class="btn-mini dorado ancho" id="btnPregunta">❓ Anotar una duda</button></div>'
+   +'<div class="nota-p">Toca una pregunta para marcarla como resuelta.</div>';
+  return h;
+}
+
+/* ---------- panel: fuentes ---------- */
+function panelFuentes(n){
+  let h='<div class="campo-l">De dónde salió esto</div>';
+  h += n.fuentes.length
+    ? n.fuentes.map((f,i)=>'<div class="fila-lista"><span class="n">'+(i+1)+'</span>'
+        +'<span class="tx">'+esc(f.t)+(f.url?'<small><a href="'+esc(f.url)+'" target="_blank" rel="noopener">'+esc(f.url)+'</a></small>':'')+'</span>'
+        +'<button class="quitar" data-borrarfuente="'+i+'">✕</button></div>').join('')
+    : '<div class="nota-p">Sin fuentes. Anótalas: dentro de un año no vas a recordar de dónde sacaste esto, y la fuente es lo que te deja verificarlo.</div>';
+  h+='<div class="btn-fila"><button class="btn-mini dorado ancho" id="btnFuente">📚 Agregar fuente</button></div>';
+  return h;
+}
+
+/* ---------- panel: historial ---------- */
+function panelHistorial(n){
+  let h='<div class="card" style="margin-bottom:14px">'
+    +'<div class="fila-est"><span class="nm">Creada</span><span class="vl num">'+esc(fFecha(n.creado,true))+'</span></div>'
+    +'<div class="fila-est"><span class="nm">Última revisión</span><span class="vl num">'+esc(fFecha(n.revisado,true))+'</span></div>'
+    +'<div class="fila-est"><span class="nm">Nivel de dominio</span><span class="vl">'+esc(dom(n.dominio).n)+'</span></div>'
+    +'</div>';
+  h+='<div class="campo-l">Cómo cambió mi entendimiento</div>';
+  h += n.correcciones.length
+    ? n.correcciones.slice().reverse().map((c,i)=>{
+        const idx=n.correcciones.length-1-i;
+        return '<div class="corr"><div class="f">'+esc(fFecha(c.f,true))+'</div>'
+          +'<div class="a">'+esc(c.antes)+'</div><div class="flecha">↓ ahora entiendo que</div>'
+          +'<div class="b">'+esc(c.ahora)+'</div>'
+          +'<div style="text-align:right;margin-top:6px"><button class="quitar" data-borrarcorr="'+idx+'">✕</button></div></div>';
+      }).join('')
+    : '<div class="nota-p">Todavía no registras ninguna corrección. Cuando descubras que entendías algo mal, anótalo: eso es exactamente lo que demuestra aprendizaje real.</div>';
+  h+='<div class="btn-fila"><button class="btn-mini dorado ancho" id="btnCorreccion">🔄 Registrar una corrección</button></div>';
+  return h;
+}
+
+/* ---------- acciones dentro de los paneles ---------- */
+document.getElementById('notaPaneles').addEventListener('click',e=>{
+  const n=notaActual; if(!n) return;
+  const c=e.target.closest('[data-conectar]');
+  if(c){ conectar(n,c.dataset.conectar); renderNota(); return; }
+  const d=e.target.closest('[data-desconectar]');
+  if(d){ desconectar(n,d.dataset.desconectar); renderNota(); return; }
+  const r=e.target.closest('[data-resolver]');
+  if(r){
+    const p=n.preguntas.find(x=>x.id===r.dataset.resolver);
+    if(p){ p.resuelta=!p.resuelta; tocar(n); guardar(); renderNota(); }
+    return;
+  }
+  const bf=e.target.closest('[data-borrarfuente]');
+  if(bf){ n.fuentes.splice(parseInt(bf.dataset.borrarfuente,10),1); tocar(n); guardar(); renderNota(); return; }
+  const bp=e.target.closest('[data-borrarpregunta]');
+  if(bp){ n.preguntas=n.preguntas.filter(x=>x.id!==bp.dataset.borrarpregunta); tocar(n); guardar(); renderNota(); return; }
+  const bc=e.target.closest('[data-borrarcorr]');
+  if(bc){ n.correcciones.splice(parseInt(bc.dataset.borrarcorr,10),1); tocar(n); guardar(); renderNota(); return; }
+  if(e.target.closest('#btnConectar'))   abrirConectar();
+  if(e.target.closest('#btnFuente'))     abrirHoja('h-fuente',()=>{ document.getElementById('fuTitulo').value=''; document.getElementById('fuUrl').value=''; });
+  if(e.target.closest('#btnPregunta'))   abrirHoja('h-pregunta',()=>{ document.getElementById('prTexto').value=''; });
+  if(e.target.closest('#btnCorreccion')) abrirHoja('h-correccion',()=>{ document.getElementById('coAntes').value=''; document.getElementById('coAhora').value=''; });
+});
+
+function conectar(n,id){
+  if(n.id===id) return;
+  const o=nota(id); if(!o) return;
+  if(!n.links.includes(id)) n.links.push(id);
+  if(!o.links.includes(n.id)) o.links.push(n.id);
+  tocar(n); tocar(o); guardar();
+}
+function desconectar(n,id){
+  n.links=n.links.filter(x=>x!==id);
+  const o=nota(id);
+  if(o) o.links=o.links.filter(x=>x!==n.id);
+  tocar(n); guardar();
+}
+
+/* ---------- título y navegación de la nota ---------- */
+const taTitulo=document.getElementById('notaTitulo');
+taTitulo.addEventListener('input',()=>{
+  autoAlto(taTitulo);
+  if(!notaActual) return;
+  notaActual.titulo=taTitulo.value.replace(/\n/g,' ');
+  tocar(notaActual); guardarPronto();
+});
+/* Ojo: aquí NO se repinta la nota. Repintar en el blur destruye el botón que el dedo
+   está tocando (pestaña, dominio…) y el toque se pierde. Solo guardamos. */
+taTitulo.addEventListener('blur',()=>{ guardar(); actualizarPie(); });
+taTitulo.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); taTitulo.blur(); } });
+document.getElementById('notaVolver').onclick=()=>ir(pantallaPrevia);
+
+/* ---------- crear la nota par (conocimiento ⇄ aplicación) ---------- */
+document.getElementById('btnDuplicarPar').onclick=()=>{
+  const n=notaActual; if(!n) return;
+  const esConoc = n.tipo==='conocimiento';
+  const titulo = esConoc ? ('Cómo usar '+(n.titulo||'esto').toLowerCase()) : ((n.titulo||'').replace(/^cómo\s+/i,'').trim()||'Concepto');
+  const par=notaNueva({
+    tipo: esConoc?'aplicacion':'conocimiento',
+    titulo: titulo.charAt(0).toUpperCase()+titulo.slice(1),
+    area:n.area, tema:n.tema, tags:n.tags.slice(),
+    def: esConoc?'':'', dominio:1
+  });
+  D.notas.push(par);
+  conectar(n,par.id);
+  guardar();
+  notificar(esConoc?'Nota de aplicación creada y conectada':'Nota de conocimiento creada y conectada');
+  abrirNota(par.id);
+};
+
+/* ---------- borrar nota ---------- */
+armarBorrar(document.getElementById('btnBorrarNota'),()=>{
+  const n=notaActual; if(!n) return;
+  n.links.forEach(id=>{ const o=nota(id); if(o) o.links=o.links.filter(x=>x!==n.id); });
+  D.notas=D.notas.filter(x=>x.id!==n.id);
+  guardar(); notaActual=null;
+  notificar('Nota borrada');
+  ir(pantallaPrevia);
+});
+
+/* ============================================================
+   Hojas (modales)
+   ============================================================ */
+const velo=document.getElementById('velo');
+let hojaAbierta=null;
+function abrirHoja(id,prep){
+  if(prep) prep();
+  if(hojaAbierta) hojaAbierta.classList.remove('abierta');
+  hojaAbierta=document.getElementById(id);
+  velo.classList.add('abierto');
+  hojaAbierta.classList.add('abierta');
+}
+function cerrarHoja(){
+  if(hojaAbierta) hojaAbierta.classList.remove('abierta');
+  velo.classList.remove('abierto');
+  hojaAbierta=null;
+}
+velo.onclick=cerrarHoja;
+document.querySelectorAll('[data-cerrar]').forEach(b=>b.onclick=cerrarHoja);
+
+/* ---------- opciones de área en los selectores ---------- */
+function pintarSelectAreas(sel,valor){
+  const el=document.getElementById(sel);
+  el.innerHTML='<option value="">Sin área</option>'
+    +D.areas.map(a=>'<option value="'+esc(a.id)+'">'+esc(a.emoji+' '+a.nombre)+'</option>').join('');
+  el.value=valor||'';
+}
+
+/* ---------- captura rápida ---------- */
+let capturaPref={};
+function abrirCaptura(pref){
+  capturaPref=pref||{};
+  abrirHoja('h-captura',()=>{
+    const tipo=capturaPref.tipo||'conocimiento';
+    setSeg('segTipo',tipo);
+    document.getElementById('capTituloLbl').textContent = tipo==='aplicacion'?'Nombre del procedimiento':'Título del concepto';
+    document.getElementById('capTitulo').placeholder    = tipo==='aplicacion'?'Ej. Cómo analizar un balance general':'Ej. Activo corriente';
+    document.getElementById('capTextoLbl').textContent  = tipo==='aplicacion'?'Cuándo uso esto':'Con mis palabras';
+    document.getElementById('capTitulo').value=capturaPref.titulo||'';
+    document.getElementById('capTexto').value='';
+    const areaSug = capturaPref.area || (notaActual&&notaActual.area) || (mapa.area&&mapa.area!==SIN_AREA?mapa.area:'') || (D.areas[0]?D.areas[0].id:'');
+    pintarSelectAreas('capArea',areaSug);
+    setTimeout(()=>document.getElementById('capTitulo').focus(),160);
+  });
+}
+document.getElementById('fab').onclick=()=>abrirCaptura({});
+document.getElementById('capGuardar').onclick=()=>{
+  const titulo=document.getElementById('capTitulo').value.trim();
+  if(!titulo){ notificar('Ponle un título, aunque sea provisional.',true); return; }
+  const ya=porTitulo(titulo);
+  if(ya){
+    cerrarHoja();
+    notificar('Ya tenías una nota con ese título — te la abro.');
+    abrirNota(ya.id);
+    return;
+  }
+  const n=notaNueva({
+    tipo:getTipoCaptura()||'conocimiento',
+    titulo:titulo,
+    def:document.getElementById('capTexto').value.trim(),
+    area:document.getElementById('capArea').value,
+    tema:(capturaPref.tema||(notaActual&&notaActual.tema)||'')
+  });
+  D.notas.push(n);
+  /* si la creaste desde otra nota o desde una mención, quedan conectadas */
+  const origen=capturaPref.desde||(notaActual?notaActual.id:null);
+  if(origen&&nota(origen)) conectar(nota(origen),n.id);
+  tocar(n); guardar();
+  cerrarHoja();
+  abrirNota(n.id);   /* abrirNota ya deja la nota en su primera pestaña */
+  notificar('Nota creada ✓');
+};
+
+/* ---------- conectar ---------- */
+function abrirConectar(){
+  abrirHoja('h-conectar',()=>{
+    document.getElementById('conectarQ').value='';
+    document.getElementById('conectarSub').textContent='Desde «'+(notaActual?notaActual.titulo:'')+'». Toca para conectar o desconectar.';
+    pintarConectar();
+  });
+}
+function pintarConectar(){
+  const n=notaActual; if(!n) return;
+  const q=document.getElementById('conectarQ').value.trim();
+  const tokens=q?tokenizar(q):[];
+  let lista=D.notas.filter(o=>o.id!==n.id);
+  if(tokens.length) lista=lista.map(o=>({o:o,p:puntuar(o,tokens)})).filter(x=>x.p>0).sort((a,b)=>b.p-a.p).map(x=>x.o);
+  else lista=lista.sort((a,b)=>{
+    const ca=n.links.includes(a.id)?0:1, cb=n.links.includes(b.id)?0:1;
+    return ca-cb || (a.revisado<b.revisado?1:-1);
+  });
+  const cont=document.getElementById('conectarLista');
+  cont.innerHTML = lista.slice(0,60).map(o=>{
+    const m=n.links.includes(o.id);
+    return '<button class="sel-f'+(m?' marcada':'')+'" data-toggle="'+o.id+'"><span class="mk">✓</span>'
+      +'<span class="nm">'+icTipo(o.tipo)+' '+esc(o.titulo)+'<small>'+esc(dom(o.dominio).n)+(o.tema?' · '+esc(o.tema):'')+'</small></span></button>';
+  }).join('') || '<div class="vacio">Sin coincidencias.'+(q?'<br><br><button class="btn-mini dorado" id="conectarCrear">+ Crear «'+esc(q)+'» y conectar</button>':'')+'</div>';
+  cont.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.toggle;
+    if(n.links.includes(id)) desconectar(n,id); else conectar(n,id);
+    pintarConectar(); renderNota();
+  });
+  const cc=document.getElementById('conectarCrear');
+  if(cc) cc.onclick=()=>{ const t=q; cerrarHoja(); abrirCaptura({titulo:t,desde:n.id}); };
+}
+document.getElementById('conectarQ').addEventListener('input',pintarConectar);
+
+/* ---------- ubicación (área / tema / etiquetas) ---------- */
+function abrirUbicacion(){
+  const n=notaActual; if(!n) return;
+  abrirHoja('h-ubicacion',()=>{
+    pintarSelectAreas('ubArea',n.area);
+    document.getElementById('ubTema').value=n.tema||'';
+    document.getElementById('ubTags').value=n.tags.join(', ');
+    const temas=[...new Set(D.notas.map(x=>(x.tema||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+    document.getElementById('dlTemas').innerHTML=temas.map(t=>'<option value="'+esc(t)+'">').join('');
+  });
+}
+document.getElementById('ubGuardar').onclick=()=>{
+  const n=notaActual; if(!n) return;
+  n.area=document.getElementById('ubArea').value;
+  n.tema=document.getElementById('ubTema').value.trim();
+  n.tags=document.getElementById('ubTags').value.split(',').map(s=>s.trim()).filter(Boolean);
+  tocar(n); guardar(); cerrarHoja(); renderNota();
+  notificar('Ubicación actualizada');
+};
+
+/* ---------- fuente / pregunta / corrección ---------- */
+document.getElementById('fuGuardar').onclick=()=>{
+  const n=notaActual; if(!n) return;
+  const t=document.getElementById('fuTitulo').value.trim();
+  if(!t){ notificar('Escribe al menos de qué fuente se trata.',true); return; }
+  let url=document.getElementById('fuUrl').value.trim();
+  if(url&&!/^https?:\/\//i.test(url)) url='https://'+url;
+  n.fuentes.push({t:t,url:url});
+  tocar(n); guardar(); cerrarHoja(); renderNota();
+};
+document.getElementById('prGuardar').onclick=()=>{
+  const n=notaActual; if(!n) return;
+  const t=document.getElementById('prTexto').value.trim();
+  if(!t){ notificar('Escribe la duda.',true); return; }
+  n.preguntas.push({id:uid(),txt:t,resuelta:false});
+  tocar(n); guardar(); cerrarHoja(); renderNota();
+};
+document.getElementById('coGuardar').onclick=()=>{
+  const n=notaActual; if(!n) return;
+  const a=document.getElementById('coAntes').value.trim();
+  const b=document.getElementById('coAhora').value.trim();
+  if(!a||!b){ notificar('Necesito las dos partes: lo que pensabas y lo que entiendes ahora.',true); return; }
+  n.correcciones.push({f:hoyISO(),antes:a,ahora:b});
+  if(n.dominio<3) n.dominio=Math.min(5,n.dominio+1);
+  tocar(n); guardar(); cerrarHoja(); renderNota();
+  notificar('Corrección registrada ✓');
+};
+
+/* ---------- áreas ---------- */
+let areaEdit=null;
+function abrirArea(id){
+  areaEdit=id?area(id):null;
+  abrirHoja('h-area',()=>{
+    document.getElementById('arTitulo').textContent=areaEdit?'Editar área':'Nueva área';
+    document.getElementById('arNombre').value=areaEdit?areaEdit.nombre:'';
+    document.getElementById('arEmoji').value=areaEdit?areaEdit.emoji:'📚';
+  });
+}
+document.getElementById('btnNuevaArea').onclick=()=>abrirArea(null);
+document.getElementById('arGuardar').onclick=()=>{
+  const nom=document.getElementById('arNombre').value.trim();
+  if(!nom){ notificar('Ponle nombre al área.',true); return; }
+  const em=document.getElementById('arEmoji').value.trim()||'📚';
+  if(areaEdit){ areaEdit.nombre=nom; areaEdit.emoji=em; }
+  else D.areas.push({id:uid(),nombre:nom,emoji:em});
+  guardar(); cerrarHoja(); renderAjustes();
+  notificar('Área guardada ✓');
+};
+
+/* ============================================================
+   Respaldo y exportación
+   ============================================================ */
+function descargar(nombre,contenido,mime){
+  const blob=new Blob([contenido],{type:mime||'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=nombre;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },400);
+}
+document.getElementById('btnRespaldar').onclick=()=>{
+  descargar('mi-conocimiento-'+hoyISO()+'.json',
+    JSON.stringify({app:'mi-conocimiento',v:1,fecha:new Date().toISOString(),datos:D},null,1));
+  notificar('Respaldo descargado ✓');
+};
+document.getElementById('btnRestaurar').onclick=()=>document.getElementById('fileRestaurar').click();
+document.getElementById('fileRestaurar').onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const lector=new FileReader();
+  lector.onload=()=>{
+    try{
+      const p=JSON.parse(lector.result);
+      const datos=p&&p.datos?p.datos:p;
+      if(!datos||!Array.isArray(datos.notas)) throw new Error('formato');
+      D=Object.assign({v:1,cfg:{tema:'auto',sesion:60},areas:[],notas:[],dias:[]},datos);
+      cargarNormalizar();
+      guardar(); aplicarTema(); renderHoy(); ir('hoy');
+      notificar('Restaurado: '+D.notas.length+' notas ✓');
+    }catch(err){
+      notificar('Ese archivo no es un respaldo válido de Mi Conocimiento.',true);
+    }
+    e.target.value='';
+  };
+  lector.readAsText(f);
+};
+function cargarNormalizar(){
+  if(!Array.isArray(D.notas)) D.notas=[];
+  if(!Array.isArray(D.dias))  D.dias=[];
+  if(!Array.isArray(D.areas)||!D.areas.length) D.areas=AREAS_BASE.map(a=>Object.assign({},a));
+  D.notas.forEach(n=>{
+    ['tags','links','fuentes','preguntas','correcciones'].forEach(k=>{ if(!Array.isArray(n[k])) n[k]=[]; });
+    if(!n.creado) n.creado=hoyISO();
+    if(!n.revisado) n.revisado=n.creado;
+    if(!n.dominio) n.dominio=1;
+  });
+}
+document.getElementById('btnMarkdown').onclick=()=>{
+  const L=[];
+  L.push('# Mi Conocimiento');
+  L.push('');
+  L.push('_'+D.notas.length+' notas · exportado el '+fFecha(hoyISO(),true)+'_');
+  const grupos=D.areas.concat([{id:SIN_AREA,nombre:'Sin área',emoji:'📁'}]);
+  grupos.forEach(a=>{
+    const ns=notasDeArea(a.id);
+    if(!ns.length) return;
+    L.push('','## '+a.emoji+' '+a.nombre);
+    temasDeArea(a.id).forEach(t=>{
+      L.push('','### '+(t[0]===SIN_TEMA?'Sin tema':t[0]));
+      ns.filter(n=>((n.tema||'').trim()||SIN_TEMA)===t[0]).forEach(n=>{
+        L.push('','#### '+icTipo(n.tipo)+' '+n.titulo);
+        L.push('','> '+dom(n.dominio).n+(n.tags.length?' · #'+n.tags.join(' #'):'')+' · revisada '+fFecha(n.revisado,true));
+        const orden=n.tipo==='aplicacion'?['pasos','def','sirve','aplico','clasif','formulas','ejemplo','errores']
+                                         :['def','sirve','clasif','formulas','aplico','pasos','ejemplo','errores'];
+        orden.forEach(c=>{
+          const v=(n[c]||'').trim(); if(!v) return;
+          L.push('','**'+etq(c,n.tipo,0)+'**','');
+          if(c==='pasos') lineas(v).forEach((x,i)=>L.push((i+1)+'. '+x));
+          else if(c==='clasif'||c==='errores') lineas(v).forEach(x=>L.push('- '+x));
+          else L.push(v);
+        });
+        if(n.links.length){
+          L.push('','**Conectado con:** '+n.links.map(id=>{ const o=nota(id); return o?'[['+o.titulo+']]':null; }).filter(Boolean).join(', '));
+        }
+        if(n.fuentes.length){
+          L.push('','**Fuentes**','');
+          n.fuentes.forEach(f=>L.push('- '+f.t+(f.url?' — '+f.url:'')));
+        }
+        if(n.preguntas.length){
+          L.push('','**Preguntas**','');
+          n.preguntas.forEach(p=>L.push('- ['+(p.resuelta?'x':' ')+'] '+p.txt));
+        }
+        if(n.correcciones.length){
+          L.push('','**Cómo cambió mi entendimiento**','');
+          n.correcciones.forEach(c=>L.push('- _'+fFecha(c.f,true)+'_ — Antes: '+c.antes+' → Ahora: '+c.ahora));
+        }
+      });
+    });
+  });
+  descargar('mi-conocimiento-'+hoyISO()+'.md',L.join('\n'),'text/markdown');
+  notificar('Markdown descargado ✓');
+};
+
+/* ---------- zona delicada ---------- */
+armarBorrar(document.getElementById('btnBorrarSemillas'),()=>{
+  const antes=D.notas.length;
+  const ids=D.notas.filter(n=>n.semilla).map(n=>n.id);
+  D.notas=D.notas.filter(n=>!n.semilla);
+  D.notas.forEach(n=>{ n.links=n.links.filter(x=>!ids.includes(x)); });
+  guardar(); renderAjustes();
+  notificar((antes-D.notas.length)+' notas de ejemplo borradas');
+});
+armarBorrar(document.getElementById('btnBorrarTodo'),()=>{
+  D={v:1,cfg:{tema:D.cfg.tema||'auto',sesion:D.cfg.sesion||60},areas:AREAS_BASE.map(a=>Object.assign({},a)),notas:[],dias:[hoyISO()]};
+  guardar(); mapa={area:null,tema:null}; notaActual=null;
+  renderAjustes(); ir('hoy');
+  notificar('Todo borrado');
+});
+
+/* ============================================================
+   Arranque
+   ============================================================ */
+cargar();
+aplicarTema();
+renderFiltros();
+renderHoy();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+window.addEventListener('beforeunload',()=>{ clearTimeout(tGuardar); guardar(); });
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) guardar(); });
+</script>
+</body>
+</html>
