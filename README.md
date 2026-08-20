@@ -27,10 +27,10 @@ Aplicación personal de finanzas: ingresos, gastos, ahorro, inversiones, patrimo
 
 ## 🧠 Mi Conocimiento
 
-En este mismo repositorio vive una segunda app: **[Mi Conocimiento](conocimiento/)**, una
-memoria personal de aprendizaje. Notas pequeñas y conectadas, separadas en *conocimiento*
-(qué significa) y *aplicación* (qué hacer), con búsqueda instantánea sobre tus propias
-palabras, niveles de dominio e historial de correcciones.
+En este mismo repositorio vive una segunda app: **[Mi Conocimiento](conocimiento/)**, un
+cuaderno de estudio con memoria: notas de tres preguntas (qué aprendí, el comando o ejemplo,
+cómo lo practiqué), búsqueda instantánea sobre tus propias palabras, repaso espaciado que te
+pregunta antes de que olvides, y rutas de estudio opcionales.
 
 Se instala aparte, con su propio ícono:
 `https://<tu-usuario>.github.io/app-mis-finanzas/conocimiento/`
