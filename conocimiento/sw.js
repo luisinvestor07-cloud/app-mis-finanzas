@@ -1,5 +1,5 @@
 /* Service worker: Mi Conocimiento funciona 100% offline una vez instalada. */
-const CACHE = 'mi-conocimiento-v2';
+const CACHE = 'mi-conocimiento-v3';
 const ARCHIVOS = [
   './',
   './index.html',
